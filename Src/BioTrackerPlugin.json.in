@@ -1,0 +1,6 @@
+{   "type" :            "TrackingPlugin",
+    "name" :            "Background Subtraction Tracker",
+    "longname" :        "some long name",
+    "version" :         "CURRENT_GIT_HASH",
+    "dependencies" :    []
+}

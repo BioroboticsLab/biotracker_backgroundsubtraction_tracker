@@ -1,0 +1,84 @@
+stages:
+  - build
+  - package
+  - deploy
+
+build ubuntu-18.04:
+  stage: build
+  tags: [ linux, docker ]
+  image: git.imp.fu-berlin.de:5000/bioroboticslab/robofish/docker:ubuntu-18.04
+  variables:
+    CC: gcc-8
+    CXX: g++-8
+  artifacts:
+    paths:
+      - build
+    expire_in: 1 day
+  before_script:
+    - 'curl -o artifacts.zip --header "JOB-TOKEN: $CI_JOB_TOKEN" "https://git.imp.fu-berlin.de/api/v4/projects/2576/jobs/artifacts/master/download?job=package%20ubuntu-18.04"'
+    - 7z e artifacts.zip
+    - 'curl -o artifacts.zip --header "JOB-TOKEN: $CI_JOB_TOKEN" "https://git.imp.fu-berlin.de/api/v4/projects/3199/jobs/artifacts/master/download?job=package%20ubuntu-18.04"'
+    - 7z e artifacts.zip
+    - 7z e '*.tar.xz' -y; rm *.tar.xz; 7z x '*.tar'; rm *.tar
+    - mkdir dependencies
+    - name='RF_Interfaces'; mv $name-* dependencies/$name
+    - name='RF_Utility'; mv $name-* dependencies/$name
+    - export CMAKE_PREFIX_PATH="$(pwd)/dependencies"
+  script:
+    - cmake -Bbuild -H. -DCMAKE_BUILD_TYPE=Release -G Ninja -DPACKAGE_TXZ=ON -DCMAKE_PREFIX_PATH="$CMAKE_PREFIX_PATH" -DCMAKE_SUPPRESS_REGENERATION=ON -DCMAKE_SKIP_PACKAGE_ALL_DEPENDENCY=ON
+    - ninja -C build
+
+package ubuntu-18.04:
+  stage: package
+  tags: [ linux, docker ]
+  image: git.imp.fu-berlin.de:5000/bioroboticslab/robofish/docker:ubuntu-18.04
+  dependencies:
+    - build ubuntu-18.04
+  artifacts:
+    paths:
+      - build/*.tar.xz
+    expire_in: 1 week
+  script:
+    - ninja -C build package
+
+build windows:
+  stage: build
+  tags: [ windows, docker ]
+  image: git.imp.fu-berlin.de:5000/bioroboticslab/robofish/docker:windows
+  artifacts:
+    paths:
+      - build
+    expire_in: 1 day
+  before_script:
+    - 'curl.exe -o artifacts.zip --header "JOB-TOKEN: $CI_JOB_TOKEN" "https://git.imp.fu-berlin.de/api/v4/projects/2576/jobs/artifacts/master/download?job=package%20windows"'
+    - 7z e artifacts.zip
+    - 'curl.exe -o artifacts.zip --header "JOB-TOKEN: $CI_JOB_TOKEN" "https://git.imp.fu-berlin.de/api/v4/projects/3199/jobs/artifacts/master/download?job=package%20windows"'
+    - 7z e artifacts.zip
+    - 7z e *.tar.xz; Remove-Item -Force *.tar.xz; 7z x *.tar; Remove-Item -Force *.tar
+    - New-Item -ItemType Directory -Force 'dependencies'
+    - $name='RF_Interfaces'; Move-Item -Force "$name-*" dependencies/$name
+    - $name='RF_Utility'; Move-Item -Force "$name-*" dependencies/$name
+    - Copy-Item -Recurse "dependencies/*" "C:/Program Files/"
+    - Remove-Item -Recurse -Force dependencies
+    - $env:PACKAGE_DIR = ("$env:TMP/pkg" -Replace "\\","/")
+    - $env:CMAKE_PREFIX_PATH="$env:VCPKG_CUDA_INSTALL_DIR"
+    - C:/VsDevEnv.ps1 -arch=amd64
+  script:
+    - cmake -Bbuild "-H." -DCMAKE_BUILD_TYPE=Release -G Ninja -DPACKAGE_WINDOWS_MSI=ON -DCMAKE_PREFIX_PATH="$env:CMAKE_PREFIX_PATH" -DCPACK_PACKAGE_DIRECTORY="$env:PACKAGE_DIR" -DCMAKE_SUPPRESS_REGENERATION=ON -DCMAKE_SKIP_PACKAGE_ALL_DEPENDENCY=ON
+    - ninja -C build
+
+package windows:
+  stage: package
+  tags: [ windows, docker ]
+  image: git.imp.fu-berlin.de:5000/bioroboticslab/robofish/docker:windows
+  dependencies:
+    - build windows
+  artifacts:
+    paths:
+      - build/*.msi
+    expire_in: 1 week
+  before_script:
+    - $env:PACKAGE_DIR = ("$env:TMP/pkg" -Replace "\\","/")
+  script:
+    - ninja -C build package
+    - Copy-Item "$env:PACKAGE_DIR/*" build -Recurse
