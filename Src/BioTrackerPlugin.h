@@ -6,7 +6,6 @@
 
 #include "Interfaces/IBioTrackerPlugin.h"
 
-
 #include "QPointer"
 #include "memory"
 #include "QPoint"
@@ -14,6 +13,7 @@
 class Q_DECL_EXPORT BioTrackerPlugin : public IBioTrackerPlugin {
 	Q_OBJECT
 	Q_INTERFACES(IBioTrackerPlugin)
+	Q_PLUGIN_METADATA(IID IBioTrackerPlugin_iid FILE "plugin.json")
 
   public:
 	BioTrackerPlugin();
