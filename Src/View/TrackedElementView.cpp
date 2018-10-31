@@ -6,7 +6,7 @@
 #include "QPainter"
 #include "QGraphicsScene"
 #include <QGraphicsSceneHoverEvent>
-#include "util/misc.h"
+#include "Utility/misc.h"
 #include "QDebug"
 
 class QGraphicsSceneHoverEvent;
@@ -14,7 +14,7 @@ class QGraphicsSceneHoverEvent;
 TrackedElementView::TrackedElementView(QGraphicsItem *parent, IController *controller, IModel *model) :
     IViewTrackedComponent(parent, controller, model)
 {
-    TrackedElement *elem = dynamic_cast<TrackedElement *>(getModel());
+    BST::TrackedElement *elem = dynamic_cast<BST::TrackedElement *>(getModel());
     _boundingRect = QRectF(0,0, 100, 100);
 }
 

@@ -1,8 +1,9 @@
-#ifndef TRACKEDCOMPONENTFACTORY_H
-#define TRACKEDCOMPONENTFACTORY_H
+#pragma once
 
 #include "Interfaces/IModel/IModelTrackedComponentFactory.h"
 
+namespace BST{
+    
 class TrackedComponentFactory : public IModelTrackedComponentFactory
 {
     Q_OBJECT
@@ -18,5 +19,5 @@ protected:
 	IModelTrackedComponent *createTrackedObject(QString name) override;
 	IModelTrackedComponent *createTrackedTrajectory(QString name) override;
 };
+}
 
-#endif // TRACKEDOBJECTFACTORY_H

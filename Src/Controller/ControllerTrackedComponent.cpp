@@ -85,8 +85,8 @@ void ControllerTrackedComponent::receiveAddTrajectory(QPoint position)
 	cv::Point newPosPx = cv::Point(position.x(), position.y());
 	cv::Point2f newPosCm = m_areaDescr->pxToCm(newPosPx);
 
-	TrackedTrajectory* newTraj = new TrackedTrajectory();
-	TrackedElement* firstElem = new TrackedElement(newTraj, "n.a.", newTraj->getId());
+	BST::TrackedTrajectory* newTraj = new BST::TrackedTrajectory();
+	BST::TrackedElement* firstElem = new BST::TrackedElement(newTraj, "n.a.", newTraj->getId());
 
 	FishPose newPose = FishPose(newPosCm, newPosPx, 0, 0, 20, 20, 0.0);
 
@@ -104,10 +104,10 @@ void ControllerTrackedComponent::receiveAddTrajectory(QPoint position)
 
 void ControllerTrackedComponent::receiveMoveElement(IModelTrackedTrajectory* trajectory, uint frameNumber, QPoint position)
 {
-	TrackedTrajectory* traj = dynamic_cast<TrackedTrajectory*>(trajectory);
+	BST::TrackedTrajectory* traj = dynamic_cast<BST::TrackedTrajectory*>(trajectory);
 	// don't move when frame number under 0 and main trajectory (id's: 0)!!
 	if (!(traj->getId() == 0) && frameNumber >= 0) {
-		TrackedElement* element = dynamic_cast<TrackedElement*>(traj->getChild(frameNumber));
+		BST::TrackedElement* element = dynamic_cast<BST::TrackedElement*>(traj->getChild(frameNumber));
 
 		//TODO rewrite this when default ipose is implemented...
 		FishPose oldPose = element->getFishPose();

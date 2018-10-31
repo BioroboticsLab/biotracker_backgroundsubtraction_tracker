@@ -45,7 +45,7 @@ private:
 
 	std::vector<FishPose> getLastPositionsAsPose();
 
-    TrackedTrajectory* _TrackedTrajectoryMajor;
+    BST::TrackedTrajectory* _TrackedTrajectoryMajor;
 	TrackerParameter* _TrackingParameter;
 	IModelAreaDescriptor* _AreaInfo;
 

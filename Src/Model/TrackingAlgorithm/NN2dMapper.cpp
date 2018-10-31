@@ -9,7 +9,7 @@ float dif(float a, float b) {
 	return fmod((std::abs(b - a)), CV_PI);
 }
 
-NN2dMapper::NN2dMapper(TrackedTrajectory *tree) {
+NN2dMapper::NN2dMapper(BST::TrackedTrajectory *tree) {
 	_tree = tree;
 
 	//Looks kinda complicated but is a rather simple thing:
@@ -35,18 +35,18 @@ struct TupleCompare
 
 };
 
-FishPose getFishpose(TrackedTrajectory* traj, uint frameid, uint id) {
+FishPose getFishpose(BST::TrackedTrajectory* traj, uint frameid, uint id) {
     IModelTrackedComponent* comp = traj->getValidChild(id);
-    TrackedTrajectory* ct = dynamic_cast<TrackedTrajectory*>(comp);
+    BST::TrackedTrajectory* ct = dynamic_cast<BST::TrackedTrajectory*>(comp);
     if (ct) {
-        TrackedElement *el = dynamic_cast<TrackedElement*>(ct->getChild(frameid-1));
+        BST::TrackedElement *el = dynamic_cast<BST::TrackedElement*>(ct->getChild(frameid-1));
         if (el)
             return el->getFishPose();
     }
     return FishPose();
 }
 
-std::tuple<std::vector<FishPose>, std::vector<float>> NN2dMapper::getNewPoses(TrackedTrajectory* traj, uint frameid, std::vector<BlobPose> blobPoses) {
+std::tuple<std::vector<FishPose>, std::vector<float>> NN2dMapper::getNewPoses(BST::TrackedTrajectory* traj, uint frameid, std::vector<BlobPose> blobPoses) {
 	/* The algorithm seems kinda inefficient, as there is many fish*blobs and fish*fish loops.
 	 * But as N is expected to be pretty small (<10 for fish, <20 for blobs) this seems feasible.
 	*/
@@ -229,10 +229,10 @@ bool NN2dMapper::correctAngle(int trackid, FishPose &pose)
 	return false;
 }
 
-TrackedTrajectory* getChildOfType(TrackedTrajectory* tree, int tid) {
+BST::TrackedTrajectory* getChildOfType(BST::TrackedTrajectory* tree, int tid) {
 	int cid = 0;
 	for (int i = 0; i < tree->size(); i++) {
-		TrackedTrajectory* t = dynamic_cast<TrackedTrajectory*>(tree->getChild(i));
+		BST::TrackedTrajectory* t = dynamic_cast<BST::TrackedTrajectory*>(tree->getChild(i));
 		if (t && cid==tid && t->getValid()) {
 			return t;
 		}else if (t && t->getValid())
@@ -244,7 +244,7 @@ TrackedTrajectory* getChildOfType(TrackedTrajectory* tree, int tid) {
 float NN2dMapper::estimateOrientationRad(int trackid, float *confidence)
 {
 	//Get corresponding trajectory
-	TrackedTrajectory* t = getChildOfType((TrackedTrajectory*)_tree, trackid);
+	BST::TrackedTrajectory* t = getChildOfType((BST::TrackedTrajectory*)_tree, trackid);
     //return 0;
 
 	// can't give estimate if not enough poses available
@@ -252,7 +252,7 @@ float NN2dMapper::estimateOrientationRad(int trackid, float *confidence)
 
 	//std::deque<FishPose>::const_reverse_iterator iter = _histComponents.rbegin();
 	int start = std::max(t->size()-20, 0);
-	TrackedElement* e = (TrackedElement*)t->getChild(start);
+	BST::TrackedElement* e = (BST::TrackedElement*)t->getChild(start);
 	if (!e)
 		return std::numeric_limits<float>::quiet_NaN();
 	cv::Point2f nextPoint = e->getFishPose().position_cm();
@@ -267,7 +267,7 @@ float NN2dMapper::estimateOrientationRad(int trackid, float *confidence)
 
 	for (int i=start+1; i<t->size(); i++)
 	{
-		TrackedElement* ecur = (TrackedElement*)t->getChild(i);
+		BST::TrackedElement* ecur = (BST::TrackedElement*)t->getChild(i);
 		if (!ecur)
 			return std::numeric_limits<float>::quiet_NaN();
 		cv::Point2f currentPoint = ecur->getFishPose().position_cm();

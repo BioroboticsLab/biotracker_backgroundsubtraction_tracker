@@ -7,7 +7,7 @@ BioTrackerTrackingAlgorithm::BioTrackerTrackingAlgorithm(IController *parent, IM
 {
 	_cfg = static_cast<ControllerTrackingAlgorithm*>(parent)->getConfig();
 	_TrackingParameter = (TrackerParameter*)parameter;
-	_TrackedTrajectoryMajor = (TrackedTrajectory*)trajectory;
+	_TrackedTrajectoryMajor = (BST::TrackedTrajectory*)trajectory;
 	_nn2d = std::make_shared<NN2dMapper>(_TrackedTrajectoryMajor);
 	 
 	_noFish = -1;
@@ -40,9 +40,9 @@ std::vector<FishPose> BioTrackerTrackingAlgorithm::getLastPositionsAsPose() {
 	//TODO: If we are tracking somewhere in the middle, this is bad. Do it by id!
 	std::vector<FishPose> last;
 	for (int i = 0; i < _TrackedTrajectoryMajor->size(); i++) {
-		TrackedTrajectory *t = dynamic_cast<TrackedTrajectory *>(_TrackedTrajectoryMajor->getChild(i));
+		BST::TrackedTrajectory *t = dynamic_cast<BST::TrackedTrajectory *>(_TrackedTrajectoryMajor->getChild(i));
 		if (t && t->getValid() && !t->getFixed()) {
-			TrackedElement *e = (TrackedElement *)t->getLastChild();
+			BST::TrackedElement *e = (BST::TrackedElement *)t->getLastChild();
 			last.push_back(e->getFishPose());
 		}
 	}
@@ -154,9 +154,9 @@ void BioTrackerTrackingAlgorithm::doTracking(std::shared_ptr<cv::Mat> p_image, u
 	//Insert new poses into data structure
 	int trajNumber = 0;
 	for (int i = 0; i < _TrackedTrajectoryMajor->size(); i++) {
-		TrackedTrajectory *t = dynamic_cast<TrackedTrajectory *>(_TrackedTrajectoryMajor->getChild(i));
+		BST::TrackedTrajectory *t = dynamic_cast<BST::TrackedTrajectory *>(_TrackedTrajectoryMajor->getChild(i));
 		if (t && t->getValid() && !t->getFixed()) {
-			TrackedElement *e = new TrackedElement(t, "n.a.", t->getId());
+			BST::TrackedElement *e = new BST::TrackedElement(t, "n.a.", t->getId());
 
 			e->setFishPose(std::get<0>(poses)[trajNumber]);
 			e->setTime(start);

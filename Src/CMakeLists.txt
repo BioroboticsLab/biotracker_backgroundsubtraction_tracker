@@ -1,5 +1,5 @@
 ##############################################################
-#### Biotracker: LukasKanade
+#### Biotracker: backgroundSubtraction
 ##############################################################
 
 include(BT_Utility/VSSugar)

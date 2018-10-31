@@ -3,34 +3,37 @@
 #include "TrackedTrajectory.h"
 #include "TrackedElement.h"
 
-TrackedComponentFactory::TrackedComponentFactory()
-{
+namespace BST{
 
-}
+	TrackedComponentFactory::TrackedComponentFactory()
+	{
 
-TrackedComponentFactory::~TrackedComponentFactory()
-{
+	}
 
-}
+	TrackedComponentFactory::~TrackedComponentFactory()
+	{
 
-QList<QString> TrackedComponentFactory::getElementTypes() {
-    return QList<QString>{ "TrackedElement" };
-}
+	}
 
-IModelTrackedComponent *TrackedComponentFactory::createTrackedElement(QString name)
-{
-    return new TrackedElement(this, "n.a.");
-}
+	QList<QString> TrackedComponentFactory::getElementTypes() {
+		return QList<QString>{ "TrackedElement" };
+	}
 
-IModelTrackedComponent *TrackedComponentFactory::createTrackedObject(QString name)
-{
-	TrackedTrajectory *t	= new TrackedTrajectory();
-	TrackedElement *e		= new TrackedElement(this, "n.a.", 0);
-	t->add(e, 0);
-	return t;
-}
+	IModelTrackedComponent *TrackedComponentFactory::createTrackedElement(QString name)
+	{
+		return new BST::TrackedElement(this, "n.a.");
+	}
 
-IModelTrackedComponent *TrackedComponentFactory::createTrackedTrajectory(QString name)
-{
-	return new TrackedTrajectory();
+	IModelTrackedComponent *TrackedComponentFactory::createTrackedObject(QString name)
+	{
+		BST::TrackedTrajectory *t	= new BST::TrackedTrajectory();
+		BST::TrackedElement *e		= new BST::TrackedElement(this, "n.a.", 0);
+		t->add(e, 0);
+		return t;
+	}
+
+	IModelTrackedComponent *TrackedComponentFactory::createTrackedTrajectory(QString name)
+	{
+		return new BST::TrackedTrajectory();
+	}
 }
