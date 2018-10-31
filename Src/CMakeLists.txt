@@ -5,7 +5,7 @@
 include(BT_Utility/VSSugar)
 VSSourceGroups(${CMAKE_CURRENT_LIST_DIR})
 
-set(TN bt_backgroundsubtraction.tracker)
+set(TN bt_backgroundsubtraction.bio_tracker)
 include(BT_Utility/TrackerPlugin)
 
 find_package(BT_Interfaces 0.1.1 REQUIRED)
@@ -17,6 +17,7 @@ install(TARGETS ${TN} OPTIONAL DESTINATION .)
 target_sources(${TN}
 PRIVATE
     "${CMAKE_CURRENT_LIST_DIR}/PluginContext.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/Config.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/BioTrackerPlugin.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/View/TrackedElementView.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/View/TrackerParameterView.cpp"

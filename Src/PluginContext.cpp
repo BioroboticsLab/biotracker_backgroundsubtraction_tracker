@@ -3,11 +3,14 @@
 #include "Controller/ControllerTrackingAlgorithm.h"
 #include "Controller/ControllerTrackedComponent.h"
 
-PluginContext::PluginContext(QObject *parent) :
+PluginContext::PluginContext(QObject *parent, Config *cfg) :
 	IBioTrackerContext(parent)
 {
-	QPointer< IController > ComponentController = new ControllerTrackedComponent(this, this, ENUMS::CONTROLLERTYPE::COMPONENT);
-	QPointer< IController > TrackingController = new ControllerTrackingAlgorithm(this, this, ENUMS::CONTROLLERTYPE::TRACKING);
+	_cfg = cfg;
+	ControllerTrackedComponent* ComponentController = new ControllerTrackedComponent(this, this, ENUMS::CONTROLLERTYPE::COMPONENT);
+	ControllerTrackingAlgorithm* TrackingController = new ControllerTrackingAlgorithm(this, this, ENUMS::CONTROLLERTYPE::TRACKING);
+	ComponentController->setConfig(_cfg);
+	TrackingController->setConfig(_cfg);
 
 	m_ControllersMap.insert(ENUMS::CONTROLLERTYPE::COMPONENT, ComponentController);
 	m_ControllersMap.insert(ENUMS::CONTROLLERTYPE::TRACKING, TrackingController);

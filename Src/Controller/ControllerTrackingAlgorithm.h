@@ -5,6 +5,7 @@
 #include "../Model/BioTrackerTrackingAlgorithm.h"
 #include "Interfaces/IBioTrackerContext.h"
 #include "Interfaces/IModel/IModelDataExporter.h"
+#include "../Config.h"
 
 
 class ControllerTrackingAlgorithm : public IController
@@ -13,6 +14,8 @@ class ControllerTrackingAlgorithm : public IController
 public:
     ControllerTrackingAlgorithm(QObject *parent = 0, IBioTrackerContext *context = 0, ENUMS::CONTROLLERTYPE ctr = ENUMS::CONTROLLERTYPE::NO_CTR);
 
+    Config *getConfig() { return _cfg;};
+    void setConfig(Config *cfg) { _cfg = cfg;};
     // IController interface
 public:
     void connectControllerToController() override;
@@ -43,6 +46,7 @@ private Q_SLOTS:
 private:
     IModel* m_TrackingParameter;
 	IModel *m_TrackedTrajectoryMajor;
+    Config *_cfg;
 };
 
 #endif // CONTROLLERTRACKINGALGORITHM_H

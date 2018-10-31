@@ -3,20 +3,18 @@
 #include "TrackedComponents/TrackedComponentFactory.h"
 #include <chrono>
 
-#include "settings/Settings.h"
-
-BioTrackerTrackingAlgorithm::BioTrackerTrackingAlgorithm(IModel *parameter, IModel *trajectory) : _ipp((TrackerParameter*)parameter)
+BioTrackerTrackingAlgorithm::BioTrackerTrackingAlgorithm(IController *parent, IModel* parameter, IModel* trajectory) : _ipp((TrackerParameter*)parameter)
 {
+	_cfg = static_cast<ControllerTrackingAlgorithm*>(parent)->getConfig();
 	_TrackingParameter = (TrackerParameter*)parameter;
 	_TrackedTrajectoryMajor = (TrackedTrajectory*)trajectory;
 	_nn2d = std::make_shared<NN2dMapper>(_TrackedTrajectoryMajor);
-	BioTracker::Core::Settings *set = _TrackingParameter->getSettings();
 	 
 	_noFish = -1;
 
-	if (set->getValueOrDefault<bool>(FISHTANKPARAM::FISHTANK_ENABLE_NETWORKING, false)) {
+	if (! _cfg->DoNetwork) {
 		_listener = new TcpListener(this);
-		_listener->listen(QHostAddress::Any, set->getValueOrDefault<int>(FISHTANKPARAM::FISHTANK_NETWORKING_PORT, 54444));
+		_listener->listen(QHostAddress::Any, _cfg->NetworkPort);
 		QObject::connect(_listener, SIGNAL(newConnection()), _listener, SLOT(acceptConnection()));
 	}
 

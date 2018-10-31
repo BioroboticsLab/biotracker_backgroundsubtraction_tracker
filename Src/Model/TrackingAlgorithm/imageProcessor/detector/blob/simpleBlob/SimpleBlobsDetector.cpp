@@ -9,29 +9,17 @@ SimpleBlobsDetector::SimpleBlobsDetector(void) : _mask(nullptr)
 
 void SimpleBlobsDetector::initParams()
 {
-	_params.minThreshold = 15;//SystemProperty::instance().getValueOfParam<double>(TRACKERPARAM::THRESHOLD_BINARIZING);
-	_params.maxThreshold = 50;//SystemProperty::instance().getValueOfParam<double>(TRACKERPARAM::THRESHOLD_BINARIZING); // THRESHOLD_BINARIZING=30
+	_params.minThreshold = 15;
+	_params.maxThreshold = 50;
 	_params.thresholdStep = 5;	
-
 	_params.filterByArea = true;
-	// blobs bigger than the provided blob size
-	_params.minArea = 1;//SystemProperty::instance().getValueOfParam<double>(TRACKERPARAM::MIN_BLOB_SIZE);
-	_params.maxArea = 999999;//SystemProperty::instance().getValueOfParam<double>(TRACKERPARAM::MAX_BLOB_SIZE);
-
-	//_params.filterByConvexity = true;	
-	//_params.minConvexity = SystemProperty::instance().getValueOfParam<double>(TRACKERPARAM::MIN_BLOB_SIZE);
-	//_params.maxConvexity = SystemProperty::instance().getValueOfParam<double>(TRACKERPARAM::MAX_BLOB_SIZE);
-	
+	_params.minArea = 1;
+	_params.maxArea = 999999;
 	_params.filterByInertia = false;
-	//_params.minInertiaRatio = 0.0f;
-	//_params.maxInertiaRatio = 1.0f;
-	
 	_params.filterByColor = true;
 	_params.blobColor = 255;
-	
 	_params.filterByCircularity = false;
-
-	_params.minDistBetweenBlobs = 0; //std::numeric_limits<float>::min();
+	_params.minDistBetweenBlobs = 0; 
 }
 
 
@@ -66,18 +54,6 @@ std::vector<BlobPose> SimpleBlobsDetector::findBlobs(const cv::Mat& binImage, co
 		blobPoses.push_back(BlobPose(blobPose_cm, blobPose_px, blobPose_angleDegree, blobPose_angleRadian, blobPose_width, blobPose_height));
 	}
 
-	/*std::cout << keyPoints.size() << std::endl;
-		
-	cv::drawKeypoints( processedImage, keyPoints, out, CV_RGB(255,0,0),cv::DrawMatchesFlags::DEFAULT);*/
-		
-	/*approxContours.resize( contours.size() );
-
-	for( int i = 0; i < contours.size(); ++i )
-	{
-			cv::approxPolyDP( cv::Mat(contours[i]), approxContours[i], 4, 1 );
-			cv::drawContours( out, contours, i, CV_RGB(rand()&255, rand()&255, rand()&255) );
-			cv::drawContours( out, approxContours, i, CV_RGB(rand()&255, rand()&255, rand()&255) );
-	}*/
 
 	return blobPoses;
 }

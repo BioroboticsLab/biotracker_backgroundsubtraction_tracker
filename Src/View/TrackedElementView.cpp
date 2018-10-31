@@ -6,7 +6,6 @@
 #include "QPainter"
 #include "QGraphicsScene"
 #include <QGraphicsSceneHoverEvent>
-#include "settings/Settings.h"
 #include "util/misc.h"
 #include "QDebug"
 

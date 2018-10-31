@@ -5,6 +5,7 @@
 #include "QPoint"
 #include "Interfaces/IModel/IModelTrackedTrajectory.h"
 #include "Interfaces/IModel/IModelAreaDescriptor.h"
+#include "../Config.h"
 
 class ControllerTrackedComponent : public IController
 {
@@ -12,6 +13,8 @@ class ControllerTrackedComponent : public IController
 public:
 	ControllerTrackedComponent(QObject *parent = 0, IBioTrackerContext *context = 0, ENUMS::CONTROLLERTYPE ctr = ENUMS::CONTROLLERTYPE::COMPONENT);
 
+    Config *getConfig() { return _cfg;};
+    void setConfig(Config *cfg) { _cfg = cfg;};
 	IView *getTrackingElementsWidget();
 public Q_SLOTS:
 		void receiveAddTrajectory(QPoint position);
@@ -36,6 +39,7 @@ protected:
 	void createView() override;
 	void connectModelToController() override;
 	void connectControllerToController() override;
+    Config *_cfg;
 
 	//members
 	int m_currentFrameNumber;

@@ -13,17 +13,19 @@
 #include "TrackedComponents/TrackedTrajectory.h"
 #include "TrackingAlgorithm/imageProcessor/detector/blob/cvBlob/BlobsDetector.h"
 #include "TrackingAlgorithm/imageProcessor/preprocessor/ImagePreProcessor.h"
+#include "../Controller/ControllerTrackingAlgorithm.h"
 #include "TrackingAlgorithm/NN2dMapper.h"
 #include "Interfaces/IModel/IModelAreaDescriptor.h"
 #include <iostream>
 
 #include "Network/TcpListener.h"
+#include "../Config.h"
 
 class BioTrackerTrackingAlgorithm : public IModelTrackingAlgorithm
 {
     Q_OBJECT
 public:
-    BioTrackerTrackingAlgorithm(IModel* parameter, IModel* trajectory);
+    BioTrackerTrackingAlgorithm(IController *parent, IModel* parameter, IModel* trajectory);
 	~BioTrackerTrackingAlgorithm();
 
 Q_SIGNALS:
@@ -65,6 +67,7 @@ private:
 
     std::shared_ptr<cv::Mat> _lastImage;
     uint _lastFramenumber;
+	Config *_cfg;
 };
 
 #endif // BIOTRACKERTRACKINGALGORITHM_H

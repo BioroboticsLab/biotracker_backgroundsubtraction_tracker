@@ -45,14 +45,12 @@ void TrackerParameterView::on_pushButton_clicked()
 	int setBinarizationThreshold = _ui->lineEdit_2_binThresh->text().toInt();
 	int setSizeErode = _ui->lineEdit_3_SizeErode->text().toInt();
 	int setSizeDilate = _ui->lineEdit_4_SizeDilate->text().toInt();
-	int setmog2History = 0;// ui->lineEdit_5_MogHist->text().toInt();
-	int setmog2VarThresh = 0;// ui->lineEdit_6_MogThresh->text().toInt();
 	int setMinBlobSize = _ui->lineEdit_8_MinBlob->text().toInt();
 	int setMaxBlobSize = _ui->lineEdit_9MaxBlob->text().toInt();
 		
 	double setmog2BackgroundRatio = _ui->lineEdit_7_MogBack->value();
 
-	parameter->setAll(0, setBinarizationThreshold, setSizeErode, setSizeDilate, setmog2History, setmog2VarThresh, 
+	parameter->setAll(0, setBinarizationThreshold, setSizeErode, setSizeDilate, 0, 0, 
 		setmog2BackgroundRatio, setMinBlobSize, setMaxBlobSize);
 
     Q_EMIT parametersChanged();

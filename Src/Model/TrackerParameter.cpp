@@ -1,24 +1,25 @@
 #include "TrackerParameter.h"
-#include "util/singleton.h"
+#include "../Controller/ControllerTrackingAlgorithm.h"
 
 TrackerParameter::TrackerParameter(QObject *parent) :
     IModel(parent)
 {
-	_settings = BioTracker::Util::TypedSingleton<BioTracker::Core::Settings>::getInstance(CONFIGPARAM::CONFIG_INI_FILE);
-	//_settings = new BioTracker::Core::Settings(CONFIGPARAM::CONFIG_INI_FILE);
+	
+	_cfg = static_cast<ControllerTrackingAlgorithm*>(parent)->getConfig();
+	
 
-	_BinarizationThreshold = _settings->getValueOrDefault(TRACKERPARAM::THRESHOLD_BINARIZING, 40);
-	_SizeErode = _settings->getValueOrDefault(TRACKERPARAM::SIZE_ERODE, 8);
-	_SizeDilate = _settings->getValueOrDefault(TRACKERPARAM::SIZE_DILATE, 8);
-	_MinBlobSize = _settings->getValueOrDefault(TRACKERPARAM::MIN_BLOB_SIZE, 40);
-	_MaxBlobSize = _settings->getValueOrDefault(TRACKERPARAM::MAX_BLOB_SIZE, 999999);
+	_BinarizationThreshold = _cfg->BinarizationThreshold;
+	_SizeErode = _cfg->SizeErode;
+	_SizeDilate = _cfg->SizeDilate;
+	_MinBlobSize = _cfg->MinBlobSize;
+	_MaxBlobSize = _cfg->MaxBlobSize;
 
-	_mog2History = _settings->getValueOrDefault(TRACKERPARAM::BG_MOG2_HISTORY, 200);
-	_mog2VarThresh = _settings->getValueOrDefault(TRACKERPARAM::BG_MOG2_VAR_THRESHOLD, 64);
-	_mog2BackgroundRatio = _settings->getValueOrDefault(TRACKERPARAM::BG_MOG2_BACKGROUND_RATIO, 0.05);
+	_mog2History = _cfg->Mog2History;
+	_mog2VarThresh = _cfg->Mog2VarThresh;
+	_mog2BackgroundRatio = _cfg->Mog2BackgroundRatio;
 
-	_doNetwork = _settings->getValueOrDefault(FISHTANKPARAM::FISHTANK_ENABLE_NETWORKING, false);
-	_networkPort = _settings->getValueOrDefault(FISHTANKPARAM::FISHTANK_NETWORKING_PORT, 54444);
+	_doNetwork = _cfg->DoNetwork;
+	_networkPort = _cfg->NetworkPort;
 
 	_Threshold = 12345;
 
@@ -44,7 +45,7 @@ int TrackerParameter::getThreshold()
 void TrackerParameter::setBinarizationThreshold(int x)
 {
 	_BinarizationThreshold = x;
-	_settings->setParam(TRACKERPARAM::THRESHOLD_BINARIZING, x);
+	_cfg->BinarizationThreshold = x;
 	Q_EMIT notifyView();
 }
 

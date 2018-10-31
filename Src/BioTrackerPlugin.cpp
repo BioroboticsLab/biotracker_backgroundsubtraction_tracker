@@ -4,13 +4,17 @@
 #include "Controller/ControllerTrackingAlgorithm.h"
 #include "Controller/ControllerTrackedComponent.h"
 
-#include "util/singleton.h"
-#include "settings/Settings.h"
+#include "Config.h"
 
 #include "View/TrackedElementView.h"
 #include "Model/TrackedComponents/TrackedComponentFactory.h"
 
 BioTrackerPlugin::BioTrackerPlugin() {
+}
+
+BioTrackerPlugin::~BioTrackerPlugin() {
+    _cfg->save(Config::configLocation, "BackgroundSubtractionConfig.ini");
+	delete _cfg;
 }
 
 IView* BioTrackerPlugin::getTrackerParameterWidget() {
@@ -30,13 +34,10 @@ IModelTrackedComponentFactory *BioTrackerPlugin::getComponentFactory() {
 	return new TrackedComponentFactory();
 }
 
-#if QT_VERSION < 0x050000
-Q_EXPORT_PLUGIN2(BioTrackerPlugin, BioTrackerPlugin)
-#endif // QT_VERSION < 0x050000
-
-
 void BioTrackerPlugin::createPlugin() {
-	m_PluginContext = new PluginContext();
+	_cfg = new Config();
+    _cfg->load(Config::configLocation, "BackgroundSubtractionConfig.ini");
+	m_PluginContext = new PluginContext(this, _cfg);
 	m_PluginContext->createApplication();
 
 	IController * ctr = m_PluginContext->requestController(ENUMS::CONTROLLERTYPE::COMPONENT);
@@ -116,20 +117,13 @@ void BioTrackerPlugin::receiveSwapIds(IModelTrackedTrajectory * trajectory0, IMo
 
 void BioTrackerPlugin::sendCorePermissions() {
 	// get plugin settings
-	BioTracker::Core::Settings *pluginSettings = BioTracker::Util::TypedSingleton<BioTracker::Core::Settings>::getInstance(CONFIGPARAM::CONFIG_INI_FILE);
 
 	// signal permissions
-	bool enableView = pluginSettings->getValueOrDefault(GUIPARAM::ENABLE_CORE_COMPONENT_VIEW, true);
-	Q_EMIT emitCorePermission(std::pair<ENUMS::COREPERMISSIONS, bool>(ENUMS::COREPERMISSIONS::COMPONENTVIEW, enableView));
-	bool enableMove = pluginSettings->getValueOrDefault(GUIPARAM::ENABLE_CORE_COMPONENT_MOVE, true);
-	Q_EMIT emitCorePermission(std::pair<ENUMS::COREPERMISSIONS, bool>(ENUMS::COREPERMISSIONS::COMPONENTMOVE, enableMove));
-	bool enableRemove = pluginSettings->getValueOrDefault(GUIPARAM::ENABLE_CORE_COMPONENT_REMOVE, true);
-	Q_EMIT emitCorePermission(std::pair<ENUMS::COREPERMISSIONS, bool>(ENUMS::COREPERMISSIONS::COMPONENTREMOVE, enableRemove));
-	bool enableSwap = pluginSettings->getValueOrDefault(GUIPARAM::ENABLE_CORE_COMPONENT_ID_SWAP, true);
-	Q_EMIT emitCorePermission(std::pair<ENUMS::COREPERMISSIONS, bool>(ENUMS::COREPERMISSIONS::COMPONENTSWAP, enableSwap));
-	bool enableAdd = pluginSettings->getValueOrDefault(GUIPARAM::ENABLE_CORE_COMPONENT_ADD, true);
-	Q_EMIT emitCorePermission(std::pair<ENUMS::COREPERMISSIONS, bool>(ENUMS::COREPERMISSIONS::COMPONENTADD, enableAdd));
-	bool enableRotate = pluginSettings->getValueOrDefault(GUIPARAM::ENABLE_CORE_COMPONENT_ROTATE, true);
-	Q_EMIT emitCorePermission(std::pair<ENUMS::COREPERMISSIONS, bool>(ENUMS::COREPERMISSIONS::COMPONENTROTATE, enableRotate));
+	Q_EMIT emitCorePermission(std::pair<ENUMS::COREPERMISSIONS, bool>(ENUMS::COREPERMISSIONS::COMPONENTVIEW, _cfg->EnableView));
+	Q_EMIT emitCorePermission(std::pair<ENUMS::COREPERMISSIONS, bool>(ENUMS::COREPERMISSIONS::COMPONENTMOVE, _cfg->EnableMove));
+	Q_EMIT emitCorePermission(std::pair<ENUMS::COREPERMISSIONS, bool>(ENUMS::COREPERMISSIONS::COMPONENTREMOVE, _cfg->EnableRemove));
+	Q_EMIT emitCorePermission(std::pair<ENUMS::COREPERMISSIONS, bool>(ENUMS::COREPERMISSIONS::COMPONENTSWAP, _cfg->EnableSwap));
+	Q_EMIT emitCorePermission(std::pair<ENUMS::COREPERMISSIONS, bool>(ENUMS::COREPERMISSIONS::COMPONENTADD, _cfg->EnableAdd));
+	Q_EMIT emitCorePermission(std::pair<ENUMS::COREPERMISSIONS, bool>(ENUMS::COREPERMISSIONS::COMPONENTROTATE, _cfg->EnableRotate));
 }
 

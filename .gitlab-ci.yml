@@ -61,10 +61,12 @@ build windows:
     - Copy-Item -Recurse "dependencies/*" "C:/Program Files/"
     - Remove-Item -Recurse -Force dependencies
     - $env:PACKAGE_DIR = ("$env:TMP/pkg" -Replace "\\","/")
-    - $env:CMAKE_PREFIX_PATH="$env:VCPKG_CUDA_INSTALL_DIR"
+    - $wd = (Get-Item -Path '.').FullName
+    - $env:CMAKE_PREFIX_PATH="$wd/dependencies;$env:VCPKG_INSTALL_DIR"
+    - $env:PATH += ";$env:VCPKG_INSTALL_DIR/bin;$wd/dependencies/BT_Interfaces/bin/"
     - C:/VsDevEnv.ps1 -arch=amd64
   script:
-    - cmake -Bbuild "-H." -DCMAKE_BUILD_TYPE=Release -G Ninja -DPACKAGE_WINDOWS_MSI=ON -DCMAKE_PREFIX_PATH="$env:CMAKE_PREFIX_PATH" -DCPACK_PACKAGE_DIRECTORY="$env:PACKAGE_DIR" -DCMAKE_SUPPRESS_REGENERATION=ON -DCMAKE_SKIP_PACKAGE_ALL_DEPENDENCY=ON
+    - cmake -Bbuild "-H." -DCMAKE_BUILD_TYPE=Release -G Ninja -DPACKAGE_WINDOWS_MSI=ON -DCMAKE_PREFIX_PATH="$env:CMAKE_PREFIX_PATH" -DCPACK_PACKAGE_DIRECTORY="$env:PACKAGE_DIR" -DCMAKE_SUPPRESS_REGENERATION=ON -DCMAKE_SKIP_PACKAGE_ALL_DEPENDENCY=ON -DINSTALL_OPENCV_COMPONENTS='video'
     - ninja -C build
 
 package windows:

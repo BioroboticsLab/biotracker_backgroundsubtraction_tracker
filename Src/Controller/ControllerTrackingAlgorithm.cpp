@@ -35,7 +35,7 @@ void ControllerTrackingAlgorithm::createModel()
 
 	m_TrackingParameter = new TrackerParameter(this);
 
-	m_Model = new BioTrackerTrackingAlgorithm(m_TrackingParameter, m_TrackedTrajectoryMajor);
+	m_Model = new BioTrackerTrackingAlgorithm(this, m_TrackingParameter, m_TrackedTrajectoryMajor);
 }
 
 void ControllerTrackingAlgorithm::createView()
