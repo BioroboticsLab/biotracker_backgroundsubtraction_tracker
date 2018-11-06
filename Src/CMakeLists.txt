@@ -2,14 +2,21 @@
 #### Biotracker: backgroundSubtraction
 ##############################################################
 
-include(BT_Utility/VSSugar)
+set(TN bt_backgroundsubtraction.bio_tracker)
+
+if( CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR )
+    include(BT_Utility/VSSugar)
+    include(BT_Utility/TrackerPlugin)
+    find_package(BT_Interfaces 0.1.1 REQUIRED)
+else()
+    include(${BT_Utility_SOURCE_DIR}/cmake/VSSugar.cmake)
+    include(${BT_Utility_SOURCE_DIR}/cmake/TrackerPlugin.cmake)
+endif()
+
 VSSourceGroups(${CMAKE_CURRENT_LIST_DIR})
 
-set(TN bt_backgroundsubtraction.bio_tracker)
-include(BT_Utility/TrackerPlugin)
-
-find_package(BT_Interfaces 0.1.1 REQUIRED)
 target_link_libraries(${TN} BT_Interfaces)
+find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
 set_target_properties(${TN} PROPERTIES AUTOMOC ON AUTOUIC ON AUTORCC ON)
 
 install(TARGETS ${TN} OPTIONAL DESTINATION .)

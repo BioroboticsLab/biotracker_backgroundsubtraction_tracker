@@ -9,7 +9,9 @@ if("${CMAKE_SYSTEM_NAME}" STREQUAL "Windows")
 endif()
 option(PACKAGE_TXZ "Create .tar.xz package" OFF)
 
-find_package(BT_Utility 0.1.1 REQUIRED)
+if( CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR )
+    find_package(BT_Utility 0.1.1 REQUIRED)
+endif()
 
 add_subdirectory(Src)
 
