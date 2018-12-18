@@ -3,85 +3,100 @@ stages:
   - package
   - deploy
 
-build ubuntu-18.04:
-  stage: build
+
+.ubuntu-18.04:
   tags: [ linux, docker ]
-  image: git.imp.fu-berlin.de:5000/bioroboticslab/robofish/docker:ubuntu-18.04
-  variables:
-    CC: gcc-8
-    CXX: g++-8
+  image: git.imp.fu-berlin.de:5000/bioroboticslab/robofish/docker:devel-ubuntu18.04
+
+.windows:
+  tags: [ windows, docker ]
+  image: git.imp.fu-berlin.de:5000/bioroboticslab/robofish/docker:devel-windows
+
+
+.gcc8: &gcc8
+  CC: gcc-8
+  CXX: g++-8
+
+.msvc15.9: &msvc15_9
+  VSDevEnv -arch=amd64 -vcvars_ver="14.16"
+
+.debug: &debug
+  CMAKE_BUILD_TYPE: Debug
+
+.release: &release
+  CMAKE_BUILD_TYPE: Release
+
+
+.build ubuntu-18.04:
+  extends: .ubuntu-18.04
+  stage: build
   artifacts:
     paths:
       - build
     expire_in: 1 day
-  before_script:
-    - 'curl -o artifacts.zip --header "JOB-TOKEN: $CI_JOB_TOKEN" "https://git.imp.fu-berlin.de/api/v4/projects/3608/jobs/artifacts/master/download?job=package%20ubuntu-18.04"'
-    - 7z e artifacts.zip
-    - 'curl -o artifacts.zip --header "JOB-TOKEN: $CI_JOB_TOKEN" "https://git.imp.fu-berlin.de/api/v4/projects/3610/jobs/artifacts/master/download?job=package%20ubuntu-18.04"'
-    - 7z e artifacts.zip
-    - 7z e '*.tar.xz' -y; rm *.tar.xz; 7z x '*.tar'; rm *.tar
-    - mkdir dependencies
-    - name='BT_Interfaces'; mv $name-* dependencies/$name
-    - name='BT_Utility'; mv $name-* dependencies/$name
-    - export CMAKE_PREFIX_PATH="$(pwd)/dependencies"
   script:
-    - cmake -Bbuild -H. -DCMAKE_BUILD_TYPE=Release -G Ninja -DPACKAGE_TXZ=ON -DCMAKE_PREFIX_PATH="$CMAKE_PREFIX_PATH" -DCMAKE_SUPPRESS_REGENERATION=ON -DCMAKE_SKIP_PACKAGE_ALL_DEPENDENCY=ON
+    - cmake -Bbuild -H. -DCMAKE_BUILD_TYPE="$CMAKE_BUILD_TYPE" -G Ninja -DPACKAGE_TXZ=ON -DCMAKE_SUPPRESS_REGENERATION=ON -DCMAKE_SKIP_PACKAGE_ALL_DEPENDENCY=ON
     - ninja -C build
 
-package ubuntu-18.04:
+.build windows:
+  extends: .windows
+  stage: build
+  artifacts:
+    paths:
+      - build
+    expire_in: 1 day
+  script:
+    - cmake -Bbuild "-H." -DCMAKE_BUILD_TYPE="$CMAKE_BUILD_TYPE" -G Ninja -DPACKAGE_WINDOWS_MSI=ON -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_DIR/scripts/buildsystems/vcpkg.cmake" -DVCPKG_TARGET_TRIPLET="$env:VCPKG_TRIPLET" -DCMAKE_SUPPRESS_REGENERATION=ON -DCMAKE_SKIP_PACKAGE_ALL_DEPENDENCY=ON -DCPACK_PACKAGE_DIRECTORY="${env:PACKAGE_DIR}"
+    - ninja -C build
+
+build ubuntu-18.04:
+  extends: .build ubuntu-18.04
+  variables:
+    <<: [ *gcc8, *release ]
+  before_script:
+    - . /etc/profile.d/robofish.sh
+    - gitlab-fetch-artifacts bioroboticslab%2Fbiotracker%2Finterfaces master package%20ubuntu-18.04
+    - cmake-integrate-package interfaces
+    - gitlab-fetch-artifacts bioroboticslab%2Fbiotracker%2Futility master package%20ubuntu-18.04
+    - cmake-integrate-package utility
+
+build windows:
+  extends: .build windows
+  variables:
+    <<: [ *release ]
+  before_script:
+    - . $Profile
+    - *msvc15_9
+    - GitLab-Fetch-Artifacts bioroboticslab%2Fbiotracker%2Finterfaces master package%20windows
+    - CMake-Integrate-Package interfaces
+    - GitLab-Fetch-Artifacts bioroboticslab%2Fbiotracker%2Futility master package%20windows
+    - CMake-Integrate-Package robo_utility
+    - $env:PACKAGE_DIR = ("${env:TMP}/pkg" -Replace "\\","/")
+
+
+.package: &package
   stage: package
-  tags: [ linux, docker ]
-  image: git.imp.fu-berlin.de:5000/bioroboticslab/robofish/docker:ubuntu-18.04
-  dependencies:
-    - build ubuntu-18.04
   artifacts:
     paths:
       - build/*.tar.xz
+      - build/*.msi
     expire_in: 1 week
   script:
     - ninja -C build package
 
-build windows:
-  stage: build
-  tags: [ windows, docker ]
-  image: git.imp.fu-berlin.de:5000/bioroboticslab/robofish/docker:windows
-  artifacts:
-    paths:
-      - build
-    expire_in: 1 day
-  before_script:
-    - 'curl.exe -o artifacts.zip --header "JOB-TOKEN: $CI_JOB_TOKEN" "https://git.imp.fu-berlin.de/api/v4/projects/3608/jobs/artifacts/master/download?job=package%20windows"'
-    - 7z e artifacts.zip
-    - 'curl.exe -o artifacts.zip --header "JOB-TOKEN: $CI_JOB_TOKEN" "https://git.imp.fu-berlin.de/api/v4/projects/3610/jobs/artifacts/master/download?job=package%20windows"'
-    - 7z e artifacts.zip
-    - 7z e *.tar.xz; Remove-Item -Force *.tar.xz; 7z x *.tar; Remove-Item -Force *.tar
-    - New-Item -ItemType Directory -Force 'dependencies'
-    - $name='BT_Interfaces'; Move-Item -Force "$name-*" dependencies/$name
-    - $name='BT_Utility'; Move-Item -Force "$name-*" dependencies/$name
-    - Copy-Item -Recurse "dependencies/*" "C:/Program Files/"
-    - Remove-Item -Recurse -Force dependencies
-    - $env:PACKAGE_DIR = ("$env:TMP/pkg" -Replace "\\","/")
-    - $wd = (Get-Item -Path '.').FullName
-    - $env:CMAKE_PREFIX_PATH="$wd/dependencies;$env:VCPKG_INSTALL_DIR"
-    - $env:PATH += ";$env:VCPKG_INSTALL_DIR/bin;$wd/dependencies/BT_Interfaces/bin/"
-    - . /Library.ps1
-    - VSDevEnv -arch=amd64 -vcvars_ver="14.15"
-  script:
-    - cmake -Bbuild "-H." -DCMAKE_BUILD_TYPE=Release -G Ninja -DPACKAGE_WINDOWS_MSI=ON -DCMAKE_PREFIX_PATH="$env:CMAKE_PREFIX_PATH" -DCPACK_PACKAGE_DIRECTORY="$env:PACKAGE_DIR" -DCMAKE_SUPPRESS_REGENERATION=ON -DCMAKE_SKIP_PACKAGE_ALL_DEPENDENCY=ON -DINSTALL_OPENCV_COMPONENTS='video'
-    - ninja -C build
+package ubuntu-18.04:
+  extends: .ubuntu-18.04
+  dependencies:
+    - build ubuntu-18.04
+  <<: *package
 
 package windows:
-  stage: package
-  tags: [ windows, docker ]
-  image: git.imp.fu-berlin.de:5000/bioroboticslab/robofish/docker:windows
+  extends: .windows
   dependencies:
     - build windows
-  artifacts:
-    paths:
-      - build/*.msi
-    expire_in: 1 week
+  <<: *package
   before_script:
-    - $env:PACKAGE_DIR = ("$env:TMP/pkg" -Replace "\\","/")
+    - $env:PACKAGE_DIR = ("${env:TMP}/pkg" -Replace "\\","/")
   script:
     - ninja -C build package
     - Copy-Item "$env:PACKAGE_DIR/*" build -Recurse
