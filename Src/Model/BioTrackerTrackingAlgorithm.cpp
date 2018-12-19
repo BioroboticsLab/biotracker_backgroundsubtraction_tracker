@@ -97,8 +97,45 @@ void BioTrackerTrackingAlgorithm::sendSelectedImage(std::map<std::string, std::s
     }
 }
 
+std::vector<BlobPose> BioTrackerTrackingAlgorithm::getContourCentroids(cv::Mat& image, int minSize){
+    
+    std::vector<std::vector<cv::Point> > contours;
+    std::vector<cv::Vec4i> hierarchy;
+    std::vector<BlobPose> centroids;
+
+    findContours( image, contours, hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE, cv::Point(0, 0) );
+    for(auto x: contours){
+        cv::Point2f c(0,0);
+        float i=0;
+        for(auto y: x){
+            c += cv::Point2f(y);
+            i++;
+        }
+        c.x = c.x / i;
+        c.y = c.y / i;
+        
+        //cv::RotatedRect minEllipse;
+        cv::RotatedRect bb = minAreaRect( x );
+
+
+        BlobPose bc(_AreaInfo->pxToCm(c), c, bb.angle, bb.size.width, bb.size.height);
+        centroids.push_back(bc);
+    }
+    
+    return centroids;
+}
+
+#define EEE        duration = std::chrono::duration_cast< std::chrono::milliseconds> (std::chrono::steady_clock::now() - startt); block++; std::cout  << "Block " << block << ": " << duration.count() << std::endl;
+#define SSS      startt = std::chrono::steady_clock::now();
+
 void BioTrackerTrackingAlgorithm::doTracking(std::shared_ptr<cv::Mat> p_image, uint framenumber)
 {
+    //Q_EMIT emitCvMatA(p_image, QString("Original"));
+	//Q_EMIT emitChangeDisplayImage("Original");
+	//Q_EMIT emitTrackingDone(framenumber);
+    //return; 
+    int block = 0;
+
 	_ipp.m_TrackingParameter = _TrackingParameter;
     _lastImage = p_image;
     _lastFramenumber = framenumber;
@@ -122,6 +159,7 @@ void BioTrackerTrackingAlgorithm::doTracking(std::shared_ptr<cv::Mat> p_image, u
 		return;
 	}
 
+
 	//The user changed the # of fish. Reset the history and start over!
 	if (_noFish != _TrackedTrajectoryMajor->validCount()) {
 		_noFish = _TrackedTrajectoryMajor->validCount();
@@ -142,7 +180,8 @@ void BioTrackerTrackingAlgorithm::doTracking(std::shared_ptr<cv::Mat> p_image, u
 	//Find blobs via ellipsefitting
 	_bd.setMaxBlobSize(_TrackingParameter->getMaxBlobSize());
 	_bd.setMinBlobSize(_TrackingParameter->getMinBlobSize());
-	std::vector<BlobPose> blobs = _bd.getPoses(*dilated, *greyMat);
+	//std::vector<BlobPose> blobs = _bd.getPoses(*dilated, *greyMat);
+    std::vector<BlobPose> blobs = getContourCentroids(*dilated, 111);
 
 	// Never switch the position of the trajectories. The NN2d mapper relies on this!
 	// If you mess up the order, add or remove some t, then create a new mapper. 
@@ -170,8 +209,10 @@ void BioTrackerTrackingAlgorithm::doTracking(std::shared_ptr<cv::Mat> p_image, u
 		std::vector<FishPose> ps = std::get<0>(poses);
 		_listener->sendPositions(framenumber, ps, std::vector<cv::Point2f>(), start);
 	}
+    
 
     sendSelectedImage(&images);
+    
 
 	//First the user still wants to see the original image, right?
 	if (framenumber==1) {

@@ -2,62 +2,49 @@
 #### Biotracker: backgroundSubtraction
 ##############################################################
 
-include(BT_Utility/VSSugar)
+include(biotracker-utility/VSSugar)
 VSSourceGroups(${CMAKE_CURRENT_LIST_DIR})
 
-set(TN bt_backgroundsubtraction.bio_tracker)
-include(BT_Utility/TrackerPlugin)
+include(biotracker-utility/TrackerPlugin)
 
-find_package(BT_Interfaces 0.1.1 REQUIRED)
-target_link_libraries(${TN} BT_Interfaces)
-set_target_properties(${TN} PROPERTIES AUTOMOC ON AUTOUIC ON AUTORCC ON)
+set(target biotracker-backgroundSubtraction.bio_tracker)
 
-install(TARGETS ${TN} OPTIONAL DESTINATION .)
-
-target_sources(${TN}
-PRIVATE
-    "${CMAKE_CURRENT_LIST_DIR}/PluginContext.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/Config.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/BioTrackerPlugin.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/View/TrackedElementView.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/View/TrackerParameterView.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/Model/null_Model.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/Model/BioTrackerTrackingAlgorithm.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/Model/TrackerParameter.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/Model/Network/TcpListener.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/Model/TrackedComponents/TrackedComponentFactory.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/Model/TrackedComponents/TrackedElement.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/Model/TrackedComponents/TrackedTrajectory.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/Model/TrackedComponents/pose/FishPose.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/Model/TrackingAlgorithm/NN2dMapper.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/Model/TrackingAlgorithm/imageProcessor/preprocessor/ImagePreProcessor.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/Model/TrackingAlgorithm/imageProcessor/cvblobs/blob.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/Model/TrackingAlgorithm/imageProcessor/cvblobs/BlobContour.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/Model/TrackingAlgorithm/imageProcessor/cvblobs/BlobOperators.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/Model/TrackingAlgorithm/imageProcessor/cvblobs/BlobProperties.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/Model/TrackingAlgorithm/imageProcessor/cvblobs/BlobResult.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/Model/TrackingAlgorithm/imageProcessor/cvblobs/ComponentLabeling.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/Model/TrackingAlgorithm/imageProcessor/detector/IDetector.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/Model/TrackingAlgorithm/imageProcessor/detector/blob/BlobPose.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/Model/TrackingAlgorithm/imageProcessor/detector/blob/BlobPose.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/Model/TrackingAlgorithm/imageProcessor/detector/blob/cvBlob/BlobsDetector.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/Model/TrackingAlgorithm/imageProcessor/detector/blob/simpleBlob/SimpleBlobsDetector.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/Model/TrackingAlgorithm/imageProcessor/detector/contour/ContourPose.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/Model/TrackingAlgorithm/imageProcessor/detector/contour/ContoursDetector.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/helper/CvHelper.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/helper/StringHelper.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/Controller/ControllerTrackedComponent.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/Controller/ControllerTrackingAlgorithm.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/Controller/null_Controller.cpp"
+add_behavior_plugin(${target}
+    "PluginContext.cpp"
+    "Config.cpp"
+    "BioTrackerPlugin.cpp"
+    "View/TrackedElementView.cpp"
+    "View/TrackerParameterView.cpp"
+    "Model/null_Model.cpp"
+    "Model/BioTrackerTrackingAlgorithm.cpp"
+    "Model/TrackerParameter.cpp"
+    "Model/Network/TcpListener.cpp"
+    "Model/TrackedComponents/TrackedComponentFactory.cpp"
+    "Model/TrackedComponents/TrackedElement.cpp"
+    "Model/TrackedComponents/TrackedTrajectory.cpp"
+    "Model/TrackedComponents/pose/FishPose.cpp"
+    "Model/TrackingAlgorithm/NN2dMapper.cpp"
+    "Model/TrackingAlgorithm/imageProcessor/preprocessor/ImagePreProcessor.cpp"
+    "Model/TrackingAlgorithm/imageProcessor/cvblobs/blob.cpp"
+    "Model/TrackingAlgorithm/imageProcessor/cvblobs/BlobContour.cpp"
+    "Model/TrackingAlgorithm/imageProcessor/cvblobs/BlobOperators.cpp"
+    "Model/TrackingAlgorithm/imageProcessor/cvblobs/BlobProperties.cpp"
+    "Model/TrackingAlgorithm/imageProcessor/cvblobs/BlobResult.cpp"
+    "Model/TrackingAlgorithm/imageProcessor/cvblobs/ComponentLabeling.cpp"
+    "Model/TrackingAlgorithm/imageProcessor/detector/IDetector.cpp"
+    "Model/TrackingAlgorithm/imageProcessor/detector/blob/BlobPose.cpp"
+    "Model/TrackingAlgorithm/imageProcessor/detector/blob/BlobPose.cpp"
+    "Model/TrackingAlgorithm/imageProcessor/detector/blob/cvBlob/BlobsDetector.cpp"
+    "Model/TrackingAlgorithm/imageProcessor/detector/blob/simpleBlob/SimpleBlobsDetector.cpp"
+    "Model/TrackingAlgorithm/imageProcessor/detector/contour/ContourPose.cpp"
+    "Model/TrackingAlgorithm/imageProcessor/detector/contour/ContoursDetector.cpp"
+    "helper/CvHelper.cpp"
+    "helper/StringHelper.cpp"
+    "Controller/ControllerTrackedComponent.cpp"
+    "Controller/ControllerTrackingAlgorithm.cpp"
+    "Controller/null_Controller.cpp"
 )
 
-
-
-
-
-
-
-
-
-
-
+install(TARGETS ${target} OPTIONAL DESTINATION .)
+find_package(Qt5 REQUIRED COMPONENTS Xml Network)
+target_link_libraries (${target} Qt5::Xml Qt5::Network)
