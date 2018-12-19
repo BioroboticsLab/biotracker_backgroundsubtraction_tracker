@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.13)
 
-file(READ version.txt Version)
-exec_program("git" ${CMAKE_CURRENT_SOURCE_DIR} ARGS "describe --tags --abbrev=0" OUTPUT_VARIABLE GIT_TAG)
+file(READ VERSION PROJECT_VERSION)
 
 project(biotracker-lucaskanade.bio_tracker)
 
@@ -40,7 +39,7 @@ endif()
 set(CPACK_PACKAGE_NAME "BioTracker Plugin BackgroundSubtraction")
 set(CPACK_PACKAGE_VENDOR "Biorobotics Lab / FU Berlin")
 
-set(CPACK_PACKAGE_VERSION ${Version})
+set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
 
 if(PACKAGE_WINDOWS_MSI)
     set(CPACK_GENERATOR "WIX")
