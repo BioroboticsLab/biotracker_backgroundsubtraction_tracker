@@ -47,6 +47,8 @@ void BioTrackerPlugin::createPlugin() {
 	m_TrackerController = qobject_cast<ControllerTrackingAlgorithm *>(ctr2);
 
 	connectInterfaces();
+
+	qDebug() << "BST-Tracker loaded!";
 }
 
 void BioTrackerPlugin::connectInterfaces() {

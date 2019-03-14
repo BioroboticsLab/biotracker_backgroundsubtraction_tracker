@@ -9,6 +9,8 @@ BioTrackerTrackingAlgorithm::BioTrackerTrackingAlgorithm(IController *parent, IM
 	_TrackingParameter = (TrackerParameter*)parameter;
 	_TrackedTrajectoryMajor = (BST::TrackedTrajectory*)trajectory;
 	_nn2d = std::make_shared<NN2dMapper>(_TrackedTrajectoryMajor);
+
+	_bd = BlobsDetector();
 	 
 	_noFish = -1;
 
@@ -117,8 +119,13 @@ std::vector<BlobPose> BioTrackerTrackingAlgorithm::getContourCentroids(cv::Mat& 
         //cv::RotatedRect minEllipse;
         cv::RotatedRect bb = minAreaRect( x );
 
+		//check if blob is in tracking area --> this can be optimized by checking earlier (only search blobs in tracking area)
+		if(!_AreaInfo->inTrackingArea(c)){
+			continue;
+		}
 
         BlobPose bc(_AreaInfo->pxToCm(c), c, bb.angle, bb.size.width, bb.size.height);
+
         centroids.push_back(bc);
     }
     
@@ -209,7 +216,6 @@ void BioTrackerTrackingAlgorithm::doTracking(std::shared_ptr<cv::Mat> p_image, u
 		std::vector<FishPose> ps = std::get<0>(poses);
 		_listener->sendPositions(framenumber, ps, std::vector<cv::Point2f>(), start);
 	}
-    
 
     sendSelectedImage(&images);
     
