@@ -17,10 +17,9 @@ void TcpListener::acceptConnection()
 
 void TcpListener::sendPositionsToSocket(std::string packet)
 {
-
-	std::vector<QTcpSocket *>::iterator sock_it = _sockets.begin();
-	for (sock_it = _sockets.begin(); sock_it != _sockets.end(); ++sock_it)
-		(*sock_it)->write(packet.c_str());
+	for (auto const& socket : _sockets) {
+		socket->write(packet.c_str());
+	}
 }
 
 std::string TcpListener::sendPositions(
