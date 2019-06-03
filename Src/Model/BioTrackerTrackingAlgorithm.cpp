@@ -14,7 +14,7 @@ BioTrackerTrackingAlgorithm::BioTrackerTrackingAlgorithm(IController *parent, IM
 	 
 	_noFish = -1;
 
-	if (! _cfg->DoNetwork) {
+	if (_cfg->DoNetwork) {
 		_listener = new TcpListener(this);
 		_listener->listen(QHostAddress::Any, _cfg->NetworkPort);
 		QObject::connect(_listener, SIGNAL(newConnection()), _listener, SLOT(acceptConnection()));
