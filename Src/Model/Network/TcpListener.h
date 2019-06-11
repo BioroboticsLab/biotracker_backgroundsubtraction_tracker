@@ -8,7 +8,7 @@
 
 #include "../TrackedComponents/pose/FishPose.h"
 
-#include <vector>
+#include <unordered_set>
 #include <chrono>
 
 class TcpListener : public QTcpServer
@@ -27,5 +27,5 @@ public slots:
 		std::chrono::system_clock::time_point ts);
 
 private:
-	std::vector<QTcpSocket *> _sockets;
+	std::unordered_set<QTcpSocket *> _sockets;
 };

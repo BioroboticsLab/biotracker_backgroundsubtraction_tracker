@@ -11,7 +11,10 @@ void TcpListener::acceptConnection()
 	while (this->hasPendingConnections())
 	{
 		QTcpSocket *socket = this->nextPendingConnection();
-		_sockets.push_back(socket);
+		_sockets.insert(socket);
+		QObject::connect(socket, &QTcpSocket::disconnected, [this, socket](){
+			_sockets.erase(socket);
+		});
 	}
 }
 
