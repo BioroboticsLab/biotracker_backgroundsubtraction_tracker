@@ -3,7 +3,9 @@
 #include "TrackedComponents/TrackedComponentFactory.h"
 #include <chrono>
 
-BioTrackerTrackingAlgorithm::BioTrackerTrackingAlgorithm(IController *parent, IModel* parameter, IModel* trajectory) : _ipp((TrackerParameter*)parameter)
+BioTrackerTrackingAlgorithm::BioTrackerTrackingAlgorithm(IController *parent, IModel* parameter, IModel* trajectory)
+: IModelTrackingAlgorithm(parent)
+, _ipp((TrackerParameter*)parameter)
 {
 	_cfg = static_cast<ControllerTrackingAlgorithm*>(parent)->getConfig();
 	_TrackingParameter = (TrackerParameter*)parameter;
