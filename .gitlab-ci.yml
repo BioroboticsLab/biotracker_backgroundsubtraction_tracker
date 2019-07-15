@@ -3,13 +3,14 @@ stages:
   - package
   - deploy
 
+
 .ubuntu-18.04:
   tags: [ linux, docker ]
   image: git.imp.fu-berlin.de:5000/bioroboticslab/robofish/docker:devel-ubuntu18.04
 
-.windows:
-  tags: [ windows, docker ]
-  image: git.imp.fu-berlin.de:5000/bioroboticslab/robofish/docker:devel-windows
+.windows-1809:
+  tags: [ windows-1809, docker ]
+  image: git.imp.fu-berlin.de:5000/bioroboticslab/robofish/docker:devel-windows1809
 
 
 .gcc8: &gcc8
@@ -17,60 +18,44 @@ stages:
   CXX: g++-8
 
 .msvc15.9: &msvc15_9
-  VSDevEnv -arch=amd64 -vcvars_ver="14.16"
-
-.debug: &debug
-  CMAKE_BUILD_TYPE: Debug
+  VCVARS_VER: '14.16'
 
 .release: &release
   CMAKE_BUILD_TYPE: Release
 
+.debug: &debug
+  CMAKE_BUILD_TYPE: Debug
 
-.build ubuntu-18.04:
-  extends: .ubuntu-18.04
+
+.build: &build
   stage: build
   artifacts:
     paths:
+      - vendor
       - build
     expire_in: 1 day
-  script:
-    - cmake -Bbuild -H. -DCMAKE_BUILD_TYPE="$CMAKE_BUILD_TYPE" -G Ninja -DPACKAGE_TXZ=ON -DCMAKE_SUPPRESS_REGENERATION=ON -DCMAKE_SKIP_PACKAGE_ALL_DEPENDENCY=ON
-    - ninja -C build
-
-.build windows:
-  extends: .windows
-  stage: build
-  artifacts:
-    paths:
-      - build
-    expire_in: 1 day
-  script:
-    - cmake -Bbuild "-H." -DCMAKE_BUILD_TYPE="$CMAKE_BUILD_TYPE" -G Ninja -DPACKAGE_WINDOWS_MSI=ON -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_DIR/scripts/buildsystems/vcpkg.cmake" -DVCPKG_TARGET_TRIPLET="$env:VCPKG_TRIPLET" -DCMAKE_SUPPRESS_REGENERATION=ON -DCMAKE_SKIP_PACKAGE_ALL_DEPENDENCY=ON -DCPACK_PACKAGE_DIRECTORY="${env:PACKAGE_DIR}"
-    - ninja -C build
+  script: ./.gitlab-ci.py build
 
 build ubuntu-18.04:
-  extends: .build ubuntu-18.04
+  extends: .ubuntu-18.04
+  <<: *build
   variables:
     <<: [ *gcc8, *release ]
   before_script:
-    - . /etc/profile.d/robofish.sh
-    - gitlab-fetch-artifacts bioroboticslab%2Fbiotracker%2Finterfaces master package%20ubuntu-18.04
-    - cmake-integrate-package biotracker-interfaces
-    - gitlab-fetch-artifacts bioroboticslab%2Fbiotracker%2Futility master package%20ubuntu-18.04
-    - cmake-integrate-package biotracker-utility
+    - ./.gitlab-ci.py prepare
+      --dependency biotracker-interfaces bioroboticslab/biotracker/interfaces master 'package ubuntu-18.04'
+      --dependency biotracker-utility    bioroboticslab/biotracker/utility    master 'package ubuntu-18.04'
 
-build windows:
-  extends: .build windows
+build windows-1809:
+  extends: .windows-1809
+  <<: *build
   variables:
-    <<: [ *release ]
+    <<: [ *msvc15_9, *release ]
   before_script:
-    - . $Profile
-    - *msvc15_9
-    - GitLab-Fetch-Artifacts bioroboticslab%2Fbiotracker%2Finterfaces master package%20windows
-    - CMake-Integrate-Package biotracker-interfaces
-    - GitLab-Fetch-Artifacts bioroboticslab%2Fbiotracker%2Futility master package%20windows
-    - CMake-Integrate-Package biotracker-utility
-    - $env:PACKAGE_DIR = ("${env:TMP}/pkg" -Replace "\\","/")
+    - ./.gitlab-ci.py prepare
+      --dependency biotracker-interfaces bioroboticslab/biotracker/interfaces master 'package windows-1809'
+      --dependency biotracker-utility    bioroboticslab/biotracker/utility    master 'package windows-1809'
+
 
 .package: &package
   stage: package
@@ -79,8 +64,7 @@ build windows:
       - build/*.tar.xz
       - build/*.msi
     expire_in: 1 week
-  script:
-    - ninja -C build package
+  script: ./.gitlab-ci.py package
 
 package ubuntu-18.04:
   extends: .ubuntu-18.04
@@ -88,13 +72,8 @@ package ubuntu-18.04:
     - build ubuntu-18.04
   <<: *package
 
-package windows:
-  extends: .windows
+package windows-1809:
+  extends: .windows-1809
   dependencies:
-    - build windows
+    - build windows-1809
   <<: *package
-  before_script:
-    - $env:PACKAGE_DIR = ("${env:TMP}/pkg" -Replace "\\","/")
-  script:
-    - ninja -C build package
-    - Copy-Item "$env:PACKAGE_DIR/*" build -Recurse
