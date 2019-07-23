@@ -38,7 +38,7 @@
 
         <DirectoryRef Id="TARGETDIR">
             <Component Id="CMakeRegistry">
-                <RegistryKey Root="HKLM" Key="Software\FUBioroboticsLab\Robofish\BioTracker\Plugins"> 
+                <RegistryKey Root="HKLM" Key="Software\FUBioroboticsLab\BioTracker\Plugins">
                     <RegistryValue Type="string" Name="backgroundsubtracktion_tracker"
                         Value="[INSTALL_ROOT]" KeyPath="yes"/>
                  </RegistryKey>
