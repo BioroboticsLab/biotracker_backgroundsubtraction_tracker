@@ -59,7 +59,7 @@ std::string TcpListener::sendPositions(
 	}
 	str << "end\n";
 
-	//std::cout << str.str() << std::endl;
+	std::cout << str.str() << std::endl;
 
 #ifdef SAVETRACKINGPACKAGES
 	_trackingInfoOutputFile4Simulation << str.str();
