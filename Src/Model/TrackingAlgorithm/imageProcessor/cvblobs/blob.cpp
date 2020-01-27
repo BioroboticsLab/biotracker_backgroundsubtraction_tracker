@@ -296,7 +296,7 @@ double CBlob::ExternPerimeter( IplImage *maskImage, bool xBorder /* = true */, b
 		{
 			if( maskImage != NULL )
 			{
-				// verify if some of 8-connected neighbours is black in mask
+				// verify if some of 8-connected neighbors is black in mask
 				char *pMask;
 				
 				pMask = (maskImage->imageData + actualPoint.x - 1 + (actualPoint.y - 1) * maskImage->widthStep);

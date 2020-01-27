@@ -196,7 +196,7 @@ void BioTrackerTrackingAlgorithm::doTracking(std::shared_ptr<cv::Mat> p_image, u
 	// If you mess up the order, add or remove some t, then create a new mapper. 
 	std::vector<FishPose> fish = getLastPositionsAsPose();
 	
-	//Find new positions using 2D nearest neighbour
+	//Find new positions using 2D nearest neighbor
 	std::tuple<std::vector<FishPose>, std::vector<float>> poses = _nn2d->getNewPoses(_TrackedTrajectoryMajor, framenumber, blobs);
 
 	//Insert new poses into data structure
