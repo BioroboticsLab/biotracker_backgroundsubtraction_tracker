@@ -43,13 +43,15 @@ set(CPACK_PACKAGE_VERSION ${SOURCE_VERSION})
 if(PACKAGE_WINDOWS_MSI)
     set(CPACK_GENERATOR "WIX")
     set(CPACK_WIX_UPGRADE_GUID "f9c5c38a-76c3-49a6-ab41-ddfdde7a2c87")
+    set(CPACK_WIX_PRODUCT_VERSION "0.0.0")
 
     set(CPACK_PACKAGE_INSTALL_DIRECTORY "BioTracker/BackgroundSubtraction_Tracker")
 
     set(CPACK_WIX_PROGRAM_MENU_FOLDER "BioTracker")
 	
 	set(CPACK_WIX_LICENSE_RTF ${CMAKE_SOURCE_DIR}/cmake/WIX/licence.rtf)
-	set(CPACK_WIX_TEMPLATE "${CMAKE_SOURCE_DIR}/cmake/WIX/WIX.template.in")
+	configure_file("${CMAKE_CURRENT_SOURCE_DIR}/cmake/WIX/WIX.template.in" "${CMAKE_CURRENT_BINARY_DIR}/cmake/WIX/WIX.template")
+	set(CPACK_WIX_TEMPLATE "${CMAKE_CURRENT_BINARY_DIR}/cmake/WIX/WIX.template")
 elseif(PACKAGE_TXZ)
     set(CPACK_GENERATOR "TXZ")
 endif()
