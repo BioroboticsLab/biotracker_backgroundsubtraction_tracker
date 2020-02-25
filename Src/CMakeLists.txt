@@ -2,9 +2,6 @@
 #### Biotracker: backgroundSubtraction
 ##############################################################
 
-include(biotracker-utility/VSSugar)
-VSSourceGroups(${CMAKE_CURRENT_LIST_DIR})
-
 include(biotracker-utility/TrackerPlugin)
 
 set(target biotracker-backgroundSubtraction.bio_tracker)

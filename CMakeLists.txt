@@ -1,22 +1,22 @@
 cmake_minimum_required(VERSION 3.13)
 
-file(READ VERSION PROJECT_VERSION)
+exec_program("git" ${CMAKE_CURRENT_SOURCE_DIR} ARGS "describe --dirty --always --exclude '*'" OUTPUT_VARIABLE SOURCE_VERSION)
 
-project(biotracker-lucaskanade.bio_tracker)
+project(biotracker-background_subtraction_tracker
+    LANGUAGES CXX
+)
 
 if("${CMAKE_SYSTEM_NAME}" STREQUAL "Windows")
     option(PACKAGE_WINDOWS_MSI "Create .msi package" OFF)
 endif()
 option(PACKAGE_TXZ "Create .tar.xz package" OFF)
 
-find_package(biotracker-utility 0.2 REQUIRED)
+find_package(biotracker-utility REQUIRED)
 
 add_subdirectory(Src)
 
 include(cmake/Locate.cmake)
 if("${CMAKE_SYSTEM_NAME}" STREQUAL "Windows")
-    install(TARGETS ${target} DESTINATION .)
-
     option(INSTALL_REQUIRED_SYSTEM_LIBRARIES "Install required system libraries" OFF)
     if(INSTALL_REQUIRED_SYSTEM_LIBRARIES)
         set(CMAKE_INSTALL_UCRT_LIBRARIES TRUE)
@@ -38,8 +38,7 @@ endif()
 
 set(CPACK_PACKAGE_NAME "BioTracker Plugin BackgroundSubtraction")
 set(CPACK_PACKAGE_VENDOR "Biorobotics Lab / FU Berlin")
-
-set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
+set(CPACK_PACKAGE_VERSION ${SOURCE_VERSION})
 
 if(PACKAGE_WINDOWS_MSI)
     set(CPACK_GENERATOR "WIX")
