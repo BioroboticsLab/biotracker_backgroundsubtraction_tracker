@@ -36,7 +36,7 @@ if("${CMAKE_SYSTEM_NAME}" STREQUAL "Windows")
     install(FILES ${shared_libraries} DESTINATION .)
 endif()
 
-set(CPACK_PACKAGE_NAME "BioTracker Background Subtraction Tracker")
+set(CPACK_PACKAGE_NAME "BioTracker-Tracker-BackgroundSubtraction")
 set(CPACK_PACKAGE_VENDOR "Biorobotics Lab / FU Berlin")
 set(CPACK_PACKAGE_VERSION ${SOURCE_VERSION})
 
@@ -45,7 +45,7 @@ if(PACKAGE_WINDOWS_MSI)
     set(CPACK_WIX_UPGRADE_GUID "f9c5c38a-76c3-49a6-ab41-ddfdde7a2c87")
     set(CPACK_WIX_PRODUCT_VERSION "0.0.0")
 
-    set(CPACK_PACKAGE_INSTALL_DIRECTORY "BioTracker/BackgroundSubtraction_Tracker")
+    set(CPACK_PACKAGE_INSTALL_DIRECTORY "BioTracker/Tracker/BackgroundSubtraction")
 
     set(CPACK_WIX_PROGRAM_MENU_FOLDER "BioTracker")
 	
