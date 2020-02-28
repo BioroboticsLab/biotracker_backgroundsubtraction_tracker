@@ -36,7 +36,7 @@ if("${CMAKE_SYSTEM_NAME}" STREQUAL "Windows")
     install(FILES ${shared_libraries} DESTINATION .)
 endif()
 
-set(CPACK_PACKAGE_NAME "BioTracker Plugin BackgroundSubtraction")
+set(CPACK_PACKAGE_NAME "BioTracker Background Subtraction Tracker")
 set(CPACK_PACKAGE_VENDOR "Biorobotics Lab / FU Berlin")
 set(CPACK_PACKAGE_VERSION ${SOURCE_VERSION})
 
