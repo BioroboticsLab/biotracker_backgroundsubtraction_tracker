@@ -13,12 +13,6 @@ MODIFICACIONS (Modificaci�, Autor, Data):
 #include <algorithm>
 #include "BlobResult.h"
 
-//! Show errors functions: only works for windows releases
-#ifdef _SHOW_ERRORS
-	#include <afx.h>			//suport per a CStrings
-	#include <afxwin.h>			//suport per a AfxMessageBox
-#endif
-
 /**************************************************************************
 		Constructors / Destructors
 **************************************************************************/
@@ -92,7 +86,7 @@ CBlobResult::CBlobResult()
 - CREATION DATE: 25-05-2005.
 - MODIFICATION: Date. Author. Description.
 */
-CBlobResult::CBlobResult(IplImage *source, IplImage *mask, uchar backgroundColor )
+CBlobResult::CBlobResult(cv::Mat source, cv::Mat* mask, uchar backgroundColor )
 {
 	bool success;
 
@@ -309,58 +303,6 @@ void CBlobResult::AddBlob( CBlob *blob )
 		m_blobs.push_back( new CBlob( blob ) );
 }
 
-
-#ifdef MATRIXCV_ACTIU
-
-/**
-- FUNCI�: GetResult
-- FUNCIONALITAT: Calcula el resultat especificat sobre tots els blobs de la classe
-- PAR�METRES:
-	- evaluador: Qualsevol objecte derivat de COperadorBlob
-- RESULTAT:
-	- Retorna un array de double's amb el resultat per cada blob
-- RESTRICCIONS:
-- AUTOR: Ricard Borr�s
-- DATA DE CREACI�: 25-05-2005.
-- MODIFICACI�: Data. Autor. Descripci�.
-*/
-/**
-- FUNCTION: GetResult
-- FUNCTIONALITY: Computes the function evaluador on all the blobs of the class
-				 and returns a vector with the result
-- PARAMETERS:
-	- evaluador: function to apply to each blob (any object derived from the 
-				 COperadorBlob class )
-- RESULT:
-	- vector with all the results in the same order as the blobs
-- RESTRICTIONS:
-- AUTHOR: Ricard Borr�s
-- CREATION DATE: 25-05-2005.
-- MODIFICATION: Date. Author. Description.
-*/
-double_vector CBlobResult::GetResult( funcio_calculBlob *evaluador ) const
-{
-	if( GetNumBlobs() <= 0 )
-	{
-		return double_vector();
-	}
-
-	// definim el resultat
-	double_vector result = double_vector( GetNumBlobs() );
-	// i iteradors sobre els blobs i el resultat
-	double_vector::iterator itResult = result.GetIterator();
-	Blob_vector::const_iterator itBlobs = m_blobs.begin();
-
-	// avaluem la funci� en tots els blobs
-	while( itBlobs != m_blobs.end() )
-	{
-		*itResult = (*evaluador)(**itBlobs);
-		itBlobs++;
-		itResult++;
-	}
-	return result;
-}
-#endif
 
 /**
 - FUNCI�: GetSTLResult
@@ -857,8 +799,7 @@ void CBlobResult::ClearBlobs()
 - PARAMETERS:
 	- errorCode: reason of the error
 - RESULT:
-	- in _SHOW_ERRORS version, shows a message box with the error. In release is silent.
-	  In both cases throws an exception with the error.
+	- Throws an exception with the error.
 - RESTRICTIONS:
 - AUTHOR: Ricard Borr�s
 - CREATION DATE: 25-05-2005.
@@ -866,23 +807,6 @@ void CBlobResult::ClearBlobs()
 */
 void CBlobResult::RaiseError(const int errorCode) const
 {
-//! Do we need to show errors?
-#ifdef _SHOW_ERRORS
-	CString msg, format = "Error en CBlobResult: %s";
-
-	switch (errorCode)
-	{
-	case EXCEPTION_BLOB_OUT_OF_BOUNDS:
-		msg.Format(format, "Intentant accedir a un blob no existent");
-		break;
-	default:
-		msg.Format(format, "Codi d'error desconegut");
-		break;
-	}
-
-	AfxMessageBox(msg);
-
-#endif
 	throw errorCode;
 }
 

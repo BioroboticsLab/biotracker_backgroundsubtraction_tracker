@@ -1,8 +1,11 @@
 #include <limits.h>
+
 #include "BlobOperators.h"
 
+#include <opencv2/imgproc/imgproc_c.h>
+
 /***************************************************************************
-  Implementació de les classes per al càlcul de característiques sobre el blob
+  Implementaciï¿½ de les classes per al cï¿½lcul de caracterï¿½stiques sobre el blob
 
   Implementation of the helper classes to perform operations on blobs
 /**************************************************************************/
@@ -15,7 +18,7 @@
 	- returns the pq moment or 0 if the moment it is not implemented
 - RESTRICTIONS:
 	- Currently, implemented moments up to 3
-- AUTHOR: Ricard Borràs
+- AUTHOR: Ricard Borrï¿½s
 - CREATION DATE: 20-07-2004.
 - MODIFICATION: Date. Author. Description.
 */
@@ -25,19 +28,19 @@ double CBlobGetMoment::operator()(CBlob &blob)
 }
 
 /**
-- FUNCIÓ: HullPerimeter
+- FUNCIï¿½: HullPerimeter
 - FUNCIONALITAT: Calcula la longitud del perimetre convex del blob.
-			   Fa servir la funció d'OpenCV cvConvexHull2 per a 
+			   Fa servir la funciï¿½ d'OpenCV cvConvexHull2 per a 
 			   calcular el perimetre convex.
 			   
-- PARÀMETRES:
+- PARï¿½METRES:
 - RESULTAT:
-	- retorna la longitud del perímetre convex del blob. Si el blob no té coordenades
-	  associades retorna el perímetre normal del blob.
+	- retorna la longitud del perï¿½metre convex del blob. Si el blob no tï¿½ coordenades
+	  associades retorna el perï¿½metre normal del blob.
 - RESTRICCIONS:
-- AUTOR: Ricard Borràs
-- DATA DE CREACIÓ: 20-07-2004.
-- MODIFICACIÓ: Data. Autor. Descripció.
+- AUTOR: Ricard Borrï¿½s
+- DATA DE CREACIï¿½: 20-07-2004.
+- MODIFICACIï¿½: Data. Autor. Descripciï¿½.
 */
 /**
 - FUNCTION: CBlobGetHullPerimeter
@@ -47,7 +50,7 @@ double CBlobGetMoment::operator()(CBlob &blob)
 	- returns the convex hull perimeter of the blob or the perimeter if the 
 	blob edges could not be retrieved
 - RESTRICTIONS:
-- AUTHOR: Ricard Borràs
+- AUTHOR: Ricard Borrï¿½s
 - CREATION DATE: 25-05-2005.
 - MODIFICATION: Date. Author. Description.
 */
@@ -91,7 +94,7 @@ double CBlobGetHullArea::operator()(CBlob &blob)
 - PARAMETERS:
 - RESULT:
 - RESTRICTIONS:
-- AUTHOR: Ricard Borràs
+- AUTHOR: Ricard Borrï¿½s
 - CREATION DATE: 25-05-2005.
 - MODIFICATION: Date. Author. Description.
 */
@@ -100,7 +103,7 @@ double CBlobGetMinXatMinY::operator()(CBlob &blob)
 	double result = LONG_MAX;
 	
 	CvSeqReader reader;
-	CvPoint actualPoint;
+	cv::Point actualPoint;
 	t_PointList externContour;
 	
 	externContour = blob.GetExternalContour()->GetContourPoints();
@@ -126,7 +129,7 @@ double CBlobGetMinXatMinY::operator()(CBlob &blob)
 - PARAMETERS:
 - RESULT:
 - RESTRICTIONS:
-- AUTHOR: Ricard Borràs
+- AUTHOR: Ricard Borrï¿½s
 - CREATION DATE: 25-05-2005.
 - MODIFICATION: Date. Author. Description.
 */
@@ -135,7 +138,7 @@ double CBlobGetMinYatMaxX::operator()(CBlob &blob)
 	double result = LONG_MAX;
 	
 	CvSeqReader reader;
-	CvPoint actualPoint;
+	cv::Point actualPoint;
 	t_PointList externContour;
 	
 	externContour = blob.GetExternalContour()->GetContourPoints();
@@ -161,7 +164,7 @@ double CBlobGetMinYatMaxX::operator()(CBlob &blob)
 - PARAMETERS:
 - RESULT:
 - RESTRICTIONS:
-- AUTHOR: Ricard Borràs
+- AUTHOR: Ricard Borrï¿½s
 - CREATION DATE: 25-05-2005.
 - MODIFICATION: Date. Author. Description.
 */
@@ -170,7 +173,7 @@ double CBlobGetMaxXatMaxY::operator()(CBlob &blob)
 	double result = LONG_MIN;
 	
 	CvSeqReader reader;
-	CvPoint actualPoint;
+	cv::Point actualPoint;
 	t_PointList externContour;
 	
 	externContour = blob.GetExternalContour()->GetContourPoints();
@@ -197,7 +200,7 @@ double CBlobGetMaxXatMaxY::operator()(CBlob &blob)
 - PARAMETERS:
 - RESULT:
 - RESTRICTIONS:
-- AUTHOR: Ricard Borràs
+- AUTHOR: Ricard Borrï¿½s
 - CREATION DATE: 25-05-2005.
 - MODIFICATION: Date. Author. Description.
 */
@@ -206,7 +209,7 @@ double CBlobGetMaxYatMinX::operator()(CBlob &blob)
 	double result = LONG_MIN;
 	
 	CvSeqReader reader;
-	CvPoint actualPoint;
+	cv::Point actualPoint;
 	t_PointList externContour;
 	
 	externContour = blob.GetExternalContour()->GetContourPoints();
@@ -236,7 +239,7 @@ double CBlobGetMaxYatMinX::operator()(CBlob &blob)
 - RESULT:
 - RESTRICTIONS:
 	- See below to see how the lenght and the breadth are aproximated
-- AUTHOR: Ricard Borràs
+- AUTHOR: Ricard Borrï¿½s
 - CREATION DATE: 25-05-2005.
 - MODIFICATION: Date. Author. Description.
 */
@@ -250,7 +253,7 @@ double CBlobGetElongation::operator()(CBlob &blob)
 
 	if( tmp > 0.0 )
 		ampladaC = (double) (blob.Perimeter()+sqrt(tmp))/4;
-	// error intrínsec en els càlculs de l'àrea i el perímetre 
+	// error intrï¿½nsec en els cï¿½lculs de l'ï¿½rea i el perï¿½metre 
 	else
 		ampladaC = (double) (blob.Perimeter())/4;
 
@@ -273,7 +276,7 @@ double CBlobGetElongation::operator()(CBlob &blob)
 - PARAMETERS:
 - RESULT:
 - RESTRICTIONS:
-- AUTHOR: Ricard Borràs
+- AUTHOR: Ricard Borrï¿½s
 - CREATION DATE: 25-05-2005.
 - MODIFICATION: Date. Author. Description.
 */
@@ -295,7 +298,7 @@ double CBlobGetCompactness::operator()(CBlob &blob)
 - PARAMETERS:
 - RESULT:
 - RESTRICTIONS:
-- AUTHOR: Ricard Borràs
+- AUTHOR: Ricard Borrï¿½s
 - CREATION DATE: 25-05-2005.
 - MODIFICATION: Date. Author. Description.
 */
@@ -321,7 +324,7 @@ double CBlobGetRoughness::operator()(CBlob &blob)
 - RESULT:
 - RESTRICTIONS:
 	- The lenght is an aproximation to the real lenght
-- AUTHOR: Ricard Borràs
+- AUTHOR: Ricard Borrï¿½s
 - CREATION DATE: 25-05-2005.
 - MODIFICATION: Date. Author. Description.
 */
@@ -334,7 +337,7 @@ double CBlobGetLength::operator()(CBlob &blob)
 
 	if( tmp > 0.0 )
 		ampladaC = (double) (blob.Perimeter()+sqrt(tmp))/4;
-	// error intrínsec en els càlculs de l'àrea i el perímetre 
+	// error intrï¿½nsec en els cï¿½lculs de l'ï¿½rea i el perï¿½metre 
 	else
 		ampladaC = (double) (blob.Perimeter())/4;
 
@@ -354,7 +357,7 @@ double CBlobGetLength::operator()(CBlob &blob)
 - RESULT:
 - RESTRICTIONS:
 	- The breadth is an aproximation to the real breadth
-- AUTHOR: Ricard Borràs
+- AUTHOR: Ricard Borrï¿½s
 - CREATION DATE: 25-05-2005.
 - MODIFICATION: Date. Author. Description.
 */
@@ -367,7 +370,7 @@ double CBlobGetBreadth::operator()(CBlob &blob)
 
 	if( tmp > 0.0 )
 		ampladaC = (double) (blob.Perimeter()+sqrt(tmp))/4;
-	// error intrínsec en els càlculs de l'àrea i el perímetre 
+	// error intrï¿½nsec en els cï¿½lculs de l'ï¿½rea i el perï¿½metre 
 	else
 		ampladaC = (double) (blob.Perimeter())/4;
 
@@ -378,7 +381,7 @@ double CBlobGetBreadth::operator()(CBlob &blob)
 }
 
 /**
-	Calcula la distància entre un punt i el centre del blob
+	Calcula la distï¿½ncia entre un punt i el centre del blob
 */
 /**
 - FUNCTION: CBlobGetDistanceFromPoint
@@ -387,7 +390,7 @@ double CBlobGetBreadth::operator()(CBlob &blob)
 - PARAMETERS:
 - RESULT:
 - RESTRICTIONS:
-- AUTHOR: Ricard Borràs
+- AUTHOR: Ricard Borrï¿½s
 - CREATION DATE: 25-05-2005.
 - MODIFICATION: Date. Author. Description.
 */
@@ -424,79 +427,3 @@ double CBlobGetXYInside::operator()(CBlob &blob)
 
 	return 0;
 }
-#ifdef BLOB_OBJECT_FACTORY
-
-/**
-- FUNCIÓ: RegistraTotsOperadors
-- FUNCIONALITAT: Registrar tots els operadors definits a blob.h
-- PARÀMETRES:
-	- fabricaOperadorsBlob: fàbrica on es registraran els operadors
-- RESULTAT:
-	- Modifica l'objecte fabricaOperadorsBlob
-- RESTRICCIONS:
-	- Només es registraran els operadors de blob.h. Si se'n volen afegir, cal afegir-los amb 
-	  el mètode Register de la fàbrica.
-- AUTOR: rborras
-- DATA DE CREACIÓ: 2006/05/18
-- MODIFICACIÓ: Data. Autor. Descripció.
-*/
-void RegistraTotsOperadors( t_OperadorBlobFactory &fabricaOperadorsBlob )
-{
-	// blob shape
-	fabricaOperadorsBlob.Register( CBlobGetArea().GetNom(), Type2Type<CBlobGetArea>());
-	fabricaOperadorsBlob.Register( CBlobGetBreadth().GetNom(), Type2Type<CBlobGetBreadth>());
-	fabricaOperadorsBlob.Register( CBlobGetCompactness().GetNom(), Type2Type<CBlobGetCompactness>());
-	fabricaOperadorsBlob.Register( CBlobGetElongation().GetNom(), Type2Type<CBlobGetElongation>());
-	fabricaOperadorsBlob.Register( CBlobGetExterior().GetNom(), Type2Type<CBlobGetExterior>());
-	fabricaOperadorsBlob.Register( CBlobGetLength().GetNom(), Type2Type<CBlobGetLength>());
-	fabricaOperadorsBlob.Register( CBlobGetPerimeter().GetNom(), Type2Type<CBlobGetPerimeter>());
-	fabricaOperadorsBlob.Register( CBlobGetRoughness().GetNom(), Type2Type<CBlobGetRoughness>());
-
-	// blob color
-	fabricaOperadorsBlob.Register( CBlobGetMean(NULL).GetNom(), Type2Type<CBlobGetMean>());
-	fabricaOperadorsBlob.Register( CBlobGetStdDev(NULL).GetNom(), Type2Type<CBlobGetStdDev>());
-
-	// extern pixels
-	fabricaOperadorsBlob.Register( CBlobGetExternPerimeterRatio().GetNom(), Type2Type<CBlobGetExternPerimeterRatio>());
-	fabricaOperadorsBlob.Register( CBlobGetExternHullPerimeterRatio().GetNom(), Type2Type<CBlobGetExternHullPerimeterRatio>());
-	fabricaOperadorsBlob.Register( CBlobGetExternPerimeter().GetNom(), Type2Type<CBlobGetExternPerimeter>());
-	
-
-	// hull 
-	fabricaOperadorsBlob.Register( CBlobGetHullPerimeter().GetNom(), Type2Type<CBlobGetHullPerimeter>());
-	fabricaOperadorsBlob.Register( CBlobGetHullArea().GetNom(), Type2Type<CBlobGetHullArea>());
-	
-
-	// elipse info
-	fabricaOperadorsBlob.Register( CBlobGetMajorAxisLength().GetNom(), Type2Type<CBlobGetMajorAxisLength>());
-	fabricaOperadorsBlob.Register( CBlobGetMinorAxisLength().GetNom(), Type2Type<CBlobGetMinorAxisLength>());
-	fabricaOperadorsBlob.Register( CBlobGetAxisRatio().GetNom(), Type2Type<CBlobGetAxisRatio>());
-	fabricaOperadorsBlob.Register( CBlobGetOrientation().GetNom(), Type2Type<CBlobGetOrientation>());
-	fabricaOperadorsBlob.Register( CBlobGetOrientationCos().GetNom(), Type2Type<CBlobGetOrientationCos>());
-	fabricaOperadorsBlob.Register( CBlobGetAreaElipseRatio().GetNom(), Type2Type<CBlobGetAreaElipseRatio>());
-
-	// min an max
-	fabricaOperadorsBlob.Register( CBlobGetMaxX().GetNom(), Type2Type<CBlobGetMaxX>());
-	fabricaOperadorsBlob.Register( CBlobGetMaxY().GetNom(), Type2Type<CBlobGetMaxY>());
-	fabricaOperadorsBlob.Register( CBlobGetMinX().GetNom(), Type2Type<CBlobGetMinX>());
-	fabricaOperadorsBlob.Register( CBlobGetMinY().GetNom(), Type2Type<CBlobGetMinY>());
-
-	fabricaOperadorsBlob.Register( CBlobGetMaxXatMaxY().GetNom(), Type2Type<CBlobGetMaxXatMaxY>());
-	fabricaOperadorsBlob.Register( CBlobGetMaxYatMinX().GetNom(), Type2Type<CBlobGetMaxYatMinX>());
-	fabricaOperadorsBlob.Register( CBlobGetMinXatMinY().GetNom(), Type2Type<CBlobGetMinXatMinY>());
-	fabricaOperadorsBlob.Register( CBlobGetMinYatMaxX().GetNom(), Type2Type<CBlobGetMinYatMaxX>());
-
-	// coordinate info
-	fabricaOperadorsBlob.Register( CBlobGetXYInside().GetNom(), Type2Type<CBlobGetXYInside>());
-	fabricaOperadorsBlob.Register( CBlobGetDiffY().GetNom(), Type2Type<CBlobGetDiffY>());
-	fabricaOperadorsBlob.Register( CBlobGetDiffX().GetNom(), Type2Type<CBlobGetDiffX>());
-	fabricaOperadorsBlob.Register( CBlobGetXCenter().GetNom(), Type2Type<CBlobGetXCenter>());
-	fabricaOperadorsBlob.Register( CBlobGetYCenter().GetNom(), Type2Type<CBlobGetYCenter>());
-	fabricaOperadorsBlob.Register( CBlobGetDistanceFromPoint().GetNom(), Type2Type<CBlobGetDistanceFromPoint>());
-
-	// moments
-	fabricaOperadorsBlob.Register( CBlobGetMoment().GetNom(), Type2Type<CBlobGetMoment>());
-
-}
-
-#endif	//BLOB_OBJECT_FACTORY

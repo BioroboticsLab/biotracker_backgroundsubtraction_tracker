@@ -58,12 +58,10 @@ void ImagePreProcessor::init()
 
 cv::Mat ImagePreProcessor::binarize(cv::Mat& image)
 {
-	//cv::cvtColor( image, grayImage, CV_BGR2GRAY );
-
 	cv::Mat binarizedImage;
 
 	if (image.channels() >= 3)
-		cv::cvtColor(image, binarizedImage, CV_BGR2GRAY);
+		cv::cvtColor(image, binarizedImage, cv::COLOR_BGR2GRAY);
 	else
 		image.copyTo(binarizedImage);
 
@@ -175,8 +173,7 @@ std::map<std::string, std::shared_ptr<cv::Mat>> ImagePreProcessor::preProcess(st
 	std::shared_ptr<cv::Mat> dilatedImage	= std::make_shared<cv::Mat>();
 	//cv::Mat test;
 
-	cv::cvtColor(*p_image, *greyMat, CV_BGR2GRAY);
-	//cv::cvtColor(*p_image, test, CV_BGR2GRAY);
+	cv::cvtColor(*p_image, *greyMat, cv::COLOR_BGR2GRAY);
 	
 	// 1. step: do the background subtraction
 	*m_foregroundImage = backgroundSubtraction(*greyMat);

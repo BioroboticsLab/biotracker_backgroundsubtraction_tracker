@@ -19,15 +19,15 @@ namespace CvHelper
 	 * Subtract operation for two CvPoints.
 	 * @return: the difference of the CvPoints. 
 	 */
-	CvPoint subtractTwoCvPoints(CvPoint a, CvPoint b);
+	cv::Point subtractTwoCvPoints(cv::Point a, cv::Point b);
 
 	/**
 	 * Add operation for two CvPoints.
 	 * @return: the sum of the CvPoints. 
 	 */
-	CvPoint addTwoCvPoints(CvPoint a, CvPoint b);
+	cv::Point addTwoCvPoints(cv::Point a, cv::Point b);
 
-	CvPoint multCvPoint(double scalar, CvPoint p);
+	cv::Point multCvPoint(double scalar, cv::Point p);
 
 	/**
 	 * Normalizes a coordinate point.

@@ -15,7 +15,9 @@ MODIFICATIONS (Modification, Author, Date):
 
 
 #include "blob.h"
+
 #include <opencv2/opencv.hpp>
+#include <opencv2/imgproc/imgproc_c.h>
 
 
 CBlob::CBlob()
@@ -27,7 +29,7 @@ CBlob::CBlob()
 	m_storage = NULL;
 	m_id = -1;
 }
-CBlob::CBlob( t_labelType id, CvPoint startPoint, CvSize originalImageSize )
+CBlob::CBlob( t_labelType id, cv::Point startPoint, cv::Size originalImageSize )
 {
 	m_id = id;
 	m_area = m_perimeter = -1;
@@ -249,7 +251,7 @@ double CBlob::ExternPerimeter( IplImage *maskImage, bool xBorder /* = true */, b
 	t_PointList externContour, externalPoints;
 	CvSeqReader reader;
 	CvSeqWriter writer;
-	CvPoint actualPoint, previousPoint;
+	cv::Point actualPoint, previousPoint;
 	bool find = false;
 	int i,j;
 	int delta = 0;
@@ -418,7 +420,7 @@ double CBlob::Mean( IplImage *image )
 	// Create a mask with same size as blob bounding box
 	IplImage *mask;
 	CvScalar mean, std;
-	CvPoint offset;
+	cv::Point offset;
 
 	GetBoundingBox();
 	
@@ -496,7 +498,7 @@ CvRect CBlob::GetBoundingBox()
 
 	t_PointList externContour;
 	CvSeqReader reader;
-	CvPoint actualPoint;
+	cv::Point actualPoint;
 	
 	// get contour pixels
 	externContour = m_externalContour.GetContourPoints();

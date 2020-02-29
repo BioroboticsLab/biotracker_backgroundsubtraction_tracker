@@ -5,15 +5,12 @@
 #ifndef BLOB_PROPERTIES_H_INCLUDED
 #define BLOB_PROPERTIES_H_INCLUDED
 
-#include <opencv/cxcore.h>
+#include <list>
+
+#include <opencv2/opencv.hpp>
+
 #include "BlobLibraryConfiguration.h"
 #include "BlobContour.h"
-
-
-#ifdef BLOB_OBJECT_FACTORY
-	//! Object factory pattern implementation
-	#include "..\inspecta\DesignPatterns\ObjectFactory.h"
-#endif
 
 
 //! Type of labelled images

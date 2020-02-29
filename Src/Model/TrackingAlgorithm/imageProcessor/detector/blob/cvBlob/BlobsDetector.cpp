@@ -11,16 +11,14 @@ BlobsDetector::BlobsDetector(void) :
 
 void BlobsDetector::filterBlobsBySize(CBlobResult& blobs)
 {
-	//std::cout << "start blobs: " << blobs.GetNumBlobs() << std::endl;
 	// blobs smaller than the provided blob size	
 	blobs.Filter( blobs, B_INCLUDE, CBlobGetArea(), B_GREATER_OR_EQUAL, minBlobSize());
-	//std::cout << "min filtered blobs: " << blobs.GetNumBlobs() << " min: " << minBlobSize() << std::endl;
+
 	// blobs bigger than the provided blob size	
 	blobs.Filter( blobs, B_INCLUDE, CBlobGetArea(), B_LESS_OR_EQUAL, maxBlobSize());
-	//std::cout << "max filtered blobs: " << blobs.GetNumBlobs() << " max: " << maxBlobSize() << std::endl;
 }
 
-bool isLeft(CvPoint a, CvPoint b, CvPoint c) {
+bool isLeft(cv::Point a, cv::Point b, cv::Point c) {
     return ((b.x - a.x)*(c.y - a.y) - (b.y - a.y)*(c.x - a.x)) > 0;
 }
 
@@ -28,14 +26,8 @@ std::vector<BlobPose> BlobsDetector::findBlobs(const cv::Mat& processedImage, co
 {
 	std::vector<BlobPose> blobPoses;
 
-	IplImage iplBinImage(processedImage);
-	IplImage *img = 0;
-	if (_mask)
-		img = new IplImage(*_mask);
-
 	CBlob *currentBlob;
-	CBlobResult blobs(&iplBinImage, img, 0);
-	delete img;
+	CBlobResult blobs(processedImage, _mask, 0);
 
 	// filter the blobs by size criteria
 	filterBlobsBySize(blobs);	
@@ -55,29 +47,11 @@ std::vector<BlobPose> BlobsDetector::findBlobs(const cv::Mat& processedImage, co
 		// ignore blobs outside the tracking area
 		if (!_areaInfo->inTrackingArea(blobPose_px))
 			continue;
-        /*
-        CBlobContour * contour = currentBlob->GetExternalContour();
-        t_PointList externContour = contour->GetContourPoints();
-        CvMemStorage storage;
-        CvPoint actualPoint, previousPoint;
-        CvSeqReader reader;
-        cvStartReadSeq(externContour, &reader);
-
-        // which contour pixels touch border?
-        for (int j = 0; j < externContour->total; j++)
-        {
-            CV_READ_SEQ_ELEM(actualPoint, reader);
-            if (j == 0) previousPoint = actualPoint;
-            //std::cout << actualPoint.x << "/" << actualPoint.y << std::endl;
-            //std::cout << isLeft(CvPoint a, CvPoint b, actualPoint) << std::endl;
-           
-            previousPoint = actualPoint;
-        }*/
         
 		float blobPose_angle_deg = currentBlob->GetEllipse().angle;
 		float blobPose_angle_rad = currentBlob->GetEllipse().angle * CV_PI / float(180.0);
 		assert(blobPose_angle_deg >= 0.0f && blobPose_angle_deg <= 360.0f);
-		//std::cout << "angle: " << blobPose_angle_deg << std::endl;
+
 		float blobPose_width =  currentBlob->GetEllipse().size.width;
 		float blobPose_height = currentBlob->GetEllipse().size.height;
 

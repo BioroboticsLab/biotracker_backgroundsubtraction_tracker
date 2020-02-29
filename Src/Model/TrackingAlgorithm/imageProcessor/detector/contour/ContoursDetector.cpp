@@ -28,7 +28,7 @@ void ContoursDetector::createMask(std::vector<cv::Point> points)
 //		}
 //	}
 //		
-//	CvPoint maskPoints[4];
+//	cv::Point maskPoints[4];
 //
 //	for(int z=0;z<4;z++)
 //	{
@@ -36,7 +36,7 @@ void ContoursDetector::createMask(std::vector<cv::Point> points)
 //	}
 //
 //	//Array im Array von Polygonen. Hier Gr��e eins, da nur eins erzeugt wird
-//	CvPoint* contours[1]={
+//	cv::Point* contours[1]={
 //		maskPoints,
 //	};
 //

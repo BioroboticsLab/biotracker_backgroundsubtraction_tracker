@@ -2,19 +2,19 @@
 
 #include "StringHelper.h"
 
-CvPoint CvHelper::subtractTwoCvPoints(CvPoint a, CvPoint b)
+cv::Point CvHelper::subtractTwoCvPoints(cv::Point a, cv::Point b)
 {
-	return cvPoint(a.x - b.x, a.y - b.y);
+	return cv::Point(a.x - b.x, a.y - b.y);
 }
 
-CvPoint CvHelper::addTwoCvPoints(CvPoint a, CvPoint b)
+cv::Point CvHelper::addTwoCvPoints(cv::Point a, cv::Point b)
 {
-	return cvPoint(a.x + b.x, a.y + b.y);
+	return cv::Point(a.x + b.x, a.y + b.y);
 }
 
-CvPoint CvHelper::multCvPoint(double scalar, CvPoint p)
+cv::Point CvHelper::multCvPoint(double scalar, cv::Point p)
 {
-	return cvPoint(scalar * p.x, scalar * p.y);
+	return cv::Point(scalar * p.x, scalar * p.y);
 }
 
 QPointF CvHelper::norm(double x, double y)

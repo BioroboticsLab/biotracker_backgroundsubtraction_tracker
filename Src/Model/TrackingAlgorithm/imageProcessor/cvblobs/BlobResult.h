@@ -21,22 +21,17 @@ MODIFICATIONS (Modification, Author, Date):
 
 #include "BlobLibraryConfiguration.h"
 #include <math.h>
-#include <opencv/cxcore.h>
-
-#ifdef MATRIXCV_ACTIU
-	#include "matrixCV.h"
-#else
-	// llibreria STL
-	#include "vector"
-	//! Vector de doubles
-	typedef std::vector<double> double_stl_vector;
-#endif
+#include <opencv2/opencv.hpp>
 
 #include <vector>		// vectors de la STL
 #include <functional>
 #include "blob.h"
 #include "BlobOperators.h"
 #include "ComponentLabeling.h"
+
+//! Vector de doubles
+typedef std::vector<double> double_stl_vector;
+
 /**************************************************************************
 	Filtres / Filters
 **************************************************************************/
@@ -82,7 +77,7 @@ public:
 	CBlobResult();
 	//! constructor a partir d'una imatge
 	//! Image constructor, it creates an object with the blobs of the image
-	CBlobResult(IplImage *source, IplImage *mask, uchar backgroundColor);
+	CBlobResult(cv::Mat source, cv::Mat* mask, uchar backgroundColor);
 	//! constructor de c�pia
 	//! Copy constructor
 	CBlobResult( const CBlobResult &source );
@@ -100,11 +95,6 @@ public:
 	//! Adds a blob to the set of blobs
 	void AddBlob( CBlob *blob );
 
-#ifdef MATRIXCV_ACTIU
-	//! Calcula un valor sobre tots els blobs de la classe retornant una MatrixCV
-	//! Computes some property on all the blobs of the class
-	double_vector GetResult( funcio_calculBlob *evaluador ) const;
-#endif
 	//! Calcula un valor sobre tots els blobs de la classe retornant un std::vector<double>
 	//! Computes some property on all the blobs of the class
 	double_stl_vector GetSTLResult( funcio_calculBlob *evaluador ) const;

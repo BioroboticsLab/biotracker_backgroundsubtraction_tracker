@@ -1,8 +1,10 @@
 #pragma once
 
-#include <cv.h>
-#include <highgui.h>
 #include <chrono>
+
+#include <opencv2/opencv.hpp>
+#include <opencv2/highgui.hpp>
+
 #include "../TrackedComponents/pose/FishPose.h"
 #include "../TrackedComponents/TrackedElement.h"
 #include "../TrackedComponents/TrackedTrajectory.h"

@@ -1,11 +1,9 @@
 #ifndef BLOBCONTOUR_H_INCLUDED
 #define BLOBCONTOUR_H_INCLUDED
 
-
-#include "list"
-#include <opencv/cv.h>
-//#include "cxtypes.h"  //AO
-#include <opencv/cxcore.h>   //
+#include <opencv2/opencv.hpp>
+#include <opencv2/core/types_c.h>
+#include <opencv2/imgproc/types_c.h>
 
 //! Type of chain codes
 typedef unsigned char t_chainCode;
@@ -28,7 +26,7 @@ class CBlobContour
 public:
 	//! Constructors
 	CBlobContour();
-	CBlobContour(CvPoint startPoint, CvMemStorage *storage );
+	CBlobContour(cv::Point startPoint, CvMemStorage *storage );
 	//! Copy constructor
 	CBlobContour( CBlobContour *source );
 
@@ -55,7 +53,7 @@ public:
 
 protected:	
 
-	CvPoint GetStartPoint() const
+	cv::Point GetStartPoint() const
 	{
 		return m_startPoint;
 	}
@@ -77,7 +75,7 @@ protected:
 
 private:
 	//! Starting point of the contour
-	CvPoint m_startPoint;
+	cv::Point m_startPoint;
 	//! All points from the contour
 	t_PointList m_contourPoints;
 

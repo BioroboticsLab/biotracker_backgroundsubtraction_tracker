@@ -1,9 +1,9 @@
 /************************************************************************
   			Blob.h
   			
-FUNCIONALITAT: Definició de la classe CBlob
+FUNCIONALITAT: Definiciï¿½ de la classe CBlob
 AUTOR: Inspecta S.L.
-MODIFICACIONS (Modificació, Autor, Data):
+MODIFICACIONS (Modificaciï¿½, Autor, Data):
 
 FUNCTIONALITY: Definition of the CBlob class and some helper classes to perform
 			   some calculations on it
@@ -18,15 +18,12 @@ MODIFICATIONS (Modification, Author, Date):
 #ifndef CBLOB_INSPECTA_INCLUDED
 #define CBLOB_INSPECTA_INCLUDED
 
-#include <opencv/cxcore.h>
+#include <list>
+
+#include <opencv2/opencv.hpp>
+
 #include "BlobLibraryConfiguration.h"
 #include "BlobContour.h"
-
-
-#ifdef BLOB_OBJECT_FACTORY
-	//! Object factory pattern implementation
-	#include "..\inspecta\DesignPatterns\ObjectFactory.h"
-#endif
 
 
 //! Type of labelled images
@@ -40,14 +37,14 @@ class CBlob
 
 public:
 	CBlob();
-	CBlob( t_labelType id, CvPoint startPoint, CvSize originalImageSize );
+	CBlob( t_labelType id, cv::Point startPoint, cv::Size originalImageSize );
 	~CBlob();
 
 	//! Copy constructor
 	CBlob( const CBlob &src );
 	CBlob( const CBlob *src );
 
-	//! Operador d'assignació
+	//! Operador d'assignaciï¿½
 	//! Assigment operator
 	CBlob& operator=(const CBlob &src );
 	
@@ -89,7 +86,7 @@ public:
 	//! Get standard deviation grey color
 	double StdDev( IplImage *image );
 
-	//! Indica si el blob està buit ( no té cap info associada )
+	//! Indica si el blob estï¿½ buit ( no tï¿½ cap info associada )
 	//! Shows if the blob has associated information
 	bool IsEmpty();
 
@@ -166,7 +163,7 @@ private:
 	//! Bounding ellipse
 	CvBox2D m_ellipse;
 	//! Sizes from image where blob is extracted
-	CvSize m_originalImageSize;
+	cv::Size m_originalImageSize;
 };
 
 #endif //CBLOB_INSPECTA_INCLUDED
