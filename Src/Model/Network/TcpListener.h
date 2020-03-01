@@ -1,15 +1,15 @@
 #pragma once
 
-#include <QtCore/QThread>
-#include <QtCore/QDebug>
-#include <QtNetwork/QTcpServer>
-#include <QtNetwork/QTcpSocket>
-#include <QtNetwork/QNetworkInterface>
-
-#include "../TrackedComponents/pose/FishPose.h"
-
 #include <unordered_set>
 #include <chrono>
+
+#include <QThread>
+#include <QDebug>
+#include <QTcpServer>
+#include <QTcpSocket>
+#include <QNetworkInterface>
+
+#include "../TrackedComponents/pose/FishPose.h"
 
 class TcpListener : public QTcpServer
 {

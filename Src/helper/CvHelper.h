@@ -1,10 +1,10 @@
 #pragma once
 
-#include <QtCore/qmath.h>
-#include <QtCore/QPoint>
-#include <QtCore/QPointF>
-#include <QtCore/QList>
-#include <QtCore/QDateTime>
+#include <QtMath>
+#include <QPoint>
+#include <QPointF>
+#include <QList>
+#include <QDateTime>
 #include <QDebug>
 
 #include <opencv2/opencv.hpp>

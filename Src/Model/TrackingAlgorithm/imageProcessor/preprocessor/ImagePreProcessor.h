@@ -1,9 +1,8 @@
 #pragma once
 
+#include <QSettings>
+
 #include <opencv2/opencv.hpp>
-
-
-#include <QtCore/QSettings>
 
 #include "../../../../helper/StringHelper.h"
 #include "../../../TrackerParameter.h"
