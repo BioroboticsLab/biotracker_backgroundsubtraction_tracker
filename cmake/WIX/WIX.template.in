@@ -38,8 +38,8 @@
 
         <DirectoryRef Id="TARGETDIR">
             <Component Id="CMakeRegistry">
-                <RegistryKey Root="HKLM" Key="Software\FUBioroboticsLab\BioTracker\Plugins">
-                    <RegistryValue Type="string" Name="backgroundsubtracktion_tracker"
+                <RegistryKey Root="HKLM" Key="Software\FU Berlin\Biorobotics Lab\BioTracker\Plugins">
+                    <RegistryValue Type="string" Name="backgroundsubtraction_tracker"
                         Value="[INSTALL_ROOT]" KeyPath="yes"/>
                  </RegistryKey>
             </Component>
