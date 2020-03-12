@@ -438,15 +438,15 @@ double CBlob::Mean( IplImage *image )
 	offset.y = -m_boundingBox.y;
 
 	// draw contours on mask
-	cvDrawContours( mask, m_externalContour.GetContourPoints(), CV_RGB(255,255,255), CV_RGB(255,255,255),0, CV_FILLED, 8,
-					offset );
+	cvDrawContours( mask, m_externalContour.GetContourPoints(), cvScalar(CV_RGB(255,255,255)), cvScalar(CV_RGB(255,255,255)),0, CV_FILLED, 8,
+					cvPoint(offset) );
 
 	// draw internal contours
 	t_contourList::iterator it = m_internalContours.begin();
 	while(it != m_internalContours.end() )
 	{
-		cvDrawContours( mask, (*it).GetContourPoints(), CV_RGB(0,0,0), CV_RGB(0,0,0),0, CV_FILLED, 8,
-					offset );
+		cvDrawContours( mask, (*it).GetContourPoints(), cvScalar(CV_RGB(0,0,0)), cvScalar(CV_RGB(0,0,0)),0, CV_FILLED, 8,
+					cvPoint(offset) );
 		it++;
 	}
 
