@@ -88,7 +88,7 @@ def build(args):
             'CMAKE_TOOLCHAIN_FILE',
             env['VCPKG_DIR'] + '/scripts/buildsystems/vcpkg.cmake')
         command += define('VCPKG_TARGET_TRIPLET', env['VCPKG_TRIPLET'])
-        command += define('PACKAGE_WINDOWS_MSI', 'ON')
+        command += define('PACKAGE_MSI', 'ON')
     elif system() == 'Linux':
         command += define('PACKAGE_TXZ', 'ON')
     check_call(command)

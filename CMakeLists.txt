@@ -7,7 +7,7 @@ project(biotracker-background_subtraction_tracker
 )
 
 if("${CMAKE_SYSTEM_NAME}" STREQUAL "Windows")
-    option(PACKAGE_WINDOWS_MSI "Create .msi package" OFF)
+    option(PACKAGE_MSI "Create MSI package" OFF)
 endif()
 option(PACKAGE_TXZ "Create .tar.xz package" OFF)
 
@@ -40,7 +40,7 @@ set(CPACK_PACKAGE_NAME "BioTracker-Tracker-BackgroundSubtraction")
 set(CPACK_PACKAGE_VENDOR "Biorobotics Lab / FU Berlin")
 set(CPACK_PACKAGE_VERSION ${SOURCE_VERSION})
 
-if(PACKAGE_WINDOWS_MSI)
+if(PACKAGE_MSI)
     set(CPACK_GENERATOR "WIX")
     set(CPACK_WIX_UPGRADE_GUID "f9c5c38a-76c3-49a6-ab41-ddfdde7a2c87")
     set(CPACK_WIX_PRODUCT_VERSION "0.0.0")
