@@ -7,7 +7,8 @@
 #include "Config.h"
 
 #include "View/TrackedElementView.h"
-#include "Utility/TrackedComponents/TrackedComponentFactory.h"
+// #include "Utility/TrackedComponents/TrackedComponentFactory.h"
+#include "Model/TrackedComponents/TrackedComponentFactory.h"
 
 BioTrackerPlugin::BioTrackerPlugin() {
 }
@@ -31,7 +32,7 @@ IModel* BioTrackerPlugin::getTrackerComponentModel() {
 }
 
 IModelTrackedComponentFactory *BioTrackerPlugin::getComponentFactory() {
-	return new TrackedComponentFactory();
+	return new BST::TrackedComponentFactory();
 }
 
 void BioTrackerPlugin::createPlugin() {
