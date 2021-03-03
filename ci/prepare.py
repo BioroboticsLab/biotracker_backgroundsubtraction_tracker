@@ -57,5 +57,5 @@ if __name__ == "__main__":
         ("biotracker-interfaces", "bioroboticslab/biotracker/interfaces", job_stem),
         ("biotracker-utility", "bioroboticslab/biotracker/utility", job_stem),
     ]:
-        with fetch_artifacts(project, "master", job) as artifacts:
+        with fetch_artifacts(project, "snapshot_20210303", job) as artifacts:
             extract_cmake_package(artifacts, name)
