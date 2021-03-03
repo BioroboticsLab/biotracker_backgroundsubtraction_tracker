@@ -37,26 +37,26 @@ stages:
   script:
     - ./ci/package.py
 
-build centos:
+"build: [centos]":
   extends: .centos
   <<: *build
   variables:
     <<: [*release]
 
-build windows:
+"build: [windows]":
   extends: .windows
   <<: *build
   variables:
     <<: [*release]
 
-package centos:
+"package: [centos]":
   extends: .centos
   dependencies:
-    - build centos
+    - "build: [centos]"
   <<: *package
 
-package windows:
+"package: [windows]":
   extends: .windows
   dependencies:
-    - build windows
+    - "build: [windows]"
   <<: *package
