@@ -35,6 +35,9 @@ void TrackerParameterView::on_comboBoxSendImage_currentIndexChanged(int v) {
 	TrackerParameter *parameter = qobject_cast<TrackerParameter *>(getModel());
 	parameter->setSendImage(v);
 	parameter->setNewSelection(_ui->comboBoxSendImage->currentText().toStdString());
+
+	//trigger retracking to send to main app
+	Q_EMIT parametersChanged();
 }
 
 
