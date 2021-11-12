@@ -97,33 +97,20 @@
                <number>13</number>
               </property>
               <item row="0" column="0">
+               <widget class="QLabel" name="label">
+                <property name="text">
+                 <string>Algorithm:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
                <widget class="QLabel" name="label_7">
                 <property name="text">
                  <string>Learning Rate:</string>
                 </property>
                </widget>
               </item>
-              <item row="1" column="0">
-               <widget class="QLabel" name="label_2">
-                <property name="text">
-                 <string>Binarization Threshold:</string>
-                </property>
-               </widget>
-              </item>
               <item row="1" column="1">
-               <widget class="QSpinBox" name="lineEdit_2_binThresh">
-                <property name="minimumSize">
-                 <size>
-                  <width>132</width>
-                  <height>30</height>
-                 </size>
-                </property>
-                <property name="toolTip">
-                 <string>Set the binarization threshold</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="1">
                <widget class="QDoubleSpinBox" name="lineEdit_7_learningRate">
                 <property name="minimumSize">
                  <size>
@@ -146,6 +133,47 @@
                 <property name="value">
                  <double>0.001000000000000</double>
                 </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="label_2">
+                <property name="text">
+                 <string>Binarization Threshold:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QSpinBox" name="lineEdit_2_binThresh">
+                <property name="minimumSize">
+                 <size>
+                  <width>132</width>
+                  <height>30</height>
+                 </size>
+                </property>
+                <property name="toolTip">
+                 <string>Set the binarization threshold</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QComboBox" name="algorithmCB">
+                <property name="minimumSize">
+                 <size>
+                  <width>132</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>132</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <item>
+                 <property name="text">
+                  <string>Custom</string>
+                 </property>
+                </item>
                </widget>
               </item>
              </layout>
@@ -340,10 +368,22 @@
               </item>
               <item row="0" column="1">
                <widget class="QComboBox" name="comboBoxSendImage">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <property name="minimumSize">
                  <size>
                   <width>132</width>
                   <height>0</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>132</width>
+                  <height>16777215</height>
                  </size>
                 </property>
                 <property name="toolTip">
