@@ -7,12 +7,9 @@
 #include "CustomBackgroundSubtractor.h"
 
 QMutex bgsMutex;
-QMutex oriImageMutex;
-QMutex initBgkFrameNumMutex;
 
 ImagePreProcessor::ImagePreProcessor(TrackerParameter* p_TrackingParameter) :
-	_maxBackgroundImageInitTime(0)
-	, m_subtractor(new CustomBackgroundSubtractor())
+	m_subtractor(new CustomBackgroundSubtractor())
 {
 	_TrackingParameter = p_TrackingParameter;
 	init();
@@ -20,18 +17,6 @@ ImagePreProcessor::ImagePreProcessor(TrackerParameter* p_TrackingParameter) :
 
 ImagePreProcessor::~ImagePreProcessor(void)
 {
-}
-
-void ImagePreProcessor::setBkgFrameNum(int frameNum)
-{
-	QMutexLocker locker(&initBgkFrameNumMutex);
-	_maxBackgroundImageInitTime = frameNum;
-}
-
-int ImagePreProcessor::getBkgFrameNum()
-{
-	QMutexLocker locker(&initBgkFrameNumMutex);
-	return _maxBackgroundImageInitTime;
 }
 
 

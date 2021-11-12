@@ -86,13 +86,7 @@ private:
 	bool _gaussianBlurEnabled;
 	bool _resetBackgroundImageEnabled;
 
-	int _maxBackgroundImageInitTime;
-
 	TrackerParameter* _TrackingParameter;
 
 	cv::BackgroundSubtractor* m_subtractor;
-
-	// functions
-	void setBkgFrameNum(int);
-	int getBkgFrameNum();
 };
