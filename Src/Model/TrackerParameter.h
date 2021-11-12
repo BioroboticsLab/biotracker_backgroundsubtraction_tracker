@@ -13,6 +13,11 @@ public:
 
 public slots:
 
+	QString getAlgorithm() { return _algorithm; }
+	void setAlgorithm(QString algorithm) {
+		_algorithm = algorithm;
+	}
+
 	void setBinarizationThreshold(int x);
 	int getBinarizationThreshold();
 
@@ -109,6 +114,8 @@ public slots:
 
 
 private:
+
+	QString _algorithm;
 
 	int _BinarizationThreshold;
 	int _SizeErode;

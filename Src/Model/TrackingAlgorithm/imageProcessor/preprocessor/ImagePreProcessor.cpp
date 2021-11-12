@@ -4,14 +4,16 @@
 
 #include <QMutex>
 
+#include <opencv2/bgsegm.hpp>
+
 #include "CustomBackgroundSubtractor.h"
 
 QMutex bgsMutex;
 
-ImagePreProcessor::ImagePreProcessor(TrackerParameter* p_TrackingParameter) :
-	m_subtractor(new CustomBackgroundSubtractor())
+ImagePreProcessor::ImagePreProcessor(TrackerParameter* TrackingParameter) :
+	m_subtractor(nullptr),
+	m_TrackingParameter{TrackingParameter}
 {
-	_TrackingParameter = p_TrackingParameter;
 	init();
 }
 
@@ -23,6 +25,13 @@ ImagePreProcessor::~ImagePreProcessor(void)
 void ImagePreProcessor::init()
 {
 	QMutexLocker locker(&bgsMutex);
+
+	auto algorithm = m_TrackingParameter->getAlgorithm();
+	if (algorithm == QString("Custom")) {
+		m_subtractor = new CustomBackgroundSubtractor();
+	} else {
+		qFatal("Unsupported background subtraction algorithm");
+	}
 
 	m_backgroundImage = std::make_shared<cv::Mat>();
 	m_foregroundMask = std::make_shared<cv::Mat>();
@@ -72,8 +81,13 @@ cv::Mat ImagePreProcessor::dilate(cv::Mat& image)
 
 cv::Mat ImagePreProcessor::backgroundSubtraction(cv::Mat& image)
 {
-	if (auto subtractor = dynamic_cast<CustomBackgroundSubtractor*>(m_subtractor); subtractor) {
+	if (auto subtractor = m_subtractor.dynamicCast<CustomBackgroundSubtractor>(); subtractor) {
+		if (m_TrackingParameter->getAlgorithm() != QString("Custom")) {
+			init();
+		}
 		subtractor->setBinarizationThreshold(m_TrackingParameter->getBinarizationThreshold());
+	} else {
+		qFatal("Unsupported background subtraction algorithm");
 	}
 
 	cv::Mat fgmask;

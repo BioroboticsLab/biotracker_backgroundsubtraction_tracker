@@ -11,6 +11,10 @@ if("${CMAKE_SYSTEM_NAME}" STREQUAL "Windows")
 endif()
 option(PACKAGE_TXZ "Create .tar.xz package" OFF)
 
+find_package(OpenCV 4 QUIET COMPONENTS bgsegm)
+if(NOT OpenCV_FOUND)
+    find_package(OpenCV 3 REQUIRED COMPONENTS bgsegm)
+endif()
 find_package(biotracker-utility REQUIRED)
 
 add_subdirectory(Src)

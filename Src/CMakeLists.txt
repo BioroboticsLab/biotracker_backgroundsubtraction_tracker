@@ -47,3 +47,5 @@ add_behavior_plugin(${target}
 install(TARGETS ${target} OPTIONAL DESTINATION .)
 find_package(Qt5 REQUIRED COMPONENTS Xml Network)
 target_link_libraries (${target} Qt5::Xml Qt5::Network)
+
+target_link_libraries(${target} ${OpenCV_LIBS})

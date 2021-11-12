@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>583</width>
-    <height>782</height>
+    <height>916</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -67,7 +67,7 @@
         <x>0</x>
         <y>0</y>
         <width>583</width>
-        <height>773</height>
+        <height>907</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -88,7 +88,7 @@
             <item>
              <layout class="QFormLayout" name="formLayout">
               <property name="fieldGrowthPolicy">
-               <enum>QFormLayout::ExpandingFieldsGrow</enum>
+               <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
               </property>
               <property name="formAlignment">
                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -103,6 +103,27 @@
                 </property>
                </widget>
               </item>
+              <item row="0" column="1">
+               <widget class="QComboBox" name="algorithmCB">
+                <property name="minimumSize">
+                 <size>
+                  <width>230</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>132</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <item>
+                 <property name="text">
+                  <string>Custom</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
               <item row="1" column="0">
                <widget class="QLabel" name="label_7">
                 <property name="text">
@@ -114,8 +135,8 @@
                <widget class="QDoubleSpinBox" name="lineEdit_7_learningRate">
                 <property name="minimumSize">
                  <size>
-                  <width>132</width>
-                  <height>30</height>
+                  <width>230</width>
+                  <height>60</height>
                  </size>
                 </property>
                 <property name="toolTip">
@@ -135,47 +156,16 @@
                 </property>
                </widget>
               </item>
-              <item row="2" column="0">
-               <widget class="QLabel" name="label_2">
-                <property name="text">
-                 <string>Binarization Threshold:</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="1">
-               <widget class="QSpinBox" name="lineEdit_2_binThresh">
-                <property name="minimumSize">
-                 <size>
-                  <width>132</width>
-                  <height>30</height>
-                 </size>
-                </property>
-                <property name="toolTip">
-                 <string>Set the binarization threshold</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="1">
-               <widget class="QComboBox" name="algorithmCB">
-                <property name="minimumSize">
-                 <size>
-                  <width>132</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>132</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
-                <item>
-                 <property name="text">
-                  <string>Custom</string>
-                 </property>
-                </item>
-               </widget>
-              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QFormLayout" name="algorithmSpecificParameterLayout">
+              <property name="fieldGrowthPolicy">
+               <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+              </property>
+              <property name="formAlignment">
+               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+              </property>
              </layout>
             </item>
             <item>
@@ -250,7 +240,7 @@
                 <property name="minimumSize">
                  <size>
                   <width>132</width>
-                  <height>30</height>
+                  <height>60</height>
                  </size>
                 </property>
                 <property name="toolTip">
@@ -270,7 +260,7 @@
                 <property name="minimumSize">
                  <size>
                   <width>132</width>
-                  <height>30</height>
+                  <height>60</height>
                  </size>
                 </property>
                 <property name="toolTip">
@@ -309,7 +299,7 @@
                 <property name="minimumSize">
                  <size>
                   <width>132</width>
-                  <height>30</height>
+                  <height>60</height>
                  </size>
                 </property>
                 <property name="toolTip">
@@ -328,8 +318,8 @@
                <widget class="QSpinBox" name="lineEdit_9MaxBlob">
                 <property name="minimumSize">
                  <size>
-                  <width>132</width>
-                  <height>30</height>
+                  <width>171</width>
+                  <height>60</height>
                  </size>
                 </property>
                 <property name="toolTip">

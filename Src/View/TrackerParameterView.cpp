@@ -4,15 +4,16 @@
 #include <iostream>
 
 TrackerParameterView::TrackerParameterView(QWidget *parent, IController *controller, IModel *model) : IViewWidget(parent, controller, model),
-																																		_ui(new Ui::TrackerParameterView)
+																																		_ui(new Ui::TrackerParameterView),
+																																		_binThres(nullptr)
 {
 	_ui->setupUi(this);
 	getNotified();
 
 	auto parameter = qobject_cast<TrackerParameter *>(getModel());
 
-	connect(_ui->lineEdit_2_binThresh, qOverload<int>(&QSpinBox::valueChanged), parameter, &TrackerParameter::setBinarizationThreshold);
-	connect(_ui->lineEdit_2_binThresh, qOverload<int>(&QSpinBox::valueChanged), this, &TrackerParameterView::parametersChanged);
+	connect(_ui->algorithmCB, &QComboBox::currentTextChanged, parameter, &TrackerParameter::setAlgorithm);
+	connect(_ui->algorithmCB, &QComboBox::currentTextChanged, this, &TrackerParameterView::initSubtractorSpecificUI);
 
 	connect(_ui->lineEdit_3_SizeErode, qOverload<int>(&QSpinBox::valueChanged), parameter, &TrackerParameter::setSizeErode);
 	connect(_ui->lineEdit_3_SizeErode, qOverload<int>(&QSpinBox::valueChanged), this, &TrackerParameterView::parametersChanged);
@@ -28,11 +29,41 @@ TrackerParameterView::TrackerParameterView(QWidget *parent, IController *control
 
 	connect(_ui->lineEdit_7_learningRate, qOverload<double>(&QDoubleSpinBox::valueChanged), parameter, &TrackerParameter::setLearningRate);
 	connect(_ui->lineEdit_7_learningRate, qOverload<double>(&QDoubleSpinBox::valueChanged), this, &TrackerParameterView::parametersChanged);
+
+	initSubtractorSpecificUI(_ui->algorithmCB->currentText());
 }
 
 TrackerParameterView::~TrackerParameterView()
 {
 	delete _ui;
+}
+
+void TrackerParameterView::initSubtractorSpecificUI(QString algorithm)
+{
+	auto parameter = qobject_cast<TrackerParameter *>(getModel());
+
+	while (_ui->algorithmSpecificParameterLayout->rowCount() > 0) {
+		_ui->algorithmSpecificParameterLayout->removeRow(0);
+	}
+
+	if (_binThres) {
+		_binThres = nullptr;
+	}
+
+	if (algorithm == QString("Custom")) {
+		_binThres = new QSpinBox();
+		_binThres->setMinimum(1);
+		_binThres->setMaximum(255);
+		_binThres->setValue(parameter->getBinarizationThreshold());
+		_ui->algorithmSpecificParameterLayout->addRow(tr("Binarization Threshold:"), _binThres);
+
+		connect(_binThres, qOverload<int>(&QSpinBox::valueChanged), parameter, &TrackerParameter::setBinarizationThreshold);
+		connect(_binThres, qOverload<int>(&QSpinBox::valueChanged), this, &TrackerParameterView::parametersChanged);
+	} else {
+		qFatal("Unsupported background subtraction algorithm");
+	}
+
+	emit parametersChanged();
 }
 
 void TrackerParameterView::on_pushButtonResetBackground_clicked()
@@ -52,21 +83,17 @@ void TrackerParameterView::getNotified()
 {
 	TrackerParameter *parameter = qobject_cast<TrackerParameter *>(getModel());
 
-	int val = parameter->getBinarizationThreshold();
-	_ui->lineEdit_2_binThresh->setValue(val);
+	_ui->lineEdit_7_learningRate->setValue(parameter->getLearningRate());
 
-	val = parameter->getSizeErode();
-	_ui->lineEdit_3_SizeErode->setValue(val);
+	if (_binThres) {
+		_binThres->setValue(parameter->getBinarizationThreshold());
+	}
 
-	val = parameter->getSizeDilate();
-	_ui->lineEdit_4_SizeDilate->setValue(val);
+	_ui->lineEdit_3_SizeErode->setValue(parameter->getSizeErode());
 
-	double dval = parameter->getLearningRate();
-	_ui->lineEdit_7_learningRate->setValue(dval);
+	_ui->lineEdit_4_SizeDilate->setValue(parameter->getSizeDilate());
 
-	val = parameter->getMinBlobSize();
-	_ui->lineEdit_8_MinBlob->setValue(val);
+	_ui->lineEdit_8_MinBlob->setValue(parameter->getMinBlobSize());
 
-	val = parameter->getMaxBlobSize();
-	_ui->lineEdit_9MaxBlob->setValue(val);
+	_ui->lineEdit_9MaxBlob->setValue(parameter->getMaxBlobSize());
 }

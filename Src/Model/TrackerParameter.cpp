@@ -23,6 +23,8 @@ TrackerParameter::TrackerParameter(QObject *parent) :
 	_sendImage = 0; //Send no image
 	_resetBackground = false;
 
+	_algorithm = "Custom";
+
     Q_EMIT notifyView();
 }
 

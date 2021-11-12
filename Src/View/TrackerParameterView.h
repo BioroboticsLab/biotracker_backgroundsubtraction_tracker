@@ -4,6 +4,8 @@
 #include "Interfaces/IView/IViewWidget.h"
 #include "../Model/TrackerParameter.h"
 
+#include <QSpinBox>
+
 namespace Ui {
 	class TrackerParameterView;
 }
@@ -28,6 +30,11 @@ public:
 
 private:
     Ui::TrackerParameterView *_ui;
+
+    QSpinBox* _binThres;
+
+private slots:
+    void initSubtractorSpecificUI(QString algorithm);
 
     // IViewWidget interface
 public slots:

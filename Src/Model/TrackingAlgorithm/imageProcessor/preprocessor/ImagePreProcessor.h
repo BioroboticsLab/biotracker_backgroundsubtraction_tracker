@@ -15,12 +15,12 @@ public:
 	/**
 	 * The standard constructor.
 	 */
-	ImagePreProcessor(TrackerParameter* p_TrackingParameter);
+	ImagePreProcessor(TrackerParameter* TrackingParameter);
 
 	/**
 	 * The standard destructor.
 	 */
-	~ImagePreProcessor(void);
+	~ImagePreProcessor();
 
 	/**
 	 * Init function. Sets the property for the imge pre-processing.
@@ -86,7 +86,5 @@ private:
 	bool _gaussianBlurEnabled;
 	bool _resetBackgroundImageEnabled;
 
-	TrackerParameter* _TrackingParameter;
-
-	cv::BackgroundSubtractor* m_subtractor;
+	cv::Ptr<cv::BackgroundSubtractor> m_subtractor;
 };
