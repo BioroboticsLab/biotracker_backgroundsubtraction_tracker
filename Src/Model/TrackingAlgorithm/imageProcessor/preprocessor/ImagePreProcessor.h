@@ -97,6 +97,8 @@ private:
 
 	TrackerParameter* _TrackingParameter;
 
+	cv::BackgroundSubtractor* m_subtractor;
+
 	// functions
 	void setBkgFrameNum(int);
 	int getBkgFrameNum();

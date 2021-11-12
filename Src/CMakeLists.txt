@@ -21,6 +21,8 @@ add_behavior_plugin(${target}
     "Model/TrackedComponents/TrackedTrajectory.cpp"
     "Model/TrackedComponents/pose/FishPose.cpp"
     "Model/TrackingAlgorithm/NN2dMapper.cpp"
+    "Model/TrackingAlgorithm/imageProcessor/preprocessor/CustomBackgroundSubtractor.h"
+    "Model/TrackingAlgorithm/imageProcessor/preprocessor/CustomBackgroundSubtractor.cpp"
     "Model/TrackingAlgorithm/imageProcessor/preprocessor/ImagePreProcessor.cpp"
     "Model/TrackingAlgorithm/imageProcessor/cvblobs/blob.cpp"
     "Model/TrackingAlgorithm/imageProcessor/cvblobs/BlobContour.cpp"

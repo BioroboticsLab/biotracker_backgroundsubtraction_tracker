@@ -2,8 +2,9 @@
 
 #include <opencv2/highgui.hpp>
 
-#include <future>
 #include <QMutex>
+
+#include "CustomBackgroundSubtractor.h"
 
 QMutex bgsMutex;
 QMutex oriImageMutex;
@@ -11,6 +12,7 @@ QMutex initBgkFrameNumMutex;
 
 ImagePreProcessor::ImagePreProcessor(TrackerParameter* p_TrackingParameter) :
 	_maxBackgroundImageInitTime(0)
+	, m_subtractor(new CustomBackgroundSubtractor())
 {
 	_TrackingParameter = p_TrackingParameter;
 	init();
@@ -100,49 +102,10 @@ cv::Mat ImagePreProcessor::dilate(cv::Mat& image)
 
 cv::Mat ImagePreProcessor::backgroundSubtraction(cv::Mat& image)
 {
-	if (!m_backgroundImage->data)
-		image.copyTo(*m_backgroundImage);
-
-	// calculate the image difference
-	const double alpha = m_TrackingParameter->getBackgroundRatio();
-
-	const int &imageWidth = m_backgroundImage->cols;
-	const int &imageHeight = m_backgroundImage->rows;
-	const int totalRegionsX = 4;
-	const int totalRegionsY = 4;
-	const int totalRegions = totalRegionsX * totalRegionsY;
-	const int regionWidth = imageWidth / totalRegionsX;
-	const int regionHeight = imageHeight / totalRegionsY;
-
-	cv::Mat results(imageHeight, imageWidth, image.type());
-
-	auto workOnRegion = [&](int x, int y) {
-		const int startingX = x * regionWidth;
-		const int startingY = y * regionHeight;
-		const cv::Rect subArea = cv::Rect(startingX, startingY, regionWidth, regionHeight);
-		cv::Mat subBackground = (*m_backgroundImage)(subArea);
-		cv::Mat subImage = image(subArea);
-		cv::Mat subResults = results(subArea);
-
-		subResults = (subBackground - subImage);
-		subBackground = (1.0 - alpha) * subBackground + alpha * subImage;
-	};
-
-	std::vector<std::future<void>> merger;
-	merger.reserve(totalRegions);
-
-	for (int x = 0; x < totalRegionsX; ++x)
-	{
-		for (int y = 0; y < totalRegionsY; ++y)
-		{
-			merger.push_back(std::async([&, x, y] { workOnRegion(x, y); }));
-		}
-	}
-
-	for (const auto & asyncResult : merger)
-		asyncResult.wait();
-
-	return results;
+	cv::Mat foreground;
+	m_subtractor->apply(image, foreground, m_TrackingParameter->getBackgroundRatio());
+	m_subtractor->getBackgroundImage(*m_backgroundImage);
+	return foreground;
 }
 
 std::map<std::string, std::shared_ptr<cv::Mat>> ImagePreProcessor::preProcess(std::shared_ptr<cv::Mat> p_image)
