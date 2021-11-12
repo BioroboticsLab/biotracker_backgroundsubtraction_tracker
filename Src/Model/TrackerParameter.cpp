@@ -14,7 +14,7 @@ TrackerParameter::TrackerParameter(QObject *parent) :
 	_MinBlobSize = _cfg->MinBlobSize;
 	_MaxBlobSize = _cfg->MaxBlobSize;
 
-	_BackgroundRatio = _cfg->BackgroundRatio;
+	_LearningRate = _cfg->LearningRate;
 
 	_doNetwork = _cfg->DoNetwork;
 	_networkPort = _cfg->NetworkPort;

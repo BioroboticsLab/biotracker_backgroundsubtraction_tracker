@@ -26,8 +26,8 @@ TrackerParameterView::TrackerParameterView(QWidget *parent, IController *control
 	connect(_ui->lineEdit_9MaxBlob, qOverload<int>(&QSpinBox::valueChanged), parameter, &TrackerParameter::setMaxBlobSize);
 	connect(_ui->lineEdit_9MaxBlob, qOverload<int>(&QSpinBox::valueChanged), this, &TrackerParameterView::parametersChanged);
 
-	connect(_ui->lineEdit_7_bgRatio, qOverload<double>(&QDoubleSpinBox::valueChanged), parameter, &TrackerParameter::setBackgroundRatio);
-	connect(_ui->lineEdit_7_bgRatio, qOverload<double>(&QDoubleSpinBox::valueChanged), this, &TrackerParameterView::parametersChanged);
+	connect(_ui->lineEdit_7_learningRate, qOverload<double>(&QDoubleSpinBox::valueChanged), parameter, &TrackerParameter::setBackgroundRatio);
+	connect(_ui->lineEdit_7_learningRate, qOverload<double>(&QDoubleSpinBox::valueChanged), this, &TrackerParameterView::parametersChanged);
 }
 
 TrackerParameterView::~TrackerParameterView()
@@ -62,7 +62,7 @@ void TrackerParameterView::getNotified()
 	_ui->lineEdit_4_SizeDilate->setValue(val);
 
 	double dval = parameter->getBackgroundRatio();
-	_ui->lineEdit_7_bgRatio->setValue(dval);
+	_ui->lineEdit_7_learningRate->setValue(dval);
 
 	val = parameter->getMinBlobSize();
 	_ui->lineEdit_8_MinBlob->setValue(val);

@@ -56,7 +56,7 @@ void Config::load(QString dir, QString file)
     config->SizeDilate = tree.get<int>(globalPrefix+"SizeDilate",config->SizeDilate);
     config->MinBlobSize = tree.get<int>(globalPrefix+"MinBlobSize",config->MinBlobSize);
     config->MaxBlobSize = tree.get<int>(globalPrefix+"MaxBlobSize",config->MaxBlobSize);
-    config->BackgroundRatio = tree.get<double>(globalPrefix+"BackgroundRatio",config->BackgroundRatio);
+    config->LearningRate = tree.get<double>(globalPrefix+"LearningRate",config->LearningRate);
     config->DoNetwork = tree.get<int>(globalPrefix+"DoNetwork",config->DoNetwork);
     config->NetworkPort = tree.get<int>(globalPrefix+"NetworkPort",config->NetworkPort);
     config->DoBackground = tree.get<int>(globalPrefix+"DoBackground",config->DoBackground);
@@ -82,7 +82,7 @@ void Config::save(QString dir, QString file)
     tree.put(globalPrefix+"SizeDilate", config->SizeDilate);
     tree.put(globalPrefix+"MinBlobSize", config->MinBlobSize);
     tree.put(globalPrefix+"MaxBlobSize", config->MaxBlobSize);
-    tree.put(globalPrefix+"BackgroundRatio", config->BackgroundRatio);
+    tree.put(globalPrefix+"LearningRate", config->LearningRate);
     tree.put(globalPrefix+"DoNetwork", config->DoNetwork);
     tree.put(globalPrefix+"NetworkPort", config->NetworkPort);
     tree.put(globalPrefix+"DoBackground", config->DoBackground);

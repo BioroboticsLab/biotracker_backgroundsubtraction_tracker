@@ -28,9 +28,9 @@ public slots:
 		Q_EMIT notifyView();
 	};
 
-	double getBackgroundRatio() { return _BackgroundRatio; };
+	double getBackgroundRatio() { return _LearningRate; };
 	void setBackgroundRatio(double x) {
-		_BackgroundRatio = x;
+		_LearningRate = x;
 		Q_EMIT notifyView();
 	};
 
@@ -87,14 +87,14 @@ public slots:
 		int BinarizationThreshold,
 		int SizeErode,
 		int SizeDilate,
-		double BackgroundRatio,
+		double LearningRate,
 		int minBlobSize, 
 		int maxBlobSize)
 	{
 		_BinarizationThreshold = BinarizationThreshold;
 		_SizeErode = SizeErode;
 		_SizeDilate = SizeDilate;
-		_BackgroundRatio = BackgroundRatio;
+		_LearningRate = LearningRate;
 		_MinBlobSize = minBlobSize;
 		_MaxBlobSize = maxBlobSize;
 		_cfg->BinarizationThreshold = BinarizationThreshold;
@@ -102,7 +102,7 @@ public slots:
 		_cfg->SizeDilate = SizeDilate;
 		_cfg->MinBlobSize = minBlobSize;
 		_cfg->MaxBlobSize = maxBlobSize;
-		_cfg->BackgroundRatio = BackgroundRatio;
+		_cfg->LearningRate = LearningRate;
 		Q_EMIT notifyView();
 	};
 
@@ -113,7 +113,7 @@ private:
 	int _BinarizationThreshold;
 	int _SizeErode;
 	int _SizeDilate;
-	double _BackgroundRatio;
+	double _LearningRate;
 	int _MinBlobSize;
 	int _MaxBlobSize;
 

@@ -13,7 +13,7 @@ public:
 	int MinBlobSize = 40;
 	int MaxBlobSize = 999999;
 
-	double BackgroundRatio = 0.05;
+	double LearningRate = 0.05;
 
 	int DoNetwork = false;
 	int NetworkPort = 54444;
