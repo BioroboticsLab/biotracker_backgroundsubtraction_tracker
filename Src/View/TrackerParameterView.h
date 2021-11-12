@@ -17,7 +17,6 @@ public:
     ~TrackerParameterView();
 
 private slots:
-	void on_pushButton_clicked();
 	void on_pushButtonResetBackground_clicked();
 	void on_comboBoxSendImage_currentIndexChanged(int v);
 

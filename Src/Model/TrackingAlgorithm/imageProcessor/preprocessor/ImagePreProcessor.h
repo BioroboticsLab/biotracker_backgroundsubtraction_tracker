@@ -81,12 +81,8 @@ private:
 
 	cv::Mat _outputImage;
 
-	int m_Mog2ShadowDetection = true;
 	std::shared_ptr<cv::Mat> m_backgroundImage;
 	std::shared_ptr<cv::Mat> m_foregroundImage;
-
-	// background subtraction
-	cv::Ptr<cv::BackgroundSubtractorMOG2> _pMOG;
 
 	//parameters for image pre-processing
 	bool _backgroundSubtractionEnabled;
@@ -98,14 +94,10 @@ private:
 	bool _resetBackgroundImageEnabled;
 
 	int _maxBackgroundImageInitTime;
-	bool _bkgSubMethodMog2;
 
 	TrackerParameter* _TrackingParameter;
 
 	// functions
 	void setBkgFrameNum(int);
 	int getBkgFrameNum();
-
-	void setEnabledMog2(bool);
-	bool isEnabledMog2();
 };

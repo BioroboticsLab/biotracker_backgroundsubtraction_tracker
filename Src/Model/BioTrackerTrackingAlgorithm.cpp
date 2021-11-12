@@ -69,34 +69,32 @@ void BioTrackerTrackingAlgorithm::sendSelectedImage(std::map<std::string, std::s
     //Send forth whatever the user selected
     switch (_TrackingParameter->getSendImage()) {
     case 0: //Send none
-            //sendImage = images.find(std::string("Original"))->second;
-            //Q_EMIT emitCvMatA(sendImage, QString("Original"));
         Q_EMIT emitChangeDisplayImage("Original");
         break;
     case 1:
+        sendImage = images->find(std::string("Background"))->second;
+        Q_EMIT emitCvMatA(sendImage, QString("Background"));
+        Q_EMIT emitChangeDisplayImage(QString("Background"));
+        break;
+    case 2:
+        sendImage = images->find(std::string("Foreground"))->second;
+        Q_EMIT emitCvMatA(sendImage, QString("Foreground"));
+        Q_EMIT emitChangeDisplayImage(QString("Foreground"));
+        break;
+    case 3:
         sendImage = images->find(std::string("Binarized"))->second;
         Q_EMIT emitCvMatA(sendImage, QString("Binarized"));
         Q_EMIT emitChangeDisplayImage(QString("Binarized"));
         break;
-    case 2:
+    case 4:
         sendImage = images->find(std::string("Eroded"))->second;
         Q_EMIT emitCvMatA(sendImage, QString("Eroded"));
         Q_EMIT emitChangeDisplayImage(QString("Eroded"));
         break;
-    case 3:
+    case 5:
         sendImage = images->find(std::string("Dilated"))->second;
         Q_EMIT emitCvMatA(sendImage, QString("Dilated"));
         Q_EMIT emitChangeDisplayImage(QString("Dilated"));
-        break;
-    case 4:
-        sendImage = images->find(std::string("Difference"))->second;
-        Q_EMIT emitCvMatA(sendImage, QString("Difference"));
-        Q_EMIT emitChangeDisplayImage(QString("Difference"));
-        break;
-    case 5:
-        sendImage = images->find(std::string("Background"))->second;
-        Q_EMIT emitCvMatA(sendImage, QString("Background"));
-        Q_EMIT emitChangeDisplayImage(QString("Background"));
         break;
     }
 }
@@ -134,17 +132,8 @@ std::vector<BlobPose> BioTrackerTrackingAlgorithm::getContourCentroids(cv::Mat& 
     return centroids;
 }
 
-#define EEE        duration = std::chrono::duration_cast< std::chrono::milliseconds> (std::chrono::steady_clock::now() - startt); block++; std::cout  << "Block " << block << ": " << duration.count() << std::endl;
-#define SSS      startt = std::chrono::steady_clock::now();
-
 void BioTrackerTrackingAlgorithm::doTracking(std::shared_ptr<cv::Mat> p_image, uint framenumber)
 {
-    //Q_EMIT emitCvMatA(p_image, QString("Original"));
-	//Q_EMIT emitChangeDisplayImage("Original");
-	//Q_EMIT emitTrackingDone(framenumber);
-    //return; 
-    int block = 0;
-
 	_ipp.m_TrackingParameter = _TrackingParameter;
     _lastImage = p_image;
     _lastFramenumber = framenumber;
@@ -172,7 +161,6 @@ void BioTrackerTrackingAlgorithm::doTracking(std::shared_ptr<cv::Mat> p_image, u
 	//The user changed the # of fish. Reset the history and start over!
 	if (_noFish != _TrackedTrajectoryMajor->validCount()) {
 		_noFish = _TrackedTrajectoryMajor->validCount();
-		//resetFishHistory(_noFish);
 		_nn2d = std::make_shared<NN2dMapper>(_TrackedTrajectoryMajor);
 	}	
 

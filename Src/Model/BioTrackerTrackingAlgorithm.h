@@ -56,9 +56,6 @@ std::vector<BlobPose> getContourCentroids(cv::Mat& image, int minSize);
 	BlobsDetector _bd;
 	std::shared_ptr<NN2dMapper> _nn2d;
 
-	// background subtraction
-	cv::Ptr<cv::BackgroundSubtractorMOG2> _pMOG;
-
 	int _noFish;
 
 	//std::ofstream _ofs;

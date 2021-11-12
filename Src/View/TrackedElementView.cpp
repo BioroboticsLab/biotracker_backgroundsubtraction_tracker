@@ -1,7 +1,6 @@
 #include "TrackedElementView.h"
 #include "../Model/TrackedComponents/TrackedElement.h"
 #include "../Model/TrackedComponents/TrackedTrajectory.h"
-#include "../Model/TrackingAlgorithm/ParamNames.h"
 #include "QBrush"
 #include "QPainter"
 #include "QGraphicsScene"
