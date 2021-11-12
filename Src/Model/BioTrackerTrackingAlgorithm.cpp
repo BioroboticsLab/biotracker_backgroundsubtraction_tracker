@@ -77,21 +77,16 @@ void BioTrackerTrackingAlgorithm::sendSelectedImage(std::map<std::string, std::s
         Q_EMIT emitChangeDisplayImage(QString("Background"));
         break;
     case 2:
-        sendImage = images->find(std::string("Foreground"))->second;
-        Q_EMIT emitCvMatA(sendImage, QString("Foreground"));
-        Q_EMIT emitChangeDisplayImage(QString("Foreground"));
+        sendImage = images->find(std::string("Foreground Mask"))->second;
+        Q_EMIT emitCvMatA(sendImage, QString("Foreground Mask"));
+        Q_EMIT emitChangeDisplayImage(QString("Foreground Mask"));
         break;
     case 3:
-        sendImage = images->find(std::string("Binarized"))->second;
-        Q_EMIT emitCvMatA(sendImage, QString("Binarized"));
-        Q_EMIT emitChangeDisplayImage(QString("Binarized"));
-        break;
-    case 4:
         sendImage = images->find(std::string("Eroded"))->second;
         Q_EMIT emitCvMatA(sendImage, QString("Eroded"));
         Q_EMIT emitChangeDisplayImage(QString("Eroded"));
         break;
-    case 5:
+    case 4:
         sendImage = images->find(std::string("Dilated"))->second;
         Q_EMIT emitCvMatA(sendImage, QString("Dilated"));
         Q_EMIT emitChangeDisplayImage(QString("Dilated"));

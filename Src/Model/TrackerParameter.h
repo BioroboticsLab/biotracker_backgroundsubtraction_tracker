@@ -28,8 +28,8 @@ public slots:
 		Q_EMIT notifyView();
 	};
 
-	double getBackgroundRatio() { return _LearningRate; };
-	void setBackgroundRatio(double x) {
+	double getLearningRate() { return _LearningRate; };
+	void setLearningRate(double x) {
 		_LearningRate = x;
 		Q_EMIT notifyView();
 	};

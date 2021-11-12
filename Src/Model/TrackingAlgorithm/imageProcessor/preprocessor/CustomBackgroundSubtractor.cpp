@@ -3,6 +3,13 @@
 #include <vector>
 #include <future>
 
+#include <opencv2/imgproc.hpp>
+
+void CustomBackgroundSubtractor::setBinarizationThreshold(int value)
+{
+	m_binarizationThreshold = value;
+}
+
 void CustomBackgroundSubtractor::getBackgroundImage(cv::OutputArray backgroundImage) const
 {
 	m_background.copyTo(backgroundImage);
@@ -24,13 +31,15 @@ void CustomBackgroundSubtractor::apply(cv::InputArray image, cv::OutputArray fgm
 
 	fgmask.create(imageHeight, imageWidth, image.type());
 
+	auto fgmaskmat = fgmask.getMat();
+
 	auto workOnRegion = [&](int x, int y) {
 		const int startingX = x * regionWidth;
 		const int startingY = y * regionHeight;
 		const cv::Rect subArea = cv::Rect(startingX, startingY, regionWidth, regionHeight);
 		cv::Mat subBackground = m_background(subArea);
 		cv::Mat subImage = image.getMat()(subArea);
-		cv::Mat subResults = fgmask.getMat()(subArea);
+		cv::Mat subResults = fgmaskmat(subArea);
 
 		subResults = (subBackground - subImage);
 		subBackground = (1.0 - learningRate) * subBackground + learningRate * subImage;
@@ -49,5 +58,9 @@ void CustomBackgroundSubtractor::apply(cv::InputArray image, cv::OutputArray fgm
 
 	for (const auto & asyncResult : merger) {
 		asyncResult.wait();
+	}
+
+	if (fgmaskmat.data) {
+		cv::threshold(fgmaskmat, fgmaskmat, m_binarizationThreshold, 255, cv::THRESH_BINARY);
 	}
 }

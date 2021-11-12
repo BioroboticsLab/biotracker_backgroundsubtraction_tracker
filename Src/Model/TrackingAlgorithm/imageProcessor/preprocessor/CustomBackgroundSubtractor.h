@@ -9,6 +9,10 @@ public:
 
 	void getBackgroundImage(cv::OutputArray backgroundImage) const override;
 
+	void setBinarizationThreshold(int value);
+
 private:
 	cv::Mat m_background;
+
+	int m_binarizationThreshold;
 };

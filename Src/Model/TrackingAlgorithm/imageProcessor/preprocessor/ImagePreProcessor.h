@@ -29,13 +29,6 @@ public:
 	void init();
 
 	/**
-	 * A computer vision method to binarize an image.
-	 * @param: image, image to binarize,
-	 * @return: a binarized image.
-	 */
-	cv::Mat binarize(cv::Mat& image);
-
-	/**
 	 * A mathematical morphology operation using in computer vision to erode an image.
 	 * Erode image with 3x3 4-connectivity.
 	 * @param: image, image to erode,
@@ -82,7 +75,7 @@ private:
 	cv::Mat _outputImage;
 
 	std::shared_ptr<cv::Mat> m_backgroundImage;
-	std::shared_ptr<cv::Mat> m_foregroundImage;
+	std::shared_ptr<cv::Mat> m_foregroundMask;
 
 	//parameters for image pre-processing
 	bool _backgroundSubtractionEnabled;

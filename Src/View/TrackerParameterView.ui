@@ -94,12 +94,32 @@
                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
               </property>
               <property name="horizontalSpacing">
-               <number>44</number>
+               <number>13</number>
               </property>
               <item row="0" column="0">
                <widget class="QLabel" name="label_7">
                 <property name="text">
                  <string>Learning Rate:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_2">
+                <property name="text">
+                 <string>Binarization Threshold:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QSpinBox" name="lineEdit_2_binThresh">
+                <property name="minimumSize">
+                 <size>
+                  <width>132</width>
+                  <height>30</height>
+                 </size>
+                </property>
+                <property name="toolTip">
+                 <string>Set the binarization threshold</string>
                 </property>
                </widget>
               </item>
@@ -188,36 +208,16 @@
                <enum>QFormLayout::ExpandingFieldsGrow</enum>
               </property>
               <property name="horizontalSpacing">
-               <number>16</number>
+               <number>74</number>
               </property>
               <item row="0" column="0">
-               <widget class="QLabel" name="label_2">
-                <property name="text">
-                 <string>Binarization Threshold:</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="1">
-               <widget class="QSpinBox" name="lineEdit_2_binThresh">
-                <property name="minimumSize">
-                 <size>
-                  <width>132</width>
-                  <height>30</height>
-                 </size>
-                </property>
-                <property name="toolTip">
-                 <string>Set the binarization threshold</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="0">
                <widget class="QLabel" name="label_3">
                 <property name="text">
                  <string>Size Erosion:</string>
                 </property>
                </widget>
               </item>
-              <item row="1" column="1">
+              <item row="0" column="1">
                <widget class="QSpinBox" name="lineEdit_3_SizeErode">
                 <property name="minimumSize">
                  <size>
@@ -230,14 +230,14 @@
                 </property>
                </widget>
               </item>
-              <item row="2" column="0">
+              <item row="1" column="0">
                <widget class="QLabel" name="label_4">
                 <property name="text">
                  <string>Size Dilation:</string>
                 </property>
                </widget>
               </item>
-              <item row="2" column="1">
+              <item row="1" column="1">
                <widget class="QSpinBox" name="lineEdit_4_SizeDilate">
                 <property name="minimumSize">
                  <size>
@@ -364,12 +364,7 @@
                 </item>
                 <item>
                  <property name="text">
-                  <string>Foreground</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Binarized</string>
+                  <string>Foreground Mask</string>
                  </property>
                 </item>
                 <item>

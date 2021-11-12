@@ -40,7 +40,7 @@ void ImagePreProcessor::init()
 	QMutexLocker locker(&bgsMutex);
 
 	m_backgroundImage = std::make_shared<cv::Mat>();
-	m_foregroundImage = std::make_shared<cv::Mat>();
+	m_foregroundMask = std::make_shared<cv::Mat>();
 
 	_backgroundSubtractionEnabled = true;
 	_backgroundEnabled = true;
@@ -49,21 +49,6 @@ void ImagePreProcessor::init()
 	_gaussianBlurEnabled = false;
 	_binarizeEnabled = true;
 	_resetBackgroundImageEnabled = false;
-}
-
-cv::Mat ImagePreProcessor::binarize(cv::Mat& image)
-{
-	cv::Mat binarizedImage;
-
-	if (image.channels() >= 3)
-		cv::cvtColor(image, binarizedImage, cv::COLOR_BGR2GRAY);
-	else
-		image.copyTo(binarizedImage);
-
-	if (binarizedImage.data)
-		cv::threshold(binarizedImage, binarizedImage, m_TrackingParameter->getBinarizationThreshold(), 255, cv::THRESH_BINARY);
-
-	return binarizedImage;
 }
 
 cv::Mat ImagePreProcessor::erode(cv::Mat& image)
@@ -102,38 +87,37 @@ cv::Mat ImagePreProcessor::dilate(cv::Mat& image)
 
 cv::Mat ImagePreProcessor::backgroundSubtraction(cv::Mat& image)
 {
-	cv::Mat foreground;
-	m_subtractor->apply(image, foreground, m_TrackingParameter->getBackgroundRatio());
+	if (auto subtractor = dynamic_cast<CustomBackgroundSubtractor*>(m_subtractor); subtractor) {
+		subtractor->setBinarizationThreshold(m_TrackingParameter->getBinarizationThreshold());
+	}
+
+	cv::Mat fgmask;
+	m_subtractor->apply(image, fgmask, m_TrackingParameter->getLearningRate());
 	m_subtractor->getBackgroundImage(*m_backgroundImage);
-	return foreground;
+	return fgmask;
 }
 
 std::map<std::string, std::shared_ptr<cv::Mat>> ImagePreProcessor::preProcess(std::shared_ptr<cv::Mat> p_image)
 {
 	std::shared_ptr<cv::Mat> greyMat		= std::make_shared<cv::Mat>();
-	std::shared_ptr<cv::Mat> binarizedImage = std::make_shared<cv::Mat>();
 	std::shared_ptr<cv::Mat> erodedImage	= std::make_shared<cv::Mat>();
 	std::shared_ptr<cv::Mat> dilatedImage	= std::make_shared<cv::Mat>();
 
 	cv::cvtColor(*p_image, *greyMat, cv::COLOR_BGR2GRAY);
 	
 	// 1. step: do the background subtraction
-	*m_foregroundImage = backgroundSubtraction(*greyMat);
+	*m_foregroundMask = backgroundSubtraction(*greyMat);
 
-	// 2. step: binarize the image 
-	*binarizedImage = binarize(*m_foregroundImage);
+	// 2. step: erode the image
+	*erodedImage = erode(*m_foregroundMask);
 
-	// 3. step: erode the image
-	*erodedImage = erode(*binarizedImage);
-
-	// 4. step: dilate the image
+	// 3. step: dilate the image
 	*dilatedImage = dilate(*erodedImage);
 
 	std::map<std::string, std::shared_ptr<cv::Mat>> all;
 	all.insert(std::pair<std::string, std::shared_ptr<cv::Mat>>(std::string("Greyscale"), greyMat));
 	all.insert(std::pair<std::string, std::shared_ptr<cv::Mat>>(std::string("Background"), m_backgroundImage));
-	all.insert(std::pair<std::string, std::shared_ptr<cv::Mat>>(std::string("Foreground"), m_foregroundImage));
-	all.insert(std::pair<std::string, std::shared_ptr<cv::Mat>>(std::string("Binarized"), binarizedImage));
+	all.insert(std::pair<std::string, std::shared_ptr<cv::Mat>>(std::string("Foreground Mask"), m_foregroundMask));
 	all.insert(std::pair<std::string, std::shared_ptr<cv::Mat>>(std::string("Eroded"), erodedImage));
 	all.insert(std::pair<std::string, std::shared_ptr<cv::Mat>>(std::string("Dilated"), dilatedImage));
 
