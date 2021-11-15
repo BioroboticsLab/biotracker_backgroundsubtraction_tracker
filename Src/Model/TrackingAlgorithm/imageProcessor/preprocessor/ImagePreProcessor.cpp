@@ -85,6 +85,7 @@ cv::Mat ImagePreProcessor::backgroundSubtraction(cv::Mat& image)
 		if (m_TrackingParameter->getAlgorithm() != QString("Custom")) {
 			init();
 		}
+		subtractor->setUseAbsoluteDifference(m_TrackingParameter->getUseAbsoluteDifference());
 		subtractor->setBinarizationThreshold(m_TrackingParameter->getBinarizationThreshold());
 	} else {
 		qFatal("Unsupported background subtraction algorithm");

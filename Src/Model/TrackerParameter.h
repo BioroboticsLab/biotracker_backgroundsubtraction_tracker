@@ -18,48 +18,58 @@ public slots:
 		_algorithm = algorithm;
 	}
 
+	void setUseAbsoluteDifference(bool x);
+	bool getUseAbsoluteDifference();
+
 	void setBinarizationThreshold(int x);
 	int getBinarizationThreshold();
 
 	int getSizeErode() { return _SizeErode; };
 	void setSizeErode(int x) {
 		_SizeErode = x;
+		_cfg->SizeErode = x;
 		Q_EMIT notifyView();
 	};
 
 	int getSizeDilate() { return _SizeDilate; };
 	void setSizeDilate(int x) {
 		_SizeDilate = x;
+		_cfg->SizeDilate = x;
 		Q_EMIT notifyView();
 	};
 
 	double getLearningRate() { return _LearningRate; };
 	void setLearningRate(double x) {
 		_LearningRate = x;
+		_cfg->LearningRate = x;
 		Q_EMIT notifyView();
 	};
 
 	double getMinBlobSize() { return _MinBlobSize; };
 	void setMinBlobSize(double x) {
 		_MinBlobSize = x;
+		_cfg->MinBlobSize = x;
 		Q_EMIT notifyView();
 	};
 
 	double getMaxBlobSize() { return _MaxBlobSize; };
 	void setMaxBlobSize(double x) {
 		_MaxBlobSize = x;
+		_cfg->MaxBlobSize = x;
 		Q_EMIT notifyView();
 	};
 
 	bool getDoBackground() { return _doBackground; };
 	void setDoBackground(bool x) {
 		_doBackground = x;
+		_cfg->DoBackground = x;
 		Q_EMIT notifyView();
 	};
 
 	bool getDoNetwork() { return _doNetwork; };
 	void setDoNetwork(bool x) {
 		_doNetwork = x;
+		_cfg->DoNetwork = x;
 		Q_EMIT notifyView();
 	};
 
@@ -86,38 +96,14 @@ public slots:
 	void setNewSelection(std::string x) {
 		_newSelection = x;
 	}
-	
-
-	void setAll(
-		int BinarizationThreshold,
-		int SizeErode,
-		int SizeDilate,
-		double LearningRate,
-		int minBlobSize, 
-		int maxBlobSize)
-	{
-		_BinarizationThreshold = BinarizationThreshold;
-		_SizeErode = SizeErode;
-		_SizeDilate = SizeDilate;
-		_LearningRate = LearningRate;
-		_MinBlobSize = minBlobSize;
-		_MaxBlobSize = maxBlobSize;
-		_cfg->BinarizationThreshold = BinarizationThreshold;
-		_cfg->SizeErode = SizeErode;
-		_cfg->SizeDilate = SizeDilate;
-		_cfg->MinBlobSize = minBlobSize;
-		_cfg->MaxBlobSize = maxBlobSize;
-		_cfg->LearningRate = LearningRate;
-		Q_EMIT notifyView();
-	};
-
-
 
 private:
 
 	QString _algorithm;
 
+	bool _UseAbsoluteDifference;
 	int _BinarizationThreshold;
+
 	int _SizeErode;
 	int _SizeDilate;
 	double _LearningRate;

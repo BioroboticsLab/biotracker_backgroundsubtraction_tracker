@@ -7,7 +7,9 @@
 class Config : public IConfig
 {
 public:
+	bool UseAbsoluteDifference = true;
 	int BinarizationThreshold = 40;
+
 	int SizeErode = 8;
 	int SizeDilate = 8;
 	int MinBlobSize = 40;

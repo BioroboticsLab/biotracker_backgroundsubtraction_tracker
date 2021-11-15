@@ -5,6 +5,18 @@
 
 #include <opencv2/imgproc.hpp>
 
+CustomBackgroundSubtractor::CustomBackgroundSubtractor()
+: m_useAbsoluteDifference{true}
+, m_binarizationThreshold{8}
+{
+
+}
+
+void CustomBackgroundSubtractor::setUseAbsoluteDifference(bool value)
+{
+	m_useAbsoluteDifference = value;
+}
+
 void CustomBackgroundSubtractor::setBinarizationThreshold(int value)
 {
 	m_binarizationThreshold = value;
@@ -33,7 +45,9 @@ void CustomBackgroundSubtractor::apply(cv::InputArray image, cv::OutputArray fgm
 
 	auto fgmaskmat = fgmask.getMat();
 
-	auto workOnRegion = [&](int x, int y) {
+	const auto useAbsoluteDifference = m_useAbsoluteDifference;
+
+	auto workOnRegion = [&, useAbsoluteDifference](int x, int y) {
 		const int startingX = x * regionWidth;
 		const int startingY = y * regionHeight;
 		const cv::Rect subArea = cv::Rect(startingX, startingY, regionWidth, regionHeight);
@@ -41,7 +55,12 @@ void CustomBackgroundSubtractor::apply(cv::InputArray image, cv::OutputArray fgm
 		cv::Mat subImage = image.getMat()(subArea);
 		cv::Mat subResults = fgmaskmat(subArea);
 
-		subResults = (subBackground - subImage);
+		if (useAbsoluteDifference) {
+			cv::absdiff(subBackground, subImage, subResults);
+		} else {
+			cv::subtract(subBackground, subImage, subResults);
+		}
+
 		subBackground = (1.0 - learningRate) * subBackground + learningRate * subImage;
 	};
 

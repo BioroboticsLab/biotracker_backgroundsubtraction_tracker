@@ -51,6 +51,7 @@ void Config::load(QString dir, QString file)
     config->EnableSwap = tree.get<int>(globalPrefix+"EnableSwap",config->EnableSwap);
     config->EnableAdd = tree.get<int>(globalPrefix+"EnableAdd",config->EnableAdd);
     config->EnableRotate = tree.get<int>(globalPrefix+"EnableRotate",config->EnableRotate);
+    config->UseAbsoluteDifference = tree.get<bool>(globalPrefix+"UseAbsoluteDifference",config->UseAbsoluteDifference);
     config->BinarizationThreshold = tree.get<int>(globalPrefix+"BinarizationThreshold",config->BinarizationThreshold);
     config->SizeErode = tree.get<int>(globalPrefix+"SizeErode",config->SizeErode);
     config->SizeDilate = tree.get<int>(globalPrefix+"SizeDilate",config->SizeDilate);
@@ -77,6 +78,7 @@ void Config::save(QString dir, QString file)
     tree.put(globalPrefix+"EnableSwap", config->EnableSwap);
     tree.put(globalPrefix+"EnableAdd", config->EnableAdd);
     tree.put(globalPrefix+"EnableRotate", config->EnableRotate);
+    tree.put(globalPrefix+"UseAbsoluteDifference", config->UseAbsoluteDifference);
     tree.put(globalPrefix+"BinarizationThreshold", config->BinarizationThreshold);
     tree.put(globalPrefix+"SizeErode", config->SizeErode);
     tree.put(globalPrefix+"SizeDilate", config->SizeDilate);

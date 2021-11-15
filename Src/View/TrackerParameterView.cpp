@@ -5,6 +5,7 @@
 
 TrackerParameterView::TrackerParameterView(QWidget *parent, IController *controller, IModel *model) : IViewWidget(parent, controller, model),
 																																		_ui(new Ui::TrackerParameterView),
+																																		_useAbsDiff(nullptr),
 																																		_binThres(nullptr)
 {
 	_ui->setupUi(this);
@@ -31,6 +32,8 @@ TrackerParameterView::TrackerParameterView(QWidget *parent, IController *control
 	connect(_ui->lineEdit_7_learningRate, qOverload<double>(&QDoubleSpinBox::valueChanged), this, &TrackerParameterView::parametersChanged);
 
 	initSubtractorSpecificUI(_ui->algorithmCB->currentText());
+
+	_ui->algorithmCB->setEnabled(false);
 }
 
 TrackerParameterView::~TrackerParameterView()
@@ -46,11 +49,18 @@ void TrackerParameterView::initSubtractorSpecificUI(QString algorithm)
 		_ui->algorithmSpecificParameterLayout->removeRow(0);
 	}
 
-	if (_binThres) {
-		_binThres = nullptr;
-	}
+	_useAbsDiff = nullptr;
+	_binThres = nullptr;
 
 	if (algorithm == QString("Custom")) {
+		_useAbsDiff = new QCheckBox();
+		_useAbsDiff->setText(" ");
+		_useAbsDiff->setChecked(parameter->getUseAbsoluteDifference());
+		_ui->algorithmSpecificParameterLayout->addRow(tr("Use Absolute Difference:"), _useAbsDiff);
+
+		connect(_useAbsDiff, &QCheckBox::toggled, parameter, &TrackerParameter::setUseAbsoluteDifference);
+		connect(_useAbsDiff, &QCheckBox::toggled, this, &TrackerParameterView::parametersChanged);
+
 		_binThres = new QSpinBox();
 		_binThres->setMinimum(1);
 		_binThres->setMaximum(255);
@@ -84,6 +94,10 @@ void TrackerParameterView::getNotified()
 	TrackerParameter *parameter = qobject_cast<TrackerParameter *>(getModel());
 
 	_ui->lineEdit_7_learningRate->setValue(parameter->getLearningRate());
+
+	if (_useAbsDiff) {
+		_useAbsDiff->setChecked(parameter->getUseAbsoluteDifference());
+	}
 
 	if (_binThres) {
 		_binThres->setValue(parameter->getBinarizationThreshold());

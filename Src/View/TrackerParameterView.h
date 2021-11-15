@@ -5,6 +5,7 @@
 #include "../Model/TrackerParameter.h"
 
 #include <QSpinBox>
+#include <QCheckBox>
 
 namespace Ui {
 	class TrackerParameterView;
@@ -30,6 +31,8 @@ public:
 
 private:
     Ui::TrackerParameterView *_ui;
+
+    QCheckBox* _useAbsDiff;
 
     QSpinBox* _binThres;
 

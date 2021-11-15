@@ -7,7 +7,7 @@ TrackerParameter::TrackerParameter(QObject *parent) :
 	
 	_cfg = static_cast<ControllerTrackingAlgorithm*>(parent)->getConfig();
 	
-
+	_UseAbsoluteDifference = _cfg->UseAbsoluteDifference;
 	_BinarizationThreshold = _cfg->BinarizationThreshold;
 	_SizeErode = _cfg->SizeErode;
 	_SizeDilate = _cfg->SizeDilate;
@@ -38,4 +38,17 @@ void TrackerParameter::setBinarizationThreshold(int x)
 int TrackerParameter::getBinarizationThreshold()
 {
 	return _BinarizationThreshold;
+}
+
+
+void TrackerParameter::setUseAbsoluteDifference(bool value)
+{
+	_UseAbsoluteDifference = value;
+	_cfg->UseAbsoluteDifference = value;
+	Q_EMIT notifyView();
+}
+
+bool TrackerParameter::getUseAbsoluteDifference()
+{
+	return _UseAbsoluteDifference;
 }
