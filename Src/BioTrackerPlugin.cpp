@@ -56,9 +56,9 @@ void BioTrackerPlugin::connectInterfaces() {
 	ControllerTrackedComponent* ctrTrC = qobject_cast<ControllerTrackedComponent*> (m_ComponentController);
 
 	//controllertrackingalgorithm
-	QObject::connect(ctrAlg, &ControllerTrackingAlgorithm::emitCvMat, this, &BioTrackerPlugin::receiveCvMatFromController);
-	QObject::connect(ctrAlg, &ControllerTrackingAlgorithm::emitTrackingDone, this, &BioTrackerPlugin::receiveTrackingDone);
-	QObject::connect(ctrAlg, &ControllerTrackingAlgorithm::emitChangeDisplayImage, this, &BioTrackerPlugin::receiveChangeDisplayImage);
+	QObject::connect(ctrAlg, &ControllerTrackingAlgorithm::emitCvMat, this, &BioTrackerPlugin::emitCvMat);
+	QObject::connect(ctrAlg, &ControllerTrackingAlgorithm::emitTrackingDone, this, &BioTrackerPlugin::emitTrackingDone);
+	QObject::connect(ctrAlg, &ControllerTrackingAlgorithm::emitChangeDisplayImage, this, &BioTrackerPlugin::emitChangeDisplayImage);
 	QObject::connect(this, &BioTrackerPlugin::emitAreaDescriptorUpdate, ctrAlg, &ControllerTrackingAlgorithm::receiveAreaDescriptorUpdate);
 	//tracking algorithm
 	QObject::connect(static_cast<BioTrackerTrackingAlgorithm*>(ctrAlg->getModel()), SIGNAL(emitDimensionUpdate(int, int)), this, SIGNAL(emitDimensionUpdate(int, int)));
@@ -91,18 +91,6 @@ void BioTrackerPlugin::receiveCurrentFrameFromMainApp(std::shared_ptr<cv::Mat> m
 
 void BioTrackerPlugin::receiveCurrentFrameNumberFromMainApp(uint frameNumber) {
 	Q_EMIT emitCurrentFrameNumber(frameNumber);
-}
-
-void BioTrackerPlugin::receiveCvMatFromController(std::shared_ptr<cv::Mat> mat, QString name) {
-	Q_EMIT emitCvMat(mat, name);
-}
-
-void BioTrackerPlugin::receiveTrackingDone(uint framenumber) {
-	Q_EMIT emitTrackingDone(framenumber);
-}
-
-void BioTrackerPlugin::receiveChangeDisplayImage(QString str) {
-	Q_EMIT emitChangeDisplayImage(str);
 }
 
 void BioTrackerPlugin::receiveRemoveTrajectory(IModelTrackedTrajectory* trajectory) {

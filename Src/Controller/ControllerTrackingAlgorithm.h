@@ -12,9 +12,9 @@ class ControllerTrackingAlgorithm : public IController
 {
     Q_OBJECT
 public:
-    ControllerTrackingAlgorithm(QObject *parent = 0, IBioTrackerContext *context = 0, ENUMS::CONTROLLERTYPE ctr = ENUMS::CONTROLLERTYPE::NO_CTR);
+    ControllerTrackingAlgorithm(QObject* parent = 0, IBioTrackerContext* context = 0, ENUMS::CONTROLLERTYPE ctr = ENUMS::CONTROLLERTYPE::NO_CTR);
 
-    Config *getConfig() { return _cfg;};
+    Config* getConfig() { return _cfg;};
     void setConfig(Config *cfg) { _cfg = cfg;};
     // IController interface
 public:
@@ -22,7 +22,7 @@ public:
 
     void doTracking(std::shared_ptr<cv::Mat> mat, uint number);
 
-    IView *getTrackingParameterWidget();
+    IView* getTrackingParameterWidget();
 
 public Q_SLOTS:
 	void receiveAreaDescriptorUpdate(IModelAreaDescriptor *areaDescr);
@@ -38,15 +38,10 @@ Q_SIGNALS:
 	void emitChangeDisplayImage(QString str);
 	void emitAreaDescriptorUpdate(IModelAreaDescriptor *areaDescr);
 
-private Q_SLOTS:
-    void receiveCvMatFromTrackingAlgorithm(std::shared_ptr<cv::Mat> mat, QString name);
-    void receiveTrackingDone(uint framenumber);
-	void receiveChangeDisplayImage(QString str);
-
 private:
     IModel* m_TrackingParameter;
-	IModel *m_TrackedTrajectoryMajor;
-    Config *_cfg;
+	IModel* m_TrackedTrajectoryMajor;
+    Config* _cfg;
 };
 
 #endif // CONTROLLERTRACKINGALGORITHM_H

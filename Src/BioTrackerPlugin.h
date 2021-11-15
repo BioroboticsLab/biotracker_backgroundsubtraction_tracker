@@ -60,9 +60,6 @@ public slots:
 	void receiveCurrentFrameNumberFromMainApp(uint frameNumber);
 
 private slots:
-	void receiveCvMatFromController(std::shared_ptr<cv::Mat> mat, QString name);
-	void receiveTrackingDone(uint framenumber);
-	void receiveChangeDisplayImage(QString str);
 	void receiveAreaDescriptor(IModelAreaDescriptor *areaDescr);
 
 private:

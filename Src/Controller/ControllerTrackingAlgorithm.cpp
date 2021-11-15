@@ -46,10 +46,10 @@ void ControllerTrackingAlgorithm::createView()
 void ControllerTrackingAlgorithm::connectModelToController()
 {
     BioTrackerTrackingAlgorithm *trackingAlg = qobject_cast<BioTrackerTrackingAlgorithm *>(m_Model);
-    QObject::connect(trackingAlg, &BioTrackerTrackingAlgorithm::emitCvMatA, this, &ControllerTrackingAlgorithm::receiveCvMatFromTrackingAlgorithm);
-    QObject::connect(trackingAlg, &BioTrackerTrackingAlgorithm::emitTrackingDone, this, &ControllerTrackingAlgorithm::receiveTrackingDone);
-	QObject::connect(trackingAlg, &BioTrackerTrackingAlgorithm::emitChangeDisplayImage, this, &ControllerTrackingAlgorithm::receiveChangeDisplayImage);
-	QObject::connect(this, &ControllerTrackingAlgorithm::emitAreaDescriptorUpdate, trackingAlg, &BioTrackerTrackingAlgorithm::receiveAreaDescriptorUpdate);
+    QObject::connect(trackingAlg, &BioTrackerTrackingAlgorithm::emitCvMatA, this, &ControllerTrackingAlgorithm::emitCvMat);
+    QObject::connect(trackingAlg, &BioTrackerTrackingAlgorithm::emitTrackingDone, this, &ControllerTrackingAlgorithm::emitTrackingDone);
+    QObject::connect(trackingAlg, &BioTrackerTrackingAlgorithm::emitChangeDisplayImage, this, &ControllerTrackingAlgorithm::emitChangeDisplayImage);
+    QObject::connect(this, &ControllerTrackingAlgorithm::emitAreaDescriptorUpdate, trackingAlg, &BioTrackerTrackingAlgorithm::receiveAreaDescriptorUpdate);
 
     QObject::connect(static_cast<TrackerParameterView*>(m_View), &TrackerParameterView::parametersChanged, 
         trackingAlg, &BioTrackerTrackingAlgorithm::receiveParametersChanged);
@@ -59,20 +59,6 @@ void ControllerTrackingAlgorithm::connectModelToController()
 	IView *v = qobject_cast<ControllerTrackedComponent*>(ctr)->getView();
 	TrackedElementView *v2 = dynamic_cast<TrackedElementView *>(v);
 	QObject::connect(trackingAlg, SIGNAL(emitDimensionUpdate(int, int)), v2, SLOT(rcvDimensionUpdate(int, int)));
-}
-
-void ControllerTrackingAlgorithm::receiveCvMatFromTrackingAlgorithm(std::shared_ptr<cv::Mat> mat, QString name)
-{
-    Q_EMIT emitCvMat(mat, name);
-}
-
-void ControllerTrackingAlgorithm::receiveTrackingDone(uint framenumber)
-{
-    Q_EMIT emitTrackingDone(framenumber);
-}
-
-void ControllerTrackingAlgorithm::receiveChangeDisplayImage(QString str) {
-	Q_EMIT emitChangeDisplayImage(str);
 }
 
 void ControllerTrackingAlgorithm::receiveAreaDescriptorUpdate(IModelAreaDescriptor *areaDescr) {
