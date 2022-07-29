@@ -475,6 +475,11 @@
                   <string>Closed Mask</string>
                  </property>
                 </item>
+                <item>
+                 <property name="text">
+                  <string>Masked Greyscale</string>
+                 </property>
+                </item>
                </widget>
               </item>
              </layout>

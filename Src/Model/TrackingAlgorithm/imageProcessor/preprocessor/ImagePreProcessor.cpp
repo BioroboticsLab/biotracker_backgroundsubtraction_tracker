@@ -105,6 +105,8 @@ std::map<std::string, std::shared_ptr<cv::Mat>> ImagePreProcessor::preProcess(
     std::shared_ptr<cv::Mat> openedMask = std::make_shared<cv::Mat>();
     std::shared_ptr<cv::Mat> closedMask = std::make_shared<cv::Mat>();
 
+    std::shared_ptr<cv::Mat> maskedGrey = std::make_shared<cv::Mat>();
+
     cv::cvtColor(*p_image, *greyMat, cv::COLOR_BGR2GRAY);
 
     // 1. step: do the background subtraction
@@ -119,6 +121,9 @@ std::map<std::string, std::shared_ptr<cv::Mat>> ImagePreProcessor::preProcess(
     *closedMask = erode(
         dilate(*openedMask, m_TrackingParameter->getClosingDilationSize()),
         m_TrackingParameter->getClosingErosionSize());
+    
+    // 4. step: masked greyscale image
+    greyMat->copyTo(*maskedGrey, *closedMask);
 
     std::map<std::string, std::shared_ptr<cv::Mat>> all;
     all.insert(std::pair<std::string, std::shared_ptr<cv::Mat>>(
@@ -136,6 +141,9 @@ std::map<std::string, std::shared_ptr<cv::Mat>> ImagePreProcessor::preProcess(
     all.insert(std::pair<std::string, std::shared_ptr<cv::Mat>>(
         std::string("Closed Mask"),
         closedMask));
+    all.insert(std::pair<std::string, std::shared_ptr<cv::Mat>>(
+        std::string("Masked Greyscale"),
+        maskedGrey));
 
     return all;
 }

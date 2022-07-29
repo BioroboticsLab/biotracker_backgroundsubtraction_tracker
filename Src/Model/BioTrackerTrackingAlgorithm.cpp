@@ -104,6 +104,11 @@ void BioTrackerTrackingAlgorithm::sendSelectedImage(
         Q_EMIT emitCvMatA(sendImage, QString("Closed Mask"));
         Q_EMIT emitChangeDisplayImage(QString("Closed Mask"));
         break;
+    case 5:
+        sendImage = images->find(std::string("Masked Greyscale"))->second;
+        Q_EMIT emitCvMatA(sendImage, QString("Masked Greyscale"));
+        Q_EMIT emitChangeDisplayImage(QString("Masked Greyscale"));
+        break;
     }
 }
 
