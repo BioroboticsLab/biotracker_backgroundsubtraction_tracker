@@ -10,6 +10,7 @@ TrackerParameterView::TrackerParameterView(QWidget*     parent,
 , _ui(new Ui::TrackerParameterView)
 , _useAbsDiff(nullptr)
 , _binThres(nullptr)
+, _maxImg(nullptr)
 {
     _ui->setupUi(this);
     getNotified();
@@ -108,6 +109,7 @@ void TrackerParameterView::initSubtractorSpecificUI(QString algorithm)
 
     _useAbsDiff = nullptr;
     _binThres   = nullptr;
+    _maxImg   = nullptr;
 
     if (algorithm == QString("Custom")) {
         _useAbsDiff = new QCheckBox();
@@ -139,6 +141,23 @@ void TrackerParameterView::initSubtractorSpecificUI(QString algorithm)
                 parameter,
                 &TrackerParameter::setBinarizationThreshold);
         connect(_binThres,
+                qOverload<int>(&QSpinBox::valueChanged),
+                this,
+                &TrackerParameterView::parametersChanged);
+ 
+        _maxImg = new QSpinBox();
+        _maxImg->setMinimum(1);
+        _maxImg->setMaximum(255);
+        _maxImg->setValue(parameter->getMaximumImageValue());
+        _ui->algorithmSpecificParameterLayout->addRow(
+            tr("Maximum Image Value:"),
+            _maxImg);
+
+        connect(_maxImg,
+                qOverload<int>(&QSpinBox::valueChanged),
+                parameter,
+                &TrackerParameter::setMaximumImageValue);
+        connect(_maxImg,
                 qOverload<int>(&QSpinBox::valueChanged),
                 this,
                 &TrackerParameterView::parametersChanged);
@@ -175,6 +194,10 @@ void TrackerParameterView::getNotified()
 
     if (_binThres) {
         _binThres->setValue(parameter->getBinarizationThreshold());
+    }
+
+    if (_maxImg) {
+        _maxImg->setValue(parameter->getMaximumImageValue());
     }
 
     _ui->lineEdit_3_OpeningErosionSize->setValue(

@@ -37,6 +37,7 @@ private:
     QCheckBox* _useAbsDiff;
 
     QSpinBox* _binThres;
+    QSpinBox* _maxImg;
 
 private slots:
     void initSubtractorSpecificUI(QString algorithm);

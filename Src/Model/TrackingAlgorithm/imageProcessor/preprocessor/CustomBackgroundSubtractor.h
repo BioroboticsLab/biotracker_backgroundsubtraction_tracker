@@ -15,6 +15,7 @@ public:
 
     void setUseAbsoluteDifference(bool value);
     void setBinarizationThreshold(int value);
+    void setMaximumImageValue(int value);
 
 private:
     cv::Mat m_background;
@@ -22,4 +23,5 @@ private:
     bool m_useAbsoluteDifference;
 
     int m_binarizationThreshold;
+    int m_maximumImageValue;
 };

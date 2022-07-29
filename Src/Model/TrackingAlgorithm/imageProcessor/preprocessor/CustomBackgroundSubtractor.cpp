@@ -8,6 +8,7 @@
 CustomBackgroundSubtractor::CustomBackgroundSubtractor()
 : m_useAbsoluteDifference{true}
 , m_binarizationThreshold{8}
+, m_maximumImageValue{255}
 {
 }
 
@@ -19,6 +20,11 @@ void CustomBackgroundSubtractor::setUseAbsoluteDifference(bool value)
 void CustomBackgroundSubtractor::setBinarizationThreshold(int value)
 {
     m_binarizationThreshold = value;
+}
+
+void CustomBackgroundSubtractor::setMaximumImageValue(int value)
+{
+    m_maximumImageValue = value;
 }
 
 void CustomBackgroundSubtractor::getBackgroundImage(
@@ -43,9 +49,7 @@ void CustomBackgroundSubtractor::apply(cv::InputArray  image,
     const int regionWidth   = imageWidth / totalRegionsX;
     const int regionHeight  = imageHeight / totalRegionsY;
 
-    fgmask.create(imageHeight, imageWidth, image.type());
-
-    auto fgmaskmat = fgmask.getMat();
+    auto diffimg = cv::Mat(imageHeight, imageWidth, image.type());
 
     const auto useAbsoluteDifference = m_useAbsoluteDifference;
 
@@ -56,7 +60,7 @@ void CustomBackgroundSubtractor::apply(cv::InputArray  image,
             cv::Rect(startingX, startingY, regionWidth, regionHeight);
         cv::Mat subBackground = m_background(subArea);
         cv::Mat subImage      = image.getMat()(subArea);
-        cv::Mat subResults    = fgmaskmat(subArea);
+        cv::Mat subResults    = diffimg(subArea);
 
         if (useAbsoluteDifference) {
             cv::absdiff(subBackground, subImage, subResults);
@@ -81,11 +85,19 @@ void CustomBackgroundSubtractor::apply(cv::InputArray  image,
         asyncResult.wait();
     }
 
-    if (fgmaskmat.data) {
-        cv::threshold(fgmaskmat,
-                      fgmaskmat,
+    if (diffimg.data) {
+        cv::Mat diffmask;
+
+        cv::Mat maxabsmask;
+
+        cv::threshold(diffimg,
+                      diffmask,
                       m_binarizationThreshold,
                       255,
                       cv::THRESH_BINARY);
+
+        cv::threshold(image, maxabsmask, m_maximumImageValue, 255, cv::THRESH_BINARY_INV);
+
+        cv::bitwise_and(diffmask, maxabsmask, fgmask);
     }
 }

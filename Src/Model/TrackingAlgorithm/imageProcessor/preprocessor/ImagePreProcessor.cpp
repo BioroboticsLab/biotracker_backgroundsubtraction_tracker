@@ -88,6 +88,8 @@ cv::Mat ImagePreProcessor::backgroundSubtraction(cv::Mat& image)
             m_TrackingParameter->getUseAbsoluteDifference());
         subtractor->setBinarizationThreshold(
             m_TrackingParameter->getBinarizationThreshold());
+        subtractor->setMaximumImageValue(
+            m_TrackingParameter->getMaximumImageValue());
     } else {
         qFatal("Unsupported background subtraction algorithm");
     }

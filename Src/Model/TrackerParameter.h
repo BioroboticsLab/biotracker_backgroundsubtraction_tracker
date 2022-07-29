@@ -27,6 +27,9 @@ public slots:
     void setBinarizationThreshold(int x);
     int  getBinarizationThreshold();
 
+    void setMaximumImageValue(int x);
+    int  getMaximumImageValue();
+
     int getOpeningErosionSize()
     {
         return _OpeningErosionSize;
@@ -171,6 +174,7 @@ private:
 
     bool _UseAbsoluteDifference;
     int  _BinarizationThreshold;
+    int  _MaximumImageValue;
 
     int _OpeningErosionSize;
     int _OpeningDilationSize;

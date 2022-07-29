@@ -62,6 +62,9 @@ void Config::load(QString dir, QString file)
     config->BinarizationThreshold = tree.get<int>(
         globalPrefix + "BinarizationThreshold",
         config->BinarizationThreshold);
+    config->MaximumImageValue = tree.get<int>(
+        globalPrefix + "MaximumImageValue",
+        config->MaximumImageValue);
 
     config->OpeningErosionSize  = tree.get<int>(globalPrefix +
                                                    "OpeningErosionSize",
@@ -111,6 +114,8 @@ void Config::save(QString dir, QString file)
              config->UseAbsoluteDifference);
     tree.put(globalPrefix + "BinarizationThreshold",
              config->BinarizationThreshold);
+    tree.put(globalPrefix + "MaximumImageValue",
+             config->MaximumImageValue);
     tree.put(globalPrefix + "OpeningErosionSize", config->OpeningErosionSize);
     tree.put(globalPrefix + "OpeningDilationSize",
              config->OpeningDilationSize);

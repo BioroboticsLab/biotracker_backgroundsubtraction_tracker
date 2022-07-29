@@ -42,6 +42,18 @@ int TrackerParameter::getBinarizationThreshold()
     return _BinarizationThreshold;
 }
 
+void TrackerParameter::setMaximumImageValue(int x)
+{
+    _MaximumImageValue      = x;
+    _cfg->MaximumImageValue = x;
+    Q_EMIT notifyView();
+}
+
+int TrackerParameter::getMaximumImageValue()
+{
+    return _MaximumImageValue;
+}
+
 void TrackerParameter::setUseAbsoluteDifference(bool value)
 {
     _UseAbsoluteDifference      = value;
