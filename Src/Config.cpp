@@ -62,10 +62,10 @@ void Config::load(QString dir, QString file)
     config->BinarizationThreshold = tree.get<int>(
         globalPrefix + "BinarizationThreshold",
         config->BinarizationThreshold);
-    config->SizeErode       = tree.get<int>(globalPrefix + "SizeErode",
-                                      config->SizeErode);
-    config->SizeDilate      = tree.get<int>(globalPrefix + "SizeDilate",
-                                       config->SizeDilate);
+    config->OpeningErosionSize       = tree.get<int>(globalPrefix + "OpeningErosionSize",
+                                      config->OpeningErosionSize);
+    config->OpeningDilationSize      = tree.get<int>(globalPrefix + "OpeningDilationSize",
+                                       config->OpeningDilationSize);
     config->MinBlobSize     = tree.get<int>(globalPrefix + "MinBlobSize",
                                         config->MinBlobSize);
     config->MaxBlobSize     = tree.get<int>(globalPrefix + "MaxBlobSize",
@@ -100,8 +100,8 @@ void Config::save(QString dir, QString file)
              config->UseAbsoluteDifference);
     tree.put(globalPrefix + "BinarizationThreshold",
              config->BinarizationThreshold);
-    tree.put(globalPrefix + "SizeErode", config->SizeErode);
-    tree.put(globalPrefix + "SizeDilate", config->SizeDilate);
+    tree.put(globalPrefix + "OpeningErosionSize", config->OpeningErosionSize);
+    tree.put(globalPrefix + "OpeningDilationSize", config->OpeningDilationSize);
     tree.put(globalPrefix + "MinBlobSize", config->MinBlobSize);
     tree.put(globalPrefix + "MaxBlobSize", config->MaxBlobSize);
     tree.put(globalPrefix + "LearningRate", config->LearningRate);

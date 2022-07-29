@@ -48,7 +48,7 @@ cv::Mat ImagePreProcessor::erode(cv::Mat& image)
 {
     cv::Mat erodedImage;
     cv::Mat erodeKernel;
-    int     sizeErode = m_TrackingParameter->getSizeErode();
+    int     sizeErode = m_TrackingParameter->getOpeningErosionSize();
     if (sizeErode > 0) {
         erodeKernel = cv::getStructuringElement(
             cv::MORPH_CROSS,
@@ -65,7 +65,7 @@ cv::Mat ImagePreProcessor::dilate(cv::Mat& image)
 {
     cv::Mat dilatedImage;
     cv::Mat dilateKernel;
-    int     sizeDilate = m_TrackingParameter->getSizeDilate();
+    int     sizeDilate = m_TrackingParameter->getOpeningDilationSize();
     if (sizeDilate > 0) {
         dilateKernel = cv::getStructuringElement(
             cv::MORPH_RECT,

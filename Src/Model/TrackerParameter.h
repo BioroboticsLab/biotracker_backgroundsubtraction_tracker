@@ -27,25 +27,25 @@ public slots:
     void setBinarizationThreshold(int x);
     int  getBinarizationThreshold();
 
-    int getSizeErode()
+    int getOpeningErosionSize()
     {
-        return _SizeErode;
+        return _OpeningErosionSize;
     };
-    void setSizeErode(int x)
+    void setOpeningErosionSize(int x)
     {
-        _SizeErode      = x;
-        _cfg->SizeErode = x;
+        _OpeningErosionSize      = x;
+        _cfg->OpeningErosionSize = x;
         Q_EMIT notifyView();
     };
 
-    int getSizeDilate()
+    int getOpeningDilationSize()
     {
-        return _SizeDilate;
+        return _OpeningDilationSize;
     };
-    void setSizeDilate(int x)
+    void setOpeningDilationSize(int x)
     {
-        _SizeDilate      = x;
-        _cfg->SizeDilate = x;
+        _OpeningDilationSize      = x;
+        _cfg->OpeningDilationSize = x;
         Q_EMIT notifyView();
     };
 
@@ -150,8 +150,8 @@ private:
     bool _UseAbsoluteDifference;
     int  _BinarizationThreshold;
 
-    int    _SizeErode;
-    int    _SizeDilate;
+    int    _OpeningErosionSize;
+    int    _OpeningDilationSize;
     double _LearningRate;
     int    _MinBlobSize;
     int    _MaxBlobSize;
