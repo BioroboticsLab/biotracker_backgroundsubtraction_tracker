@@ -7,15 +7,23 @@
 #include "Interfaces/IModel/IModelDataExporter.h"
 #include "../Config.h"
 
-
 class ControllerTrackingAlgorithm : public IController
 {
     Q_OBJECT
 public:
-    ControllerTrackingAlgorithm(QObject* parent = 0, IBioTrackerContext* context = 0, ENUMS::CONTROLLERTYPE ctr = ENUMS::CONTROLLERTYPE::NO_CTR);
+    ControllerTrackingAlgorithm(
+        QObject*              parent  = 0,
+        IBioTrackerContext*   context = 0,
+        ENUMS::CONTROLLERTYPE ctr     = ENUMS::CONTROLLERTYPE::NO_CTR);
 
-    Config* getConfig() { return _cfg;};
-    void setConfig(Config *cfg) { _cfg = cfg;};
+    Config* getConfig()
+    {
+        return _cfg;
+    };
+    void setConfig(Config* cfg)
+    {
+        _cfg = cfg;
+    };
     // IController interface
 public:
     void connectControllerToController() override;
@@ -25,7 +33,7 @@ public:
     IView* getTrackingParameterWidget();
 
 public Q_SLOTS:
-	void receiveAreaDescriptorUpdate(IModelAreaDescriptor *areaDescr);
+    void receiveAreaDescriptorUpdate(IModelAreaDescriptor* areaDescr);
 
 protected:
     void createModel() override;
@@ -35,12 +43,12 @@ protected:
 Q_SIGNALS:
     void emitCvMat(std::shared_ptr<cv::Mat> mat, QString name);
     void emitTrackingDone(uint framenumber);
-	void emitChangeDisplayImage(QString str);
-	void emitAreaDescriptorUpdate(IModelAreaDescriptor *areaDescr);
+    void emitChangeDisplayImage(QString str);
+    void emitAreaDescriptorUpdate(IModelAreaDescriptor* areaDescr);
 
 private:
     IModel* m_TrackingParameter;
-	IModel* m_TrackedTrajectoryMajor;
+    IModel* m_TrackedTrajectoryMajor;
     Config* _cfg;
 };
 

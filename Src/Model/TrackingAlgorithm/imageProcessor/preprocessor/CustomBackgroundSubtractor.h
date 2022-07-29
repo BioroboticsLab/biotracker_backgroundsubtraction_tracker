@@ -5,19 +5,21 @@
 class CustomBackgroundSubtractor : public cv::BackgroundSubtractor
 {
 public:
-	CustomBackgroundSubtractor();
+    CustomBackgroundSubtractor();
 
-	void apply(cv::InputArray image, cv::OutputArray fgmask, double learningRate = -1) override;
+    void apply(cv::InputArray  image,
+               cv::OutputArray fgmask,
+               double          learningRate = -1) override;
 
-	void getBackgroundImage(cv::OutputArray backgroundImage) const override;
+    void getBackgroundImage(cv::OutputArray backgroundImage) const override;
 
-	void setUseAbsoluteDifference(bool value);
-	void setBinarizationThreshold(int value);
+    void setUseAbsoluteDifference(bool value);
+    void setBinarizationThreshold(int value);
 
 private:
-	cv::Mat m_background;
+    cv::Mat m_background;
 
-	bool m_useAbsoluteDifference;
+    bool m_useAbsoluteDifference;
 
-	int m_binarizationThreshold;
+    int m_binarizationThreshold;
 };

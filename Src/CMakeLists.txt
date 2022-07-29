@@ -41,7 +41,6 @@ add_behavior_plugin(${target}
     "helper/StringHelper.cpp"
     "Controller/ControllerTrackedComponent.cpp"
     "Controller/ControllerTrackingAlgorithm.cpp"
-    "Controller/null_Controller.cpp"
 )
 
 install(TARGETS ${target} OPTIONAL DESTINATION .)

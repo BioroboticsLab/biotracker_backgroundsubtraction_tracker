@@ -5,37 +5,46 @@
 #include "../View/TrackerParameterView.h"
 #include "../View/TrackedElementView.h"
 
-ControllerTrackingAlgorithm::ControllerTrackingAlgorithm(QObject *parent, IBioTrackerContext *context, ENUMS::CONTROLLERTYPE ctr) :
-    IController(parent, context, ctr)
+ControllerTrackingAlgorithm::ControllerTrackingAlgorithm(
+    QObject*              parent,
+    IBioTrackerContext*   context,
+    ENUMS::CONTROLLERTYPE ctr)
+: IController(parent, context, ctr)
 {
-	m_BioTrackerContext = context;
+    m_BioTrackerContext = context;
 }
 
 void ControllerTrackingAlgorithm::connectControllerToController()
 {
-	IController * ctr = m_BioTrackerContext->requestController(ENUMS::CONTROLLERTYPE::COMPONENT);
-	QPointer< ControllerTrackedComponent > ctrComponent = qobject_cast<ControllerTrackedComponent *>(ctr);
+    IController* ctr = m_BioTrackerContext->requestController(
+        ENUMS::CONTROLLERTYPE::COMPONENT);
+    QPointer<ControllerTrackedComponent> ctrComponent =
+        qobject_cast<ControllerTrackedComponent*>(ctr);
 
-	m_TrackedTrajectoryMajor = ctrComponent->getModel();
+    m_TrackedTrajectoryMajor = ctrComponent->getModel();
 }
 
-void ControllerTrackingAlgorithm::doTracking(std::shared_ptr<cv::Mat> mat, uint number)
+void ControllerTrackingAlgorithm::doTracking(std::shared_ptr<cv::Mat> mat,
+                                             uint                     number)
 {
-    qobject_cast<BioTrackerTrackingAlgorithm *>(m_Model)->doTracking(mat, number);
+    qobject_cast<BioTrackerTrackingAlgorithm*>(m_Model)->doTracking(mat,
+                                                                    number);
 }
 
-IView *ControllerTrackingAlgorithm::getTrackingParameterWidget()
+IView* ControllerTrackingAlgorithm::getTrackingParameterWidget()
 {
     return m_View;
 }
 
 void ControllerTrackingAlgorithm::createModel()
 {
-	connectControllerToController();
+    connectControllerToController();
 
-	m_TrackingParameter = new TrackerParameter(this);
+    m_TrackingParameter = new TrackerParameter(this);
 
-	m_Model = new BioTrackerTrackingAlgorithm(this, m_TrackingParameter, m_TrackedTrajectoryMajor);
+    m_Model = new BioTrackerTrackingAlgorithm(this,
+                                              m_TrackingParameter,
+                                              m_TrackedTrajectoryMajor);
 }
 
 void ControllerTrackingAlgorithm::createView()
@@ -45,22 +54,45 @@ void ControllerTrackingAlgorithm::createView()
 
 void ControllerTrackingAlgorithm::connectModelToController()
 {
-    BioTrackerTrackingAlgorithm *trackingAlg = qobject_cast<BioTrackerTrackingAlgorithm *>(m_Model);
-    QObject::connect(trackingAlg, &BioTrackerTrackingAlgorithm::emitCvMatA, this, &ControllerTrackingAlgorithm::emitCvMat);
-    QObject::connect(trackingAlg, &BioTrackerTrackingAlgorithm::emitTrackingDone, this, &ControllerTrackingAlgorithm::emitTrackingDone);
-    QObject::connect(trackingAlg, &BioTrackerTrackingAlgorithm::emitChangeDisplayImage, this, &ControllerTrackingAlgorithm::emitChangeDisplayImage);
-    QObject::connect(this, &ControllerTrackingAlgorithm::emitAreaDescriptorUpdate, trackingAlg, &BioTrackerTrackingAlgorithm::receiveAreaDescriptorUpdate);
+    BioTrackerTrackingAlgorithm* trackingAlg =
+        qobject_cast<BioTrackerTrackingAlgorithm*>(m_Model);
+    QObject::connect(trackingAlg,
+                     &BioTrackerTrackingAlgorithm::emitCvMatA,
+                     this,
+                     &ControllerTrackingAlgorithm::emitCvMat);
+    QObject::connect(trackingAlg,
+                     &BioTrackerTrackingAlgorithm::emitTrackingDone,
+                     this,
+                     &ControllerTrackingAlgorithm::emitTrackingDone);
+    QObject::connect(trackingAlg,
+                     &BioTrackerTrackingAlgorithm::emitChangeDisplayImage,
+                     this,
+                     &ControllerTrackingAlgorithm::emitChangeDisplayImage);
+    QObject::connect(
+        this,
+        &ControllerTrackingAlgorithm::emitAreaDescriptorUpdate,
+        trackingAlg,
+        &BioTrackerTrackingAlgorithm::receiveAreaDescriptorUpdate);
 
-    QObject::connect(static_cast<TrackerParameterView*>(m_View), &TrackerParameterView::parametersChanged, 
-        trackingAlg, &BioTrackerTrackingAlgorithm::receiveParametersChanged);
+    QObject::connect(static_cast<TrackerParameterView*>(m_View),
+                     &TrackerParameterView::parametersChanged,
+                     trackingAlg,
+                     &BioTrackerTrackingAlgorithm::receiveParametersChanged);
 
-	//enable the tracker to send video dimension updates to the views via signal
-	IController* ctr = m_BioTrackerContext->requestController(ENUMS::CONTROLLERTYPE::COMPONENT);
-	IView *v = qobject_cast<ControllerTrackedComponent*>(ctr)->getView();
-	TrackedElementView *v2 = dynamic_cast<TrackedElementView *>(v);
-	QObject::connect(trackingAlg, SIGNAL(emitDimensionUpdate(int, int)), v2, SLOT(rcvDimensionUpdate(int, int)));
+    // enable the tracker to send video dimension updates to the views via
+    // signal
+    IController* ctr = m_BioTrackerContext->requestController(
+        ENUMS::CONTROLLERTYPE::COMPONENT);
+    IView* v = qobject_cast<ControllerTrackedComponent*>(ctr)->getView();
+    TrackedElementView* v2 = dynamic_cast<TrackedElementView*>(v);
+    QObject::connect(trackingAlg,
+                     SIGNAL(emitDimensionUpdate(int, int)),
+                     v2,
+                     SLOT(rcvDimensionUpdate(int, int)));
 }
 
-void ControllerTrackingAlgorithm::receiveAreaDescriptorUpdate(IModelAreaDescriptor *areaDescr) {
-	Q_EMIT emitAreaDescriptorUpdate(areaDescr);
+void ControllerTrackingAlgorithm::receiveAreaDescriptorUpdate(
+    IModelAreaDescriptor* areaDescr)
+{
+    Q_EMIT emitAreaDescriptorUpdate(areaDescr);
 }

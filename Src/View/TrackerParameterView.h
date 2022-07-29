@@ -7,8 +7,9 @@
 #include <QSpinBox>
 #include <QCheckBox>
 
-namespace Ui {
-	class TrackerParameterView;
+namespace Ui
+{
+    class TrackerParameterView;
 }
 
 class TrackerParameterView : public IViewWidget
@@ -16,21 +17,22 @@ class TrackerParameterView : public IViewWidget
     Q_OBJECT
 
 public:
-    explicit TrackerParameterView(QWidget *parent = 0, IController *controller = 0, IModel *model = 0);
+    explicit TrackerParameterView(QWidget*     parent     = 0,
+                                  IController* controller = 0,
+                                  IModel*      model      = 0);
     ~TrackerParameterView();
 
 private slots:
-	void on_pushButtonResetBackground_clicked();
-	void on_comboBoxSendImage_currentIndexChanged(int v);
+    void on_pushButtonResetBackground_clicked();
+    void on_comboBoxSendImage_currentIndexChanged(int v);
 
-	
 public:
-	signals:
+signals:
     void trackingAreaType(int v);
     void parametersChanged();
 
 private:
-    Ui::TrackerParameterView *_ui;
+    Ui::TrackerParameterView* _ui;
 
     QCheckBox* _useAbsDiff;
 

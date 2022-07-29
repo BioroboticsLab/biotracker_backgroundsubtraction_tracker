@@ -2,22 +2,22 @@
 
 #include "Interfaces/IModel/IModelTrackedComponentFactory.h"
 
-namespace BST{
-    
-class TrackedComponentFactory : public IModelTrackedComponentFactory
+namespace BST
 {
-    Q_OBJECT
-public:
-    TrackedComponentFactory();
-    ~TrackedComponentFactory();
 
-    QList<QString> getElementTypes() override;
+    class TrackedComponentFactory : public IModelTrackedComponentFactory
+    {
+        Q_OBJECT
+    public:
+        TrackedComponentFactory();
+        ~TrackedComponentFactory();
 
-    // ITrackedComponentFactory interface
-protected:
-    IModelTrackedComponent *createTrackedElement(QString name) override;
-	IModelTrackedComponent *createTrackedObject(QString name) override;
-	IModelTrackedComponent *createTrackedTrajectory(QString name) override;
-};
+        QList<QString> getElementTypes() override;
+
+        // ITrackedComponentFactory interface
+    protected:
+        IModelTrackedComponent* createTrackedElement(QString name) override;
+        IModelTrackedComponent* createTrackedObject(QString name) override;
+        IModelTrackedComponent* createTrackedTrajectory(QString name) override;
+    };
 }
-

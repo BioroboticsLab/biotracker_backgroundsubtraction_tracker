@@ -11,39 +11,42 @@
 class SimpleBlobsDetector : public IDetector<BlobPose>
 {
 public:
+    /**
+     * The contructor with parameters.
+     */
+    SimpleBlobsDetector(void);
 
-	/**
-	 * The contructor with parameters.
-	 */
-	SimpleBlobsDetector(void);
+    virtual ~SimpleBlobsDetector(void)
+    {
+    }
 
-	virtual ~SimpleBlobsDetector(void) {}
+    void setMask(cv::Mat* mask)
+    {
+        _mask = mask;
+    }
 
-	void setMask(cv::Mat *mask) { _mask = mask; }
-		
-	std::vector<BlobPose> getPoses(cv::Mat& binImage, cv::Mat& oriImage);
+    std::vector<BlobPose> getPoses(cv::Mat& binImage, cv::Mat& oriImage);
 
-	void setDouble(std::string spec_param, double value);
+    void setDouble(std::string spec_param, double value);
 
 private:
+    cv::Mat*                       _mask;
+    cv::SimpleBlobDetector::Params _params;
 
-	cv::Mat *_mask;
-	cv::SimpleBlobDetector::Params _params;
+    /**
+     * Initialized the parameter for setting up the blob detector.
+     * @return: void.
+     */
+    void initParams();
 
-	/**
-	 * Initialized the parameter for setting up the blob detector.
-	 * @return: void. 
-	 */
-	void initParams();
+    /**
+     * Find all blobs within an image.
+     * @param: binarized_image_mat, image contains blobs and is already
+     * binarized,
+     * @return: all found blobs within the image.
+     */
 
-	/**
-	 * Find all blobs within an image.
-	 * @param: binarized_image_mat, image contains blobs and is already binarized,
-	 * @return: all found blobs within the image.
-	 */
-	
-	// TODO: can we make binImage a reference??
-	std::vector<BlobPose> findBlobs(const cv::Mat& binImage, const cv::Mat& oriImage);
-
-	
+    // TODO: can we make binImage a reference??
+    std::vector<BlobPose> findBlobs(const cv::Mat& binImage,
+                                    const cv::Mat& oriImage);
 };

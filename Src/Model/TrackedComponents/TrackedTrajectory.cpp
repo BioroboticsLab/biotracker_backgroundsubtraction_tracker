@@ -2,43 +2,49 @@
 #include "QDebug"
 #include "TrackedElement.h"
 
-namespace BST{
-    
-    void TrackedTrajectory::triggerRecalcValid() {
+namespace BST
+{
+
+    void TrackedTrajectory::triggerRecalcValid()
+    {
         g_calcValid = 1;
     }
 
-    void TrackedTrajectory::setValid(bool v) {
+    void TrackedTrajectory::setValid(bool v)
+    {
         _valid = v;
         if (_parentNode) {
-            TrackedTrajectory* n = dynamic_cast<TrackedTrajectory*>(_parentNode);
+            TrackedTrajectory* n = dynamic_cast<TrackedTrajectory*>(
+                _parentNode);
             if (n)
                 n->triggerRecalcValid();
         }
     }
 
-    TrackedTrajectory::TrackedTrajectory(QObject *parent, QString name) :
-        ::TrackedTrajectory(parent),
-        name(name)
+    TrackedTrajectory::TrackedTrajectory(QObject* parent, QString name)
+    : ::TrackedTrajectory(parent)
+    , name(name)
     {
         setFixed(false);
-        g_calcValid = 1;
+        g_calcValid  = 1;
         g_validCount = 0;
-        _size = 0;
-        _valid = true;
+        _size        = 0;
+        _valid       = true;
     }
 
     void TrackedTrajectory::operate()
     {
-        qDebug() << "Printing all TrackedElements in TrackedObject " <<  name;
-        qDebug() << "========================= Begin ==========================";
+        qDebug() << "Printing all TrackedElements in TrackedObject " << name;
+        qDebug()
+            << "========================= Begin ==========================";
         for (int i = 0; i < _TrackedComponents.size(); ++i) {
-            dynamic_cast<TrackedElement *>(_TrackedComponents.at(i))->operate();
+            dynamic_cast<TrackedElement*>(_TrackedComponents.at(i))->operate();
         }
-        qDebug() << "========================   End   =========================";
+        qDebug()
+            << "========================   End   =========================";
     }
 
-    void TrackedTrajectory::add(IModelTrackedComponent *comp, int pos)
+    void TrackedTrajectory::add(IModelTrackedComponent* comp, int pos)
     {
 
         comp->setParent(this);
@@ -47,10 +53,8 @@ namespace BST{
             _TrackedComponents.append(comp);
             _size++;
             g_validCount++;
-        }
-        else if (_size <= pos) {
-            while (_size < pos)
-            {
+        } else if (_size <= pos) {
+            while (_size < pos) {
                 _TrackedComponents.append(nullptr);
                 _size++;
             }
@@ -58,13 +62,12 @@ namespace BST{
             _TrackedComponents.append(comp);
             _size++;
             g_validCount++;
-        }
-        else {
+        } else {
             _TrackedComponents[pos] = comp;
         }
     }
 
-    bool TrackedTrajectory::remove(IModelTrackedComponent *comp)
+    bool TrackedTrajectory::remove(IModelTrackedComponent* comp)
     {
         g_calcValid = 1;
         comp->setValid(false);
@@ -74,7 +77,7 @@ namespace BST{
     void TrackedTrajectory::clear()
     {
         g_calcValid = 1;
-        foreach(IModelTrackedComponent* el, _TrackedComponents) {
+        foreach (IModelTrackedComponent* el, _TrackedComponents) {
             if (dynamic_cast<IModelTrackedTrajectory*>(el))
                 dynamic_cast<IModelTrackedTrajectory*>(el)->clear();
         }
@@ -97,8 +100,8 @@ namespace BST{
     IModelTrackedComponent* TrackedTrajectory::getValidChild(int index)
     {
         int c = 0;
-        foreach(IModelTrackedComponent* el, _TrackedComponents) {
-            if (el){
+        foreach (IModelTrackedComponent* el, _TrackedComponents) {
+            if (el) {
                 if (c == index && el->getValid())
                     return el;
                 c += el->getValid() ? 1 : 0;
@@ -124,16 +127,15 @@ namespace BST{
     {
         if (g_calcValid == 1) {
             int c = 0;
-            foreach(IModelTrackedComponent* el, _TrackedComponents) {
+            foreach (IModelTrackedComponent* el, _TrackedComponents) {
                 if (el)
                     c += el->getValid() ? 1 : 0;
             }
 
             g_validCount = c;
-            g_calcValid = 0;
+            g_calcValid  = 0;
             return c;
-        }
-        else {
+        } else {
             return g_validCount;
         }
     }

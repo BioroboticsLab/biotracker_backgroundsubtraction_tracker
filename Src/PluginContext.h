@@ -5,17 +5,16 @@
 
 class PluginContext : public IBioTrackerContext
 {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
-	PluginContext(QObject *parent, Config *cfg);
+    PluginContext(QObject* parent, Config* cfg);
 
-	// IBioTrackerContext interface
+    // IBioTrackerContext interface
 protected:
-	void createAppController() override;
-	void connectController() override;
+    void createAppController() override;
+    void connectController() override;
 
 private:
-	Config *_cfg;
+    Config* _cfg;
 };
-

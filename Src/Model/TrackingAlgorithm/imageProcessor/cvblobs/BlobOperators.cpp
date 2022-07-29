@@ -15,28 +15,28 @@
 - FUNCTIONALITY: Calculates the pq moment of the blob
 - PARAMETERS:
 - RESULT:
-	- returns the pq moment or 0 if the moment it is not implemented
+    - returns the pq moment or 0 if the moment it is not implemented
 - RESTRICTIONS:
-	- Currently, implemented moments up to 3
+    - Currently, implemented moments up to 3
 - AUTHOR: Ricard Borr�s
 - CREATION DATE: 20-07-2004.
 - MODIFICATION: Date. Author. Description.
 */
-double CBlobGetMoment::operator()(CBlob &blob)
+double CBlobGetMoment::operator()(CBlob& blob)
 {
-	return blob.Moment(m_p, m_q);
+    return blob.Moment(m_p, m_q);
 }
 
 /**
 - FUNCI�: HullPerimeter
 - FUNCIONALITAT: Calcula la longitud del perimetre convex del blob.
-			   Fa servir la funci� d'OpenCV cvConvexHull2 per a 
-			   calcular el perimetre convex.
-			   
+               Fa servir la funci� d'OpenCV cvConvexHull2 per a
+               calcular el perimetre convex.
+
 - PAR�METRES:
 - RESULTAT:
-	- retorna la longitud del per�metre convex del blob. Si el blob no t� coordenades
-	  associades retorna el per�metre normal del blob.
+    - retorna la longitud del per�metre convex del blob. Si el blob no t�
+coordenades associades retorna el per�metre normal del blob.
 - RESTRICCIONS:
 - AUTOR: Ricard Borr�s
 - DATA DE CREACI�: 20-07-2004.
@@ -47,45 +47,45 @@ double CBlobGetMoment::operator()(CBlob &blob)
 - FUNCTIONALITY: Calculates the convex hull perimeter of the blob
 - PARAMETERS:
 - RESULT:
-	- returns the convex hull perimeter of the blob or the perimeter if the 
-	blob edges could not be retrieved
+    - returns the convex hull perimeter of the blob or the perimeter if the
+    blob edges could not be retrieved
 - RESTRICTIONS:
 - AUTHOR: Ricard Borr�s
 - CREATION DATE: 25-05-2005.
 - MODIFICATION: Date. Author. Description.
 */
-double CBlobGetHullPerimeter::operator()(CBlob &blob)
+double CBlobGetHullPerimeter::operator()(CBlob& blob)
 {
-	CvSeq *convexHull;
-	double perimeter;
+    CvSeq* convexHull;
+    double perimeter;
 
-	convexHull = blob.GetConvexHull();
+    convexHull = blob.GetConvexHull();
 
-	if( convexHull )
-		perimeter = fabs(cvArcLength(convexHull,CV_WHOLE_SEQ,1));
-	else
-		return 0;
+    if (convexHull)
+        perimeter = fabs(cvArcLength(convexHull, CV_WHOLE_SEQ, 1));
+    else
+        return 0;
 
-	cvClearSeq(convexHull);
+    cvClearSeq(convexHull);
 
-	return perimeter;
+    return perimeter;
 }
 
-double CBlobGetHullArea::operator()(CBlob &blob)
+double CBlobGetHullArea::operator()(CBlob& blob)
 {
-	CvSeq *convexHull;
-	double area;
+    CvSeq* convexHull;
+    double area;
 
-	convexHull = blob.GetConvexHull();
+    convexHull = blob.GetConvexHull();
 
-	if( convexHull )
-		area = fabs(cvContourArea(convexHull));
-	else
-		return 0;
+    if (convexHull)
+        area = fabs(cvContourArea(convexHull));
+    else
+        return 0;
 
-	cvClearSeq(convexHull);
+    cvClearSeq(convexHull);
 
-	return area;
+    return area;
 }
 
 /**
@@ -98,29 +98,28 @@ double CBlobGetHullArea::operator()(CBlob &blob)
 - CREATION DATE: 25-05-2005.
 - MODIFICATION: Date. Author. Description.
 */
-double CBlobGetMinXatMinY::operator()(CBlob &blob)
+double CBlobGetMinXatMinY::operator()(CBlob& blob)
 {
-	double result = LONG_MAX;
-	
-	CvSeqReader reader;
-	cv::Point actualPoint;
-	t_PointList externContour;
-	
-	externContour = blob.GetExternalContour()->GetContourPoints();
-	if( !externContour ) return result;
-	cvStartReadSeq( externContour, &reader);
+    double result = LONG_MAX;
 
-	for( int i=0; i< externContour->total; i++)
-	{
-		CV_READ_SEQ_ELEM( actualPoint, reader);
+    CvSeqReader reader;
+    cv::Point   actualPoint;
+    t_PointList externContour;
 
-		if( (actualPoint.y == blob.MinY()) && (actualPoint.x < result) )
-		{
-			result = actualPoint.x;
-		}	
-	}
+    externContour = blob.GetExternalContour()->GetContourPoints();
+    if (!externContour)
+        return result;
+    cvStartReadSeq(externContour, &reader);
 
-	return result;
+    for (int i = 0; i < externContour->total; i++) {
+        CV_READ_SEQ_ELEM(actualPoint, reader);
+
+        if ((actualPoint.y == blob.MinY()) && (actualPoint.x < result)) {
+            result = actualPoint.x;
+        }
+    }
+
+    return result;
 }
 
 /**
@@ -133,29 +132,28 @@ double CBlobGetMinXatMinY::operator()(CBlob &blob)
 - CREATION DATE: 25-05-2005.
 - MODIFICATION: Date. Author. Description.
 */
-double CBlobGetMinYatMaxX::operator()(CBlob &blob)
+double CBlobGetMinYatMaxX::operator()(CBlob& blob)
 {
-	double result = LONG_MAX;
-	
-	CvSeqReader reader;
-	cv::Point actualPoint;
-	t_PointList externContour;
-	
-	externContour = blob.GetExternalContour()->GetContourPoints();
-	if( !externContour ) return result;
-	cvStartReadSeq( externContour, &reader);
+    double result = LONG_MAX;
 
-	for( int i=0; i< externContour->total; i++)
-	{
-		CV_READ_SEQ_ELEM( actualPoint, reader);
+    CvSeqReader reader;
+    cv::Point   actualPoint;
+    t_PointList externContour;
 
-		if( (actualPoint.x == blob.MaxX()) && (actualPoint.y < result) )
-		{
-			result = actualPoint.y;
-		}	
-	}
+    externContour = blob.GetExternalContour()->GetContourPoints();
+    if (!externContour)
+        return result;
+    cvStartReadSeq(externContour, &reader);
 
-	return result;
+    for (int i = 0; i < externContour->total; i++) {
+        CV_READ_SEQ_ELEM(actualPoint, reader);
+
+        if ((actualPoint.x == blob.MaxX()) && (actualPoint.y < result)) {
+            result = actualPoint.y;
+        }
+    }
+
+    return result;
 }
 
 /**
@@ -168,30 +166,29 @@ double CBlobGetMinYatMaxX::operator()(CBlob &blob)
 - CREATION DATE: 25-05-2005.
 - MODIFICATION: Date. Author. Description.
 */
-double CBlobGetMaxXatMaxY::operator()(CBlob &blob)
+double CBlobGetMaxXatMaxY::operator()(CBlob& blob)
 {
-	double result = LONG_MIN;
-	
-	CvSeqReader reader;
-	cv::Point actualPoint;
-	t_PointList externContour;
-	
-	externContour = blob.GetExternalContour()->GetContourPoints();
-	if( !externContour ) return result;
+    double result = LONG_MIN;
 
-	cvStartReadSeq( externContour, &reader);
+    CvSeqReader reader;
+    cv::Point   actualPoint;
+    t_PointList externContour;
 
-	for( int i=0; i< externContour->total; i++)
-	{
-		CV_READ_SEQ_ELEM( actualPoint, reader);
+    externContour = blob.GetExternalContour()->GetContourPoints();
+    if (!externContour)
+        return result;
 
-		if( (actualPoint.y == blob.MaxY()) && (actualPoint.x > result) )
-		{
-			result = actualPoint.x;
-		}	
-	}
+    cvStartReadSeq(externContour, &reader);
 
-	return result;
+    for (int i = 0; i < externContour->total; i++) {
+        CV_READ_SEQ_ELEM(actualPoint, reader);
+
+        if ((actualPoint.y == blob.MaxY()) && (actualPoint.x > result)) {
+            result = actualPoint.x;
+        }
+    }
+
+    return result;
 }
 
 /**
@@ -204,33 +201,30 @@ double CBlobGetMaxXatMaxY::operator()(CBlob &blob)
 - CREATION DATE: 25-05-2005.
 - MODIFICATION: Date. Author. Description.
 */
-double CBlobGetMaxYatMinX::operator()(CBlob &blob)
+double CBlobGetMaxYatMinX::operator()(CBlob& blob)
 {
-	double result = LONG_MIN;
-	
-	CvSeqReader reader;
-	cv::Point actualPoint;
-	t_PointList externContour;
-	
-	externContour = blob.GetExternalContour()->GetContourPoints();
-	if( !externContour ) return result;
+    double result = LONG_MIN;
 
-	cvStartReadSeq( externContour, &reader);
+    CvSeqReader reader;
+    cv::Point   actualPoint;
+    t_PointList externContour;
 
-	
-	for( int i=0; i< externContour->total; i++)
-	{
-		CV_READ_SEQ_ELEM( actualPoint, reader);
+    externContour = blob.GetExternalContour()->GetContourPoints();
+    if (!externContour)
+        return result;
 
-		if( (actualPoint.x == blob.MinX()) && (actualPoint.y > result) )
-		{
-			result = actualPoint.y;
-		}	
-	}
+    cvStartReadSeq(externContour, &reader);
 
-	return result;
+    for (int i = 0; i < externContour->total; i++) {
+        CV_READ_SEQ_ELEM(actualPoint, reader);
+
+        if ((actualPoint.x == blob.MinX()) && (actualPoint.y > result)) {
+            result = actualPoint.y;
+        }
+    }
+
+    return result;
 }
-
 
 /**
 - FUNCTION: CBlobGetElongation
@@ -238,41 +232,42 @@ double CBlobGetMaxYatMinX::operator()(CBlob &blob)
 - PARAMETERS:
 - RESULT:
 - RESTRICTIONS:
-	- See below to see how the lenght and the breadth are aproximated
+    - See below to see how the lenght and the breadth are aproximated
 - AUTHOR: Ricard Borr�s
 - CREATION DATE: 25-05-2005.
 - MODIFICATION: Date. Author. Description.
 */
-double CBlobGetElongation::operator()(CBlob &blob)
+double CBlobGetElongation::operator()(CBlob& blob)
 {
-	double ampladaC,longitudC,amplada,longitud;
+    double ampladaC, longitudC, amplada, longitud;
 
-	double tmp;
+    double tmp;
 
-	tmp = blob.Perimeter()*blob.Perimeter() - 16*blob.Area();
+    tmp = blob.Perimeter() * blob.Perimeter() - 16 * blob.Area();
 
-	if( tmp > 0.0 )
-		ampladaC = (double) (blob.Perimeter()+sqrt(tmp))/4;
-	// error intr�nsec en els c�lculs de l'�rea i el per�metre 
-	else
-		ampladaC = (double) (blob.Perimeter())/4;
+    if (tmp > 0.0)
+        ampladaC = (double) (blob.Perimeter() + sqrt(tmp)) / 4;
+    // error intr�nsec en els c�lculs de l'�rea i el per�metre
+    else
+        ampladaC = (double) (blob.Perimeter()) / 4;
 
-	if(ampladaC<=0.0) return 0;
-	longitudC=(double) blob.Area()/ampladaC;
+    if (ampladaC <= 0.0)
+        return 0;
+    longitudC = (double) blob.Area() / ampladaC;
 
-	longitud=MAX( longitudC , ampladaC );
-	amplada=MIN( longitudC , ampladaC );
+    longitud = MAX(longitudC, ampladaC);
+    amplada  = MIN(longitudC, ampladaC);
 
-	return (double) longitud/amplada;
+    return (double) longitud / amplada;
 }
 
 /**
-	Retorna la compacitat del blob
+    Retorna la compacitat del blob
 */
 /**
 - FUNCTION: CBlobGetCompactness
-- FUNCTIONALITY: Calculates the compactness of the blob 
-			    ( maximum for circle shaped blobs, minimum for the rest)
+- FUNCTIONALITY: Calculates the compactness of the blob
+                ( maximum for circle shaped blobs, minimum for the rest)
 - PARAMETERS:
 - RESULT:
 - RESTRICTIONS:
@@ -280,21 +275,21 @@ double CBlobGetElongation::operator()(CBlob &blob)
 - CREATION DATE: 25-05-2005.
 - MODIFICATION: Date. Author. Description.
 */
-double CBlobGetCompactness::operator()(CBlob &blob)
+double CBlobGetCompactness::operator()(CBlob& blob)
 {
-	if( blob.Area() != 0.0 )
-		return (double) pow(blob.Perimeter(),2)/(4*CV_PI*blob.Area());
-	else
-		return 0.0;
+    if (blob.Area() != 0.0)
+        return (double) pow(blob.Perimeter(), 2) / (4 * CV_PI * blob.Area());
+    else
+        return 0.0;
 }
 
 /**
-	Retorna la rugositat del blob
+    Retorna la rugositat del blob
 */
 /**
 - FUNCTION: CBlobGetRoughness
-- FUNCTIONALITY: Calculates the roughness of the blob 
-			    ( ratio between perimeter and convex hull perimeter)
+- FUNCTIONALITY: Calculates the roughness of the blob
+                ( ratio between perimeter and convex hull perimeter)
 - PARAMETERS:
 - RESULT:
 - RESTRICTIONS:
@@ -302,91 +297,95 @@ double CBlobGetCompactness::operator()(CBlob &blob)
 - CREATION DATE: 25-05-2005.
 - MODIFICATION: Date. Author. Description.
 */
-double CBlobGetRoughness::operator()(CBlob &blob)
+double CBlobGetRoughness::operator()(CBlob& blob)
 {
-	CBlobGetHullPerimeter getHullPerimeter = CBlobGetHullPerimeter();
-	
-	double hullPerimeter = getHullPerimeter(blob);
+    CBlobGetHullPerimeter getHullPerimeter = CBlobGetHullPerimeter();
 
-	if( hullPerimeter != 0.0 )
-		return blob.Perimeter() / hullPerimeter;//HullPerimeter();
+    double hullPerimeter = getHullPerimeter(blob);
 
-	return 0.0;
+    if (hullPerimeter != 0.0)
+        return blob.Perimeter() / hullPerimeter; // HullPerimeter();
+
+    return 0.0;
 }
 
 /**
-	Retorna la longitud del blob
+    Retorna la longitud del blob
 */
 /**
 - FUNCTION: CBlobGetLength
-- FUNCTIONALITY: Calculates the lenght of the blob (the biggest axis of the blob)
+- FUNCTIONALITY: Calculates the lenght of the blob (the biggest axis of the
+blob)
 - PARAMETERS:
 - RESULT:
 - RESTRICTIONS:
-	- The lenght is an aproximation to the real lenght
+    - The lenght is an aproximation to the real lenght
 - AUTHOR: Ricard Borr�s
 - CREATION DATE: 25-05-2005.
 - MODIFICATION: Date. Author. Description.
 */
-double CBlobGetLength::operator()(CBlob &blob)
+double CBlobGetLength::operator()(CBlob& blob)
 {
-	double ampladaC,longitudC;
-	double tmp;
+    double ampladaC, longitudC;
+    double tmp;
 
-	tmp = blob.Perimeter()*blob.Perimeter() - 16*blob.Area();
+    tmp = blob.Perimeter() * blob.Perimeter() - 16 * blob.Area();
 
-	if( tmp > 0.0 )
-		ampladaC = (double) (blob.Perimeter()+sqrt(tmp))/4;
-	// error intr�nsec en els c�lculs de l'�rea i el per�metre 
-	else
-		ampladaC = (double) (blob.Perimeter())/4;
+    if (tmp > 0.0)
+        ampladaC = (double) (blob.Perimeter() + sqrt(tmp)) / 4;
+    // error intr�nsec en els c�lculs de l'�rea i el per�metre
+    else
+        ampladaC = (double) (blob.Perimeter()) / 4;
 
-	if(ampladaC<=0.0) return 0;
-	longitudC=(double) blob.Area()/ampladaC;
+    if (ampladaC <= 0.0)
+        return 0;
+    longitudC = (double) blob.Area() / ampladaC;
 
-	return MAX( longitudC , ampladaC );
+    return MAX(longitudC, ampladaC);
 }
 
 /**
-	Retorna l'amplada del blob
+    Retorna l'amplada del blob
 */
 /**
 - FUNCTION: CBlobGetBreadth
-- FUNCTIONALITY: Calculates the breadth of the blob (the smallest axis of the blob)
+- FUNCTIONALITY: Calculates the breadth of the blob (the smallest axis of the
+blob)
 - PARAMETERS:
 - RESULT:
 - RESTRICTIONS:
-	- The breadth is an aproximation to the real breadth
+    - The breadth is an aproximation to the real breadth
 - AUTHOR: Ricard Borr�s
 - CREATION DATE: 25-05-2005.
 - MODIFICATION: Date. Author. Description.
 */
-double CBlobGetBreadth::operator()(CBlob &blob)
+double CBlobGetBreadth::operator()(CBlob& blob)
 {
-	double ampladaC,longitudC;
-	double tmp;
+    double ampladaC, longitudC;
+    double tmp;
 
-	tmp = blob.Perimeter()*blob.Perimeter() - 16*blob.Area();
+    tmp = blob.Perimeter() * blob.Perimeter() - 16 * blob.Area();
 
-	if( tmp > 0.0 )
-		ampladaC = (double) (blob.Perimeter()+sqrt(tmp))/4;
-	// error intr�nsec en els c�lculs de l'�rea i el per�metre 
-	else
-		ampladaC = (double) (blob.Perimeter())/4;
+    if (tmp > 0.0)
+        ampladaC = (double) (blob.Perimeter() + sqrt(tmp)) / 4;
+    // error intr�nsec en els c�lculs de l'�rea i el per�metre
+    else
+        ampladaC = (double) (blob.Perimeter()) / 4;
 
-	if(ampladaC<=0.0) return 0;
-	longitudC = (double) blob.Area()/ampladaC;
+    if (ampladaC <= 0.0)
+        return 0;
+    longitudC = (double) blob.Area() / ampladaC;
 
-	return MIN( longitudC , ampladaC );
+    return MIN(longitudC, ampladaC);
 }
 
 /**
-	Calcula la dist�ncia entre un punt i el centre del blob
+    Calcula la dist�ncia entre un punt i el centre del blob
 */
 /**
 - FUNCTION: CBlobGetDistanceFromPoint
-- FUNCTIONALITY: Calculates the euclidean distance between the blob center and 
-				 the point specified in the constructor
+- FUNCTIONALITY: Calculates the euclidean distance between the blob center and
+                 the point specified in the constructor
 - PARAMETERS:
 - RESULT:
 - RESTRICTIONS:
@@ -394,16 +393,16 @@ double CBlobGetBreadth::operator()(CBlob &blob)
 - CREATION DATE: 25-05-2005.
 - MODIFICATION: Date. Author. Description.
 */
-double CBlobGetDistanceFromPoint::operator()(CBlob &blob)
+double CBlobGetDistanceFromPoint::operator()(CBlob& blob)
 {
-	double xmitjana, ymitjana;
-	CBlobGetXCenter getXCenter;
-	CBlobGetYCenter getYCenter;
+    double          xmitjana, ymitjana;
+    CBlobGetXCenter getXCenter;
+    CBlobGetYCenter getYCenter;
 
-	xmitjana = m_x - getXCenter( blob );
-	ymitjana = m_y - getYCenter( blob );
+    xmitjana = m_x - getXCenter(blob);
+    ymitjana = m_y - getYCenter(blob);
 
-	return sqrt((xmitjana*xmitjana)+(ymitjana*ymitjana));
+    return sqrt((xmitjana * xmitjana) + (ymitjana * ymitjana));
 }
 
 /**
@@ -412,18 +411,20 @@ double CBlobGetDistanceFromPoint::operator()(CBlob &blob)
     rectangular bounding box of a blob
 - PARAMETERS:
 - RESULT:
-	- returns 1 if it is inside; o if not
+    - returns 1 if it is inside; o if not
 - RESTRICTIONS:
 - AUTHOR: Francesc Pinyol Margalef
 - CREATION DATE: 16-01-2006.
 - MODIFICATION: Date. Author. Description.
 */
-double CBlobGetXYInside::operator()(CBlob &blob)
+double CBlobGetXYInside::operator()(CBlob& blob)
 {
-	if( blob.GetExternalContour()->GetContourPoints() )
-	{
-		return cvPointPolygonTest( blob.GetExternalContour()->GetContourPoints(), m_p,0) >= 0;
-	}
+    if (blob.GetExternalContour()->GetContourPoints()) {
+        return cvPointPolygonTest(
+                   blob.GetExternalContour()->GetContourPoints(),
+                   m_p,
+                   0) >= 0;
+    }
 
-	return 0;
+    return 0;
 }

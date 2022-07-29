@@ -9,41 +9,59 @@
 
 class ControllerTrackedComponent : public IController
 {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	ControllerTrackedComponent(QObject *parent = 0, IBioTrackerContext *context = 0, ENUMS::CONTROLLERTYPE ctr = ENUMS::CONTROLLERTYPE::COMPONENT);
+    ControllerTrackedComponent(
+        QObject*              parent  = 0,
+        IBioTrackerContext*   context = 0,
+        ENUMS::CONTROLLERTYPE ctr     = ENUMS::CONTROLLERTYPE::COMPONENT);
 
-    Config *getConfig() { return _cfg;};
-    void setConfig(Config *cfg) { _cfg = cfg;};
-	IView *getTrackingElementsWidget();
+    Config* getConfig()
+    {
+        return _cfg;
+    };
+    void setConfig(Config* cfg)
+    {
+        _cfg = cfg;
+    };
+    IView* getTrackingElementsWidget();
 public Q_SLOTS:
-		void receiveAddTrajectory(QPoint position);
-		void receiveRemoveTrajectory(IModelTrackedTrajectory* trajectory);
-		void receiveRemoveTrajectoryId(int id);
-		void receiveRemoveTrackEntity(IModelTrackedTrajectory* trajectory, uint frameNumber);
-		void receiveValidateTrajectory(int id);
-		void receiveValidateEntity(IModelTrackedTrajectory* trajectory, uint frameNumber);
-		void receiveMoveElement(IModelTrackedTrajectory* trajectory, uint frameNumber, QPoint position);
-		/* TODO Swaps ID's of last elements (-> swap elements) or swap ID's of trajectories and all of its elements?
-		*/
-		void receiveSwapIds(IModelTrackedTrajectory* trajectory0, IModelTrackedTrajectory* trajectory1);
-		void receiveToggleFixTrack(IModelTrackedTrajectory* trajectory, bool toggle);
-		void receiveEntityRotation(IModelTrackedTrajectory* trajectory, double angle, uint frameNumber);
-		void receiveCurrentFrameNumber(uint framenumber);
+    void receiveAddTrajectory(QPoint position);
+    void receiveRemoveTrajectory(IModelTrackedTrajectory* trajectory);
+    void receiveRemoveTrajectoryId(int id);
+    void receiveRemoveTrackEntity(IModelTrackedTrajectory* trajectory,
+                                  uint                     frameNumber);
+    void receiveValidateTrajectory(int id);
+    void receiveValidateEntity(IModelTrackedTrajectory* trajectory,
+                               uint                     frameNumber);
+    void receiveMoveElement(IModelTrackedTrajectory* trajectory,
+                            uint                     frameNumber,
+                            QPoint                   position);
+    /* TODO Swaps ID's of last elements (-> swap elements) or swap ID's of
+     * trajectories and all of its elements?
+     */
+    void receiveSwapIds(IModelTrackedTrajectory* trajectory0,
+                        IModelTrackedTrajectory* trajectory1);
+    void receiveToggleFixTrack(IModelTrackedTrajectory* trajectory,
+                               bool                     toggle);
+    void receiveEntityRotation(IModelTrackedTrajectory* trajectory,
+                               double                   angle,
+                               uint                     frameNumber);
+    void receiveCurrentFrameNumber(uint framenumber);
 
-		void receiveAreaDescriptorUpdate(IModelAreaDescriptor *areaDescr);
+    void receiveAreaDescriptorUpdate(IModelAreaDescriptor* areaDescr);
 
-	// IController interface
+    // IController interface
 protected:
-	void createModel() override;
-	void createView() override;
-	void connectModelToController() override;
-	void connectControllerToController() override;
-    Config *_cfg;
+    void    createModel() override;
+    void    createView() override;
+    void    connectModelToController() override;
+    void    connectControllerToController() override;
+    Config* _cfg;
 
-	//members
-	int m_currentFrameNumber;
-	IModelAreaDescriptor* m_areaDescr;
+    // members
+    int                   m_currentFrameNumber;
+    IModelAreaDescriptor* m_areaDescr;
 };
 
 #endif // CONTROLLERTRACKEDCOMPONENT_H
