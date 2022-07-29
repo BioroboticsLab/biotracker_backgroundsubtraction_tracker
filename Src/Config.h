@@ -17,7 +17,7 @@ public:
 
     double LearningRate = 0.05;
 
-    int DoNetwork   = false;
+    int DoNetwork   = true;
     int NetworkPort = 54444;
 
     int DoBackground    = true;
