@@ -43,6 +43,24 @@ TrackerParameterView::TrackerParameterView(QWidget*     parent,
             this,
             &TrackerParameterView::parametersChanged);
 
+    connect(_ui->lineEdit_4_ClosingDilationSize,
+            qOverload<int>(&QSpinBox::valueChanged),
+            parameter,
+            &TrackerParameter::setClosingDilationSize);
+    connect(_ui->lineEdit_4_ClosingDilationSize,
+            qOverload<int>(&QSpinBox::valueChanged),
+            this,
+            &TrackerParameterView::parametersChanged);
+
+    connect(_ui->lineEdit_3_ClosingErosionSize,
+            qOverload<int>(&QSpinBox::valueChanged),
+            parameter,
+            &TrackerParameter::setClosingErosionSize);
+    connect(_ui->lineEdit_3_ClosingErosionSize,
+            qOverload<int>(&QSpinBox::valueChanged),
+            this,
+            &TrackerParameterView::parametersChanged);
+
     connect(_ui->lineEdit_8_MinBlob,
             qOverload<int>(&QSpinBox::valueChanged),
             parameter,
@@ -159,9 +177,17 @@ void TrackerParameterView::getNotified()
         _binThres->setValue(parameter->getBinarizationThreshold());
     }
 
-    _ui->lineEdit_3_OpeningErosionSize->setValue(parameter->getOpeningErosionSize());
+    _ui->lineEdit_3_OpeningErosionSize->setValue(
+        parameter->getOpeningErosionSize());
 
-    _ui->lineEdit_4_OpeningDilationSize->setValue(parameter->getOpeningDilationSize());
+    _ui->lineEdit_4_OpeningDilationSize->setValue(
+        parameter->getOpeningDilationSize());
+
+    _ui->lineEdit_4_ClosingDilationSize->setValue(
+        parameter->getClosingDilationSize());
+
+    _ui->lineEdit_3_ClosingErosionSize->setValue(
+        parameter->getClosingErosionSize());
 
     _ui->lineEdit_8_MinBlob->setValue(parameter->getMinBlobSize());
 

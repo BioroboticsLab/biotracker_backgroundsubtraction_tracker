@@ -29,17 +29,19 @@ public:
      * A mathematical morphology operation using in computer vision to erode an
      * image. Erode image with 3x3 4-connectivity.
      * @param: image, image to erode,
+     * @param: kernelSize, size of erosion kernel,
      * @return: an eroded image.
      */
-    cv::Mat erode(cv::Mat& image);
+    cv::Mat erode(cv::Mat image, int kernelSize);
 
     /**
      * A mathematical morphology operation using in computer vision to dilate
      * an image. Dilate image with 6x6 8-connectivity.
      * @param: image, image to dilate,
+     * @param: kernelSize, size of dilation kernel,
      * @return: a dilated image.
      */
-    cv::Mat dilate(cv::Mat& image);
+    cv::Mat dilate(cv::Mat image, int kernelSize);
 
     /**
      * A computer vision methode to calculate the image difference.

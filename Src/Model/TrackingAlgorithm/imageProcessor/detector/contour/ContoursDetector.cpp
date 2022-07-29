@@ -23,7 +23,7 @@ void ContoursDetector::createMask(std::vector<cv::Point> points)
 //		return;
 //
 //	mask = cvCreateImage(cvSize(_xRes, _yRes), IPL_DEPTH_8U,1);//erstellt
-//schwarzwei� bild
+// schwarzwei� bild
 //
 //	//folgender Block setzt die Pixel schwarz
 //	for( int y=0; y<mask->height; y++ ) {

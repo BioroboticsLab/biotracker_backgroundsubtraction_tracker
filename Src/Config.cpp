@@ -62,10 +62,21 @@ void Config::load(QString dir, QString file)
     config->BinarizationThreshold = tree.get<int>(
         globalPrefix + "BinarizationThreshold",
         config->BinarizationThreshold);
-    config->OpeningErosionSize       = tree.get<int>(globalPrefix + "OpeningErosionSize",
-                                      config->OpeningErosionSize);
-    config->OpeningDilationSize      = tree.get<int>(globalPrefix + "OpeningDilationSize",
-                                       config->OpeningDilationSize);
+
+    config->OpeningErosionSize  = tree.get<int>(globalPrefix +
+                                                   "OpeningErosionSize",
+                                               config->OpeningErosionSize);
+    config->OpeningDilationSize = tree.get<int>(globalPrefix +
+                                                    "OpeningDilationSize",
+                                                config->OpeningDilationSize);
+
+    config->ClosingDilationSize = tree.get<int>(globalPrefix +
+                                                    "ClosingDilationSize",
+                                                config->ClosingDilationSize);
+    config->ClosingErosionSize  = tree.get<int>(globalPrefix +
+                                                   "ClosingErosionSize",
+                                               config->ClosingErosionSize);
+
     config->MinBlobSize     = tree.get<int>(globalPrefix + "MinBlobSize",
                                         config->MinBlobSize);
     config->MaxBlobSize     = tree.get<int>(globalPrefix + "MaxBlobSize",
@@ -101,7 +112,11 @@ void Config::save(QString dir, QString file)
     tree.put(globalPrefix + "BinarizationThreshold",
              config->BinarizationThreshold);
     tree.put(globalPrefix + "OpeningErosionSize", config->OpeningErosionSize);
-    tree.put(globalPrefix + "OpeningDilationSize", config->OpeningDilationSize);
+    tree.put(globalPrefix + "OpeningDilationSize",
+             config->OpeningDilationSize);
+    tree.put(globalPrefix + "ClosingDilationSize",
+             config->ClosingDilationSize);
+    tree.put(globalPrefix + "ClosingErosionSize", config->ClosingErosionSize);
     tree.put(globalPrefix + "MinBlobSize", config->MinBlobSize);
     tree.put(globalPrefix + "MaxBlobSize", config->MaxBlobSize);
     tree.put(globalPrefix + "LearningRate", config->LearningRate);

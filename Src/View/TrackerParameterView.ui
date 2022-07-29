@@ -221,54 +221,122 @@
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_6">
             <item>
-             <layout class="QFormLayout" name="formLayout_6">
-              <property name="fieldGrowthPolicy">
-               <enum>QFormLayout::ExpandingFieldsGrow</enum>
+             <widget class="QGroupBox" name="groupBox_5">
+              <property name="title">
+               <string>Opening</string>
               </property>
-              <property name="horizontalSpacing">
-               <number>74</number>
+              <layout class="QFormLayout" name="formLayout_3">
+               <item row="0" column="0">
+                <layout class="QFormLayout" name="formLayout_6">
+                 <property name="fieldGrowthPolicy">
+                  <enum>QFormLayout::ExpandingFieldsGrow</enum>
+                 </property>
+                 <property name="horizontalSpacing">
+                  <number>74</number>
+                 </property>
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="label_3">
+                   <property name="text">
+                    <string>Erosion kernel size:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QSpinBox" name="lineEdit_3_OpeningErosionSize">
+                   <property name="minimumSize">
+                    <size>
+                     <width>132</width>
+                     <height>60</height>
+                    </size>
+                   </property>
+                   <property name="toolTip">
+                    <string>Set the opening erosion size</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="label_4">
+                   <property name="text">
+                    <string>Dilation kernel size:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QSpinBox" name="lineEdit_4_OpeningDilationSize">
+                   <property name="minimumSize">
+                    <size>
+                     <width>132</width>
+                     <height>60</height>
+                    </size>
+                   </property>
+                   <property name="toolTip">
+                    <string>Set the opening dilation size</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QGroupBox" name="groupBox_6">
+              <property name="title">
+               <string>Closing</string>
               </property>
-              <item row="0" column="0">
-               <widget class="QLabel" name="label_3">
-                <property name="text">
-                 <string>Opening erosion size:</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="1">
-               <widget class="QSpinBox" name="lineEdit_3_OpeningErosionSize">
-                <property name="minimumSize">
-                 <size>
-                  <width>132</width>
-                  <height>60</height>
-                 </size>
-                </property>
-                <property name="toolTip">
-                 <string>Set the opening erosion size</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="0">
-               <widget class="QLabel" name="label_4">
-                <property name="text">
-                 <string>Opening dilation size:</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="1">
-               <widget class="QSpinBox" name="lineEdit_4_OpeningDilationSize">
-                <property name="minimumSize">
-                 <size>
-                  <width>132</width>
-                  <height>60</height>
-                 </size>
-                </property>
-                <property name="toolTip">
-                 <string>Set the opening dilation size</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
+              <layout class="QFormLayout" name="formLayout_5">
+               <item row="0" column="0">
+                <layout class="QFormLayout" name="formLayout_7">
+                 <property name="fieldGrowthPolicy">
+                  <enum>QFormLayout::ExpandingFieldsGrow</enum>
+                 </property>
+                 <property name="horizontalSpacing">
+                  <number>74</number>
+                 </property>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="label_6">
+                   <property name="text">
+                    <string>Erosion kernel size:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="1">
+                  <widget class="QSpinBox" name="lineEdit_3_ClosingErosionSize">
+                   <property name="minimumSize">
+                    <size>
+                     <width>132</width>
+                     <height>60</height>
+                    </size>
+                   </property>
+                   <property name="toolTip">
+                    <string>Set the opening erosion size</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QSpinBox" name="lineEdit_4_ClosingDilationSize">
+                   <property name="minimumSize">
+                    <size>
+                     <width>132</width>
+                     <height>60</height>
+                    </size>
+                   </property>
+                   <property name="toolTip">
+                    <string>Set the opening dilation size</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="label_10">
+                   <property name="text">
+                    <string>Dilation kernel size:</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
             </item>
            </layout>
           </widget>
@@ -399,12 +467,12 @@
                 </item>
                 <item>
                  <property name="text">
-                  <string>Eroded</string>
+                  <string>Opened Mask</string>
                  </property>
                 </item>
                 <item>
                  <property name="text">
-                  <string>Dilated</string>
+                  <string>Closed Mask</string>
                  </property>
                 </item>
                </widget>

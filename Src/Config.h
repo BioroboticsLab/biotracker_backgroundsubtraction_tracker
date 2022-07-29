@@ -10,8 +10,12 @@ public:
     bool UseAbsoluteDifference = true;
     int  BinarizationThreshold = 40;
 
-    int OpeningErosionSize   = 8;
-    int OpeningDilationSize  = 8;
+    int OpeningErosionSize  = 8;
+    int OpeningDilationSize = 8;
+
+    int ClosingDilationSize = 8;
+    int ClosingErosionSize  = 8;
+
     int MinBlobSize = 40;
     int MaxBlobSize = 999999;
 

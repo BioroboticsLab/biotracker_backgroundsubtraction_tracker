@@ -95,14 +95,14 @@ void BioTrackerTrackingAlgorithm::sendSelectedImage(
         Q_EMIT emitChangeDisplayImage(QString("Foreground Mask"));
         break;
     case 3:
-        sendImage = images->find(std::string("Eroded"))->second;
-        Q_EMIT emitCvMatA(sendImage, QString("Eroded"));
-        Q_EMIT emitChangeDisplayImage(QString("Eroded"));
+        sendImage = images->find(std::string("Opened Mask"))->second;
+        Q_EMIT emitCvMatA(sendImage, QString("Opened Mask"));
+        Q_EMIT emitChangeDisplayImage(QString("Opened Mask"));
         break;
     case 4:
-        sendImage = images->find(std::string("Dilated"))->second;
-        Q_EMIT emitCvMatA(sendImage, QString("Dilated"));
-        Q_EMIT emitChangeDisplayImage(QString("Dilated"));
+        sendImage = images->find(std::string("Closed Mask"))->second;
+        Q_EMIT emitCvMatA(sendImage, QString("Closed Mask"));
+        Q_EMIT emitChangeDisplayImage(QString("Closed Mask"));
         break;
     }
 }
@@ -195,16 +195,16 @@ void BioTrackerTrackingAlgorithm::doTracking(std::shared_ptr<cv::Mat> p_image,
     // Do the preprocessing
     std::map<std::string, std::shared_ptr<cv::Mat>> images = _ipp.preProcess(
         p_image);
-    std::shared_ptr<cv::Mat> dilated =
-        images.find(std::string("Dilated"))->second;
+    std::shared_ptr<cv::Mat> mask =
+        images.find(std::string("Closed Mask"))->second;
     std::shared_ptr<cv::Mat> greyMat =
         images.find(std::string("Greyscale"))->second;
 
     // Find blobs via ellipsefitting
     _bd.setMaxBlobSize(_TrackingParameter->getMaxBlobSize());
     _bd.setMinBlobSize(_TrackingParameter->getMinBlobSize());
-    // std::vector<BlobPose> blobs = _bd.getPoses(*dilated, *greyMat);
-    std::vector<BlobPose> blobs = getContourCentroids(*dilated, 111);
+    // std::vector<BlobPose> blobs = _bd.getPoses(*mask, *greyMat);
+    std::vector<BlobPose> blobs = getContourCentroids(*mask, 111);
 
     // Never switch the position of the trajectories. The NN2d mapper relies on
     // this! If you mess up the order, add or remove some t, then create a new

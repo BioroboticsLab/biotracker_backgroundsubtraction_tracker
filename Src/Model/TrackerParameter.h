@@ -49,6 +49,28 @@ public slots:
         Q_EMIT notifyView();
     };
 
+    int getClosingDilationSize()
+    {
+        return _ClosingDilationSize;
+    };
+    void setClosingDilationSize(int x)
+    {
+        _ClosingDilationSize      = x;
+        _cfg->ClosingDilationSize = x;
+        Q_EMIT notifyView();
+    };
+
+    int getClosingErosionSize()
+    {
+        return _ClosingErosionSize;
+    };
+    void setClosingErosionSize(int x)
+    {
+        _ClosingErosionSize      = x;
+        _cfg->ClosingErosionSize = x;
+        Q_EMIT notifyView();
+    };
+
     double getLearningRate()
     {
         return _LearningRate;
@@ -150,8 +172,11 @@ private:
     bool _UseAbsoluteDifference;
     int  _BinarizationThreshold;
 
-    int    _OpeningErosionSize;
-    int    _OpeningDilationSize;
+    int _OpeningErosionSize;
+    int _OpeningDilationSize;
+    int _ClosingDilationSize;
+    int _ClosingErosionSize;
+
     double _LearningRate;
     int    _MinBlobSize;
     int    _MaxBlobSize;

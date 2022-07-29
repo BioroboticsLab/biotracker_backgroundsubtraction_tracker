@@ -44,38 +44,36 @@ void ImagePreProcessor::init()
     _resetBackgroundImageEnabled  = false;
 }
 
-cv::Mat ImagePreProcessor::erode(cv::Mat& image)
+cv::Mat ImagePreProcessor::erode(cv::Mat image, int kernelSize)
 {
-    cv::Mat erodedImage;
-    cv::Mat erodeKernel;
-    int     sizeErode = m_TrackingParameter->getOpeningErosionSize();
-    if (sizeErode > 0) {
-        erodeKernel = cv::getStructuringElement(
+    if (kernelSize > 0 && image.data) {
+        auto kernel = cv::getStructuringElement(
             cv::MORPH_CROSS,
-            cv::Size(sizeErode, sizeErode));
+            cv::Size(kernelSize, kernelSize));
+
+        cv::Mat morphed;
+        cv::erode(image, morphed, kernel);
+
+        return morphed;
     } else {
         return image;
     }
-    if (image.data)
-        cv::erode(image, erodedImage, erodeKernel);
-    return erodedImage;
 }
 
-cv::Mat ImagePreProcessor::dilate(cv::Mat& image)
+cv::Mat ImagePreProcessor::dilate(cv::Mat image, int kernelSize)
 {
-    cv::Mat dilatedImage;
-    cv::Mat dilateKernel;
-    int     sizeDilate = m_TrackingParameter->getOpeningDilationSize();
-    if (sizeDilate > 0) {
-        dilateKernel = cv::getStructuringElement(
+    if (kernelSize > 0 && image.data) {
+        auto kernel = cv::getStructuringElement(
             cv::MORPH_RECT,
-            cv::Size(sizeDilate, sizeDilate));
+            cv::Size(kernelSize, kernelSize));
+
+        cv::Mat morphed;
+        cv::dilate(image, morphed, kernel);
+
+        return morphed;
     } else {
         return image;
     }
-    if (image.data)
-        cv::dilate(image, dilatedImage, dilateKernel);
-    return dilatedImage;
 }
 
 cv::Mat ImagePreProcessor::backgroundSubtraction(cv::Mat& image)
@@ -103,20 +101,24 @@ cv::Mat ImagePreProcessor::backgroundSubtraction(cv::Mat& image)
 std::map<std::string, std::shared_ptr<cv::Mat>> ImagePreProcessor::preProcess(
     std::shared_ptr<cv::Mat> p_image)
 {
-    std::shared_ptr<cv::Mat> greyMat      = std::make_shared<cv::Mat>();
-    std::shared_ptr<cv::Mat> erodedImage  = std::make_shared<cv::Mat>();
-    std::shared_ptr<cv::Mat> dilatedImage = std::make_shared<cv::Mat>();
+    std::shared_ptr<cv::Mat> greyMat    = std::make_shared<cv::Mat>();
+    std::shared_ptr<cv::Mat> openedMask = std::make_shared<cv::Mat>();
+    std::shared_ptr<cv::Mat> closedMask = std::make_shared<cv::Mat>();
 
     cv::cvtColor(*p_image, *greyMat, cv::COLOR_BGR2GRAY);
 
     // 1. step: do the background subtraction
     *m_foregroundMask = backgroundSubtraction(*greyMat);
 
-    // 2. step: erode the image
-    *erodedImage = erode(*m_foregroundMask);
+    // 2. step: open the mask
+    *openedMask = dilate(
+        erode(*m_foregroundMask, m_TrackingParameter->getOpeningErosionSize()),
+        m_TrackingParameter->getOpeningDilationSize());
 
-    // 3. step: dilate the image
-    *dilatedImage = dilate(*erodedImage);
+    // 3. step: close the image
+    *closedMask = erode(
+        dilate(*openedMask, m_TrackingParameter->getClosingDilationSize()),
+        m_TrackingParameter->getClosingErosionSize());
 
     std::map<std::string, std::shared_ptr<cv::Mat>> all;
     all.insert(std::pair<std::string, std::shared_ptr<cv::Mat>>(
@@ -128,12 +130,12 @@ std::map<std::string, std::shared_ptr<cv::Mat>> ImagePreProcessor::preProcess(
     all.insert(std::pair<std::string, std::shared_ptr<cv::Mat>>(
         std::string("Foreground Mask"),
         m_foregroundMask));
-    all.insert(
-        std::pair<std::string, std::shared_ptr<cv::Mat>>(std::string("Eroded"),
-                                                         erodedImage));
     all.insert(std::pair<std::string, std::shared_ptr<cv::Mat>>(
-        std::string("Dilated"),
-        dilatedImage));
+        std::string("Opened Mask"),
+        openedMask));
+    all.insert(std::pair<std::string, std::shared_ptr<cv::Mat>>(
+        std::string("Closed Mask"),
+        closedMask));
 
     return all;
 }

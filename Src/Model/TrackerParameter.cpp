@@ -9,8 +9,10 @@ TrackerParameter::TrackerParameter(QObject* parent)
 
     _UseAbsoluteDifference = _cfg->UseAbsoluteDifference;
     _BinarizationThreshold = _cfg->BinarizationThreshold;
-    _OpeningErosionSize             = _cfg->OpeningErosionSize;
-    _OpeningDilationSize            = _cfg->OpeningDilationSize;
+    _OpeningErosionSize    = _cfg->OpeningErosionSize;
+    _OpeningDilationSize   = _cfg->OpeningDilationSize;
+    _ClosingDilationSize   = _cfg->ClosingDilationSize;
+    _ClosingErosionSize    = _cfg->ClosingErosionSize;
     _MinBlobSize           = _cfg->MinBlobSize;
     _MaxBlobSize           = _cfg->MaxBlobSize;
 
