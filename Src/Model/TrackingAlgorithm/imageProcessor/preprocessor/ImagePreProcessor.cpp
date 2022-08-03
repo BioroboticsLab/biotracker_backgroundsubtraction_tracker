@@ -123,7 +123,7 @@ std::map<std::string, std::shared_ptr<cv::Mat>> ImagePreProcessor::preProcess(
     *closedMask = erode(
         dilate(*openedMask, m_TrackingParameter->getClosingDilationSize()),
         m_TrackingParameter->getClosingErosionSize());
-    
+
     // 4. step: masked greyscale image
     greyMat->copyTo(*maskedGrey, *closedMask);
 

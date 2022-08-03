@@ -113,20 +113,20 @@ void BioTrackerTrackingAlgorithm::sendSelectedImage(
 }
 
 std::vector<BlobPose> BioTrackerTrackingAlgorithm::getContourCentroids(
-    cv::Mat& image,
-    int      minSize)
+    cv::Mat image)
 {
 
     std::vector<std::vector<cv::Point>> contours;
     std::vector<cv::Vec4i>              hierarchy;
     std::vector<BlobPose>               centroids;
 
-    findContours(image,
-                 contours,
-                 hierarchy,
-                 cv::RETR_TREE,
-                 cv::CHAIN_APPROX_SIMPLE,
-                 cv::Point(0, 0));
+    cv::findContours(image,
+                     contours,
+                     hierarchy,
+                     cv::RETR_TREE,
+                     cv::CHAIN_APPROX_SIMPLE,
+                     cv::Point(0, 0));
+
     for (auto x : contours) {
         cv::Point2f c(0, 0);
         float       i = 0;
@@ -208,8 +208,23 @@ void BioTrackerTrackingAlgorithm::doTracking(std::shared_ptr<cv::Mat> p_image,
     // Find blobs via ellipsefitting
     _bd.setMaxBlobSize(_TrackingParameter->getMaxBlobSize());
     _bd.setMinBlobSize(_TrackingParameter->getMinBlobSize());
-    // std::vector<BlobPose> blobs = _bd.getPoses(*mask, *greyMat);
-    std::vector<BlobPose> blobs = getContourCentroids(*mask, 111);
+
+    auto foo = *images.find(std::string("Masked Greyscale"))->second;
+
+    std::vector<std::vector<cv::Point>> contours;
+    std::vector<cv::Vec4i>              hierarchy;
+    cv::findContours(foo,
+                     contours,
+                     hierarchy,
+                     cv::RETR_TREE,
+                     cv::CHAIN_APPROX_SIMPLE,
+                     cv::Point(0, 0));
+
+    for (size_t i = 0; i < contours.size(); i++) {
+        drawContours(foo, contours, (int) i, cv::Scalar(255));
+    }
+
+    std::vector<BlobPose> blobs = getContourCentroids(*mask);
 
     // Never switch the position of the trajectories. The NN2d mapper relies on
     // this! If you mess up the order, add or remove some t, then create a new

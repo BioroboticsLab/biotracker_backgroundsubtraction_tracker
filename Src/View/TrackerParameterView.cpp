@@ -109,7 +109,7 @@ void TrackerParameterView::initSubtractorSpecificUI(QString algorithm)
 
     _useAbsDiff = nullptr;
     _binThres   = nullptr;
-    _maxImg   = nullptr;
+    _maxImg     = nullptr;
 
     if (algorithm == QString("Custom")) {
         _useAbsDiff = new QCheckBox();
@@ -144,7 +144,7 @@ void TrackerParameterView::initSubtractorSpecificUI(QString algorithm)
                 qOverload<int>(&QSpinBox::valueChanged),
                 this,
                 &TrackerParameterView::parametersChanged);
- 
+
         _maxImg = new QSpinBox();
         _maxImg->setMinimum(1);
         _maxImg->setMaximum(255);

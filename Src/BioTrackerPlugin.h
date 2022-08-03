@@ -29,8 +29,6 @@ public:
 
 public:
     void createPlugin();
-    void receiveCurrentFrameFromMainApp(std::shared_ptr<cv::Mat> mat,
-                                        uint                     frameNumber);
     void sendCorePermissions();
 
 private:
@@ -70,7 +68,9 @@ public slots:
                         IModelTrackedTrajectory* trajectory1);
     void receiveCurrentFrameNumberFromMainApp(uint frameNumber);
 
-private slots:
+public slots:
+    void receiveCurrentFrameFromMainApp(std::shared_ptr<cv::Mat> mat,
+                                        uint                     frameNumber);
     void receiveAreaDescriptor(IModelAreaDescriptor* areaDescr);
 
 private:

@@ -9,7 +9,7 @@ class Config : public IConfig
 public:
     bool UseAbsoluteDifference = true;
     int  BinarizationThreshold = 40;
-    int  MaximumImageValue = 255;
+    int  MaximumImageValue     = 255;
 
     int OpeningErosionSize  = 8;
     int OpeningDilationSize = 8;

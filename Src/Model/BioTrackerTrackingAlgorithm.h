@@ -41,7 +41,7 @@ public Q_SLOTS:
     void receiveParametersChanged();
 
 private:
-    std::vector<BlobPose> getContourCentroids(cv::Mat& image, int minSize);
+    std::vector<BlobPose> getContourCentroids(cv::Mat image);
     void                  refreshPolygon();
     void                  sendSelectedImage(
                          std::map<std::string, std::shared_ptr<cv::Mat>>* images);

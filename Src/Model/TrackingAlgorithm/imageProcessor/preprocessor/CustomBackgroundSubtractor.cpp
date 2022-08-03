@@ -96,7 +96,11 @@ void CustomBackgroundSubtractor::apply(cv::InputArray  image,
                       255,
                       cv::THRESH_BINARY);
 
-        cv::threshold(image, maxabsmask, m_maximumImageValue, 255, cv::THRESH_BINARY_INV);
+        cv::threshold(image,
+                      maxabsmask,
+                      m_maximumImageValue,
+                      255,
+                      cv::THRESH_BINARY_INV);
 
         cv::bitwise_and(diffmask, maxabsmask, fgmask);
     }
