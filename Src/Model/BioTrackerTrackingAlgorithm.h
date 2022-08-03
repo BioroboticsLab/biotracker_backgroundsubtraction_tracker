@@ -5,6 +5,10 @@
 
 #include "TrackerParameter.h"
 
+#include <optional>
+
+#include <QMap>
+
 #include <opencv2/opencv.hpp>
 #include "Interfaces/IModel/IModelTrackingAlgorithm.h"
 #include "Interfaces/IModel/IModelDataExporter.h"
@@ -30,21 +34,20 @@ public:
     ~BioTrackerTrackingAlgorithm();
 
 Q_SIGNALS:
-    void emitCvMatA(std::shared_ptr<cv::Mat> image, QString name);
+    void emitCvMatA(cv::Mat image, QString name);
     void emitDimensionUpdate(int x, int y);
     void emitTrackingDone(uint framenumber);
 
     // ITrackingAlgorithm interface
 public Q_SLOTS:
-    void doTracking(std::shared_ptr<cv::Mat> image, uint framenumber) override;
+    void doTracking(cv::Mat image, uint framenumber) override;
     void receiveAreaDescriptorUpdate(IModelAreaDescriptor* areaDescr);
     void receiveParametersChanged();
 
 private:
     std::vector<BlobPose> getContourCentroids(cv::Mat image);
     void                  refreshPolygon();
-    void                  sendSelectedImage(
-                         std::map<std::string, std::shared_ptr<cv::Mat>>* images);
+    void sendSelectedImage(QMap<QString, cv::Mat> images);
 
     std::vector<FishPose> getLastPositionsAsPose();
 
@@ -65,9 +68,9 @@ private:
     int _imageX;
     int _imageY;
 
-    std::shared_ptr<cv::Mat> _lastImage;
-    uint                     _lastFramenumber;
-    Config*                  _cfg;
+    std::optional<cv::Mat> _lastImage;
+    uint                   _lastFramenumber;
+    Config*                _cfg;
 };
 
 #endif // BIOTRACKERTRACKINGALGORITHM_H

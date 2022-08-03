@@ -24,8 +24,7 @@ void ControllerTrackingAlgorithm::connectControllerToController()
     m_TrackedTrajectoryMajor = ctrComponent->getModel();
 }
 
-void ControllerTrackingAlgorithm::doTracking(std::shared_ptr<cv::Mat> mat,
-                                             uint                     number)
+void ControllerTrackingAlgorithm::doTracking(cv::Mat mat, uint number)
 {
     qobject_cast<BioTrackerTrackingAlgorithm*>(m_Model)->doTracking(mat,
                                                                     number);

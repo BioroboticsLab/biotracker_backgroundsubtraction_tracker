@@ -3,11 +3,15 @@
 #include "TrackedComponents/TrackedComponentFactory.h"
 #include <chrono>
 
+#include <tuple>
+#include <optional>
+
 BioTrackerTrackingAlgorithm::BioTrackerTrackingAlgorithm(IController* parent,
                                                          IModel* parameter,
                                                          IModel* trajectory)
 : IModelTrackingAlgorithm(parent)
 , _ipp((TrackerParameter*) parameter)
+, _lastImage(std::nullopt)
 {
     _cfg = static_cast<ControllerTrackingAlgorithm*>(parent)->getConfig();
     _TrackingParameter      = (TrackerParameter*) parameter;
@@ -27,7 +31,6 @@ BioTrackerTrackingAlgorithm::BioTrackerTrackingAlgorithm(IController* parent,
                          SLOT(acceptConnection()));
     }
 
-    _lastImage       = nullptr;
     _lastFramenumber = -1;
 }
 
@@ -70,46 +73,43 @@ void BioTrackerTrackingAlgorithm::refreshPolygon()
 void BioTrackerTrackingAlgorithm::receiveParametersChanged()
 {
     if (_lastFramenumber >= 0 && _lastImage && !_lastImage->empty()) {
-        doTracking(_lastImage, _lastFramenumber);
+        doTracking(*_lastImage, _lastFramenumber);
     }
 }
 
 void BioTrackerTrackingAlgorithm::sendSelectedImage(
-    std::map<std::string, std::shared_ptr<cv::Mat>>* images)
+    QMap<QString, cv::Mat> images)
 {
-
-    std::shared_ptr<cv::Mat> sendImage;
-    // Send forth whatever the user selected
-    switch (_TrackingParameter->getSendImage()) {
-    case 0: // Send none
-        Q_EMIT emitChangeDisplayImage("Original");
-        break;
+    auto index = _TrackingParameter->getSendImage();
+    auto name = [&]() -> QString {
+        switch (index) {
+        case 0:
+            return "Original";
     case 1:
-        sendImage = images->find(std::string("Background"))->second;
-        Q_EMIT emitCvMatA(sendImage, QString("Background"));
-        Q_EMIT emitChangeDisplayImage(QString("Background"));
-        break;
+            return "Background";
     case 2:
-        sendImage = images->find(std::string("Foreground Mask"))->second;
-        Q_EMIT emitCvMatA(sendImage, QString("Foreground Mask"));
-        Q_EMIT emitChangeDisplayImage(QString("Foreground Mask"));
-        break;
+            return "Foreground Mask";
     case 3:
-        sendImage = images->find(std::string("Opened Mask"))->second;
-        Q_EMIT emitCvMatA(sendImage, QString("Opened Mask"));
-        Q_EMIT emitChangeDisplayImage(QString("Opened Mask"));
-        break;
+            return "Opened Mask";
     case 4:
-        sendImage = images->find(std::string("Closed Mask"))->second;
-        Q_EMIT emitCvMatA(sendImage, QString("Closed Mask"));
-        Q_EMIT emitChangeDisplayImage(QString("Closed Mask"));
-        break;
+            return "Closed Mask";
     case 5:
-        sendImage = images->find(std::string("Masked Greyscale"))->second;
-        Q_EMIT emitCvMatA(sendImage, QString("Masked Greyscale"));
-        Q_EMIT emitChangeDisplayImage(QString("Masked Greyscale"));
-        break;
+            return "Masked Greyscale";
+        default:
+            return "";
     }
+    }();
+
+    if (name.isEmpty()) {
+        qCritical() << "Invalid tracking image";
+        return;
+    }
+
+    if (index != 0) {
+        emit emitCvMatA(*images.find(name), name);
+    }
+
+    emit emitChangeDisplayImage(name);
 }
 
 std::vector<BlobPose> BioTrackerTrackingAlgorithm::getContourCentroids(
@@ -158,22 +158,20 @@ std::vector<BlobPose> BioTrackerTrackingAlgorithm::getContourCentroids(
     return centroids;
 }
 
-void BioTrackerTrackingAlgorithm::doTracking(std::shared_ptr<cv::Mat> p_image,
-                                             uint framenumber)
+void BioTrackerTrackingAlgorithm::doTracking(cv::Mat image, uint framenumber)
 {
     _ipp.m_TrackingParameter = _TrackingParameter;
-    _lastImage               = p_image;
+    _lastImage               = image;
     _lastFramenumber         = framenumber;
 
     // dont do nothing if we ain't got an image
-    if (p_image->empty()) {
+    if (image.empty()) {
         return;
     }
 
-    if (_imageX != p_image->size().width ||
-        _imageY != p_image->size().height) {
-        _imageX = p_image->size().width;
-        _imageY = p_image->size().height;
+    if (_imageX != image.size().width || _imageY != image.size().height) {
+        _imageX = image.size().width;
+        _imageY = image.size().height;
         Q_EMIT emitDimensionUpdate(_imageX, _imageY);
     }
 
@@ -198,18 +196,15 @@ void BioTrackerTrackingAlgorithm::doTracking(std::shared_ptr<cv::Mat> p_image,
     }
 
     // Do the preprocessing
-    std::map<std::string, std::shared_ptr<cv::Mat>> images = _ipp.preProcess(
-        p_image);
-    std::shared_ptr<cv::Mat> mask =
-        images.find(std::string("Closed Mask"))->second;
-    std::shared_ptr<cv::Mat> greyMat =
-        images.find(std::string("Greyscale"))->second;
+    auto    images  = _ipp.preProcess(image);
+    cv::Mat mask    = *images.find("Closed Mask");
+    cv::Mat greyMat = *images.find("Greyscale");
 
     // Find blobs via ellipsefitting
     _bd.setMaxBlobSize(_TrackingParameter->getMaxBlobSize());
     _bd.setMinBlobSize(_TrackingParameter->getMinBlobSize());
 
-    auto foo = *images.find(std::string("Masked Greyscale"))->second;
+    auto foo = *images.find("Masked Greyscale");
 
     std::vector<std::vector<cv::Point>> contours;
     std::vector<cv::Vec4i>              hierarchy;
@@ -224,7 +219,7 @@ void BioTrackerTrackingAlgorithm::doTracking(std::shared_ptr<cv::Mat> p_image,
         drawContours(foo, contours, (int) i, cv::Scalar(255));
     }
 
-    std::vector<BlobPose> blobs = getContourCentroids(*mask);
+    std::vector<BlobPose> blobs = getContourCentroids(mask);
 
     // Never switch the position of the trajectories. The NN2d mapper relies on
     // this! If you mess up the order, add or remove some t, then create a new
@@ -261,7 +256,7 @@ void BioTrackerTrackingAlgorithm::doTracking(std::shared_ptr<cv::Mat> p_image,
                                  start);
     }
 
-    sendSelectedImage(&images);
+    sendSelectedImage(images);
 
     // First the user still wants to see the original image, right?
     if (framenumber == 1) {

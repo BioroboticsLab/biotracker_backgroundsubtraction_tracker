@@ -163,9 +163,8 @@ void BioTrackerPlugin::receiveAreaDescriptor(IModelAreaDescriptor* areaDescr)
     Q_EMIT emitAreaDescriptorUpdate(areaDescr);
 }
 
-void BioTrackerPlugin::receiveCurrentFrameFromMainApp(
-    std::shared_ptr<cv::Mat> mat,
-    uint                     frameNumber)
+void BioTrackerPlugin::receiveCurrentFrameFromMainApp(cv::Mat mat,
+                                                      uint    frameNumber)
 {
     qobject_cast<ControllerTrackingAlgorithm*>(m_TrackerController)
         ->doTracking(mat, frameNumber);

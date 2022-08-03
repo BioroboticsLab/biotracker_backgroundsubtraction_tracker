@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QSettings>
+#include <QMap>
 
 #include <opencv2/opencv.hpp>
 
@@ -59,8 +60,7 @@ public:
      * @param: image, image to process,
      * @return: a pre-process image.
      */
-    std::map<std::string, std::shared_ptr<cv::Mat>> preProcess(
-        std::shared_ptr<cv::Mat> p_image);
+    QMap<QString, cv::Mat> preProcess(cv::Mat p_image);
 
     /**
      * The method updates the image background.
@@ -72,8 +72,8 @@ public:
 private:
     cv::Mat _outputImage;
 
-    std::shared_ptr<cv::Mat> m_backgroundImage;
-    std::shared_ptr<cv::Mat> m_foregroundMask;
+    cv::Mat m_backgroundImage;
+    cv::Mat m_foregroundMask;
 
     // parameters for image pre-processing
     bool _backgroundSubtractionEnabled;

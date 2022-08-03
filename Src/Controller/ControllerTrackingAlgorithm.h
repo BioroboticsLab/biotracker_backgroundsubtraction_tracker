@@ -28,7 +28,7 @@ public:
 public:
     void connectControllerToController() override;
 
-    void doTracking(std::shared_ptr<cv::Mat> mat, uint number);
+    void doTracking(cv::Mat mat, uint number);
 
     IView* getTrackingParameterWidget();
 
@@ -41,7 +41,7 @@ protected:
     void connectModelToController() override;
 
 Q_SIGNALS:
-    void emitCvMat(std::shared_ptr<cv::Mat> mat, QString name);
+    void emitCvMat(cv::Mat mat, QString name);
     void emitTrackingDone(uint framenumber);
     void emitChangeDisplayImage(QString str);
     void emitAreaDescriptorUpdate(IModelAreaDescriptor* areaDescr);

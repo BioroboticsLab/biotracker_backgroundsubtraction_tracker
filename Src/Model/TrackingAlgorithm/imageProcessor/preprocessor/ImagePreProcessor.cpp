@@ -32,8 +32,8 @@ void ImagePreProcessor::init()
         qFatal("Unsupported background subtraction algorithm");
     }
 
-    m_backgroundImage = std::make_shared<cv::Mat>();
-    m_foregroundMask  = std::make_shared<cv::Mat>();
+    m_backgroundImage = cv::Mat();
+    m_foregroundMask  = cv::Mat();
 
     _backgroundSubtractionEnabled = true;
     _backgroundEnabled            = true;
@@ -96,56 +96,43 @@ cv::Mat ImagePreProcessor::backgroundSubtraction(cv::Mat& image)
 
     cv::Mat fgmask;
     m_subtractor->apply(image, fgmask, m_TrackingParameter->getLearningRate());
-    m_subtractor->getBackgroundImage(*m_backgroundImage);
+    m_subtractor->getBackgroundImage(m_backgroundImage);
     return fgmask;
 }
 
-std::map<std::string, std::shared_ptr<cv::Mat>> ImagePreProcessor::preProcess(
-    std::shared_ptr<cv::Mat> p_image)
+QMap<QString, cv::Mat> ImagePreProcessor::preProcess(cv::Mat image)
 {
-    std::shared_ptr<cv::Mat> greyMat    = std::make_shared<cv::Mat>();
-    std::shared_ptr<cv::Mat> openedMask = std::make_shared<cv::Mat>();
-    std::shared_ptr<cv::Mat> closedMask = std::make_shared<cv::Mat>();
+    cv::Mat greyMat;
+    cv::Mat openedMask;
+    cv::Mat closedMask;
 
-    std::shared_ptr<cv::Mat> maskedGrey = std::make_shared<cv::Mat>();
+    cv::Mat maskedGrey;
 
-    cv::cvtColor(*p_image, *greyMat, cv::COLOR_BGR2GRAY);
+    cv::cvtColor(image, greyMat, cv::COLOR_BGR2GRAY);
 
     // 1. step: do the background subtraction
-    *m_foregroundMask = backgroundSubtraction(*greyMat);
+    m_foregroundMask = backgroundSubtraction(greyMat);
 
     // 2. step: open the mask
-    *openedMask = dilate(
-        erode(*m_foregroundMask, m_TrackingParameter->getOpeningErosionSize()),
+    openedMask = dilate(
+        erode(m_foregroundMask, m_TrackingParameter->getOpeningErosionSize()),
         m_TrackingParameter->getOpeningDilationSize());
 
     // 3. step: close the image
-    *closedMask = erode(
-        dilate(*openedMask, m_TrackingParameter->getClosingDilationSize()),
+    closedMask = erode(
+        dilate(openedMask, m_TrackingParameter->getClosingDilationSize()),
         m_TrackingParameter->getClosingErosionSize());
 
     // 4. step: masked greyscale image
-    greyMat->copyTo(*maskedGrey, *closedMask);
+    greyMat.copyTo(maskedGrey, closedMask);
 
-    std::map<std::string, std::shared_ptr<cv::Mat>> all;
-    all.insert(std::pair<std::string, std::shared_ptr<cv::Mat>>(
-        std::string("Greyscale"),
-        greyMat));
-    all.insert(std::pair<std::string, std::shared_ptr<cv::Mat>>(
-        std::string("Background"),
-        m_backgroundImage));
-    all.insert(std::pair<std::string, std::shared_ptr<cv::Mat>>(
-        std::string("Foreground Mask"),
-        m_foregroundMask));
-    all.insert(std::pair<std::string, std::shared_ptr<cv::Mat>>(
-        std::string("Opened Mask"),
-        openedMask));
-    all.insert(std::pair<std::string, std::shared_ptr<cv::Mat>>(
-        std::string("Closed Mask"),
-        closedMask));
-    all.insert(std::pair<std::string, std::shared_ptr<cv::Mat>>(
-        std::string("Masked Greyscale"),
-        maskedGrey));
+    QMap<QString, cv::Mat> all;
+    all.insert("Greyscale", greyMat);
+    all.insert("Background", m_backgroundImage);
+    all.insert("Foreground Mask", m_foregroundMask);
+    all.insert("Opened Mask", openedMask);
+    all.insert("Closed Mask", closedMask);
+    all.insert("Masked Greyscale", maskedGrey);
 
     return all;
 }

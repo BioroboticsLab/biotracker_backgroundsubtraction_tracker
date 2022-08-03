@@ -34,7 +34,7 @@ public:
 private:
     void connectInterfaces();
 signals:
-    void emitCvMat(std::shared_ptr<cv::Mat> mat, QString name);
+    void emitCvMat(cv::Mat mat, QString name);
     void emitTrackingDone(uint framenumber);
     void emitChangeDisplayImage(QString str);
     void emitAreaDescriptorUpdate(IModelAreaDescriptor* areaDescr);
@@ -69,8 +69,7 @@ public slots:
     void receiveCurrentFrameNumberFromMainApp(uint frameNumber);
 
 public slots:
-    void receiveCurrentFrameFromMainApp(std::shared_ptr<cv::Mat> mat,
-                                        uint                     frameNumber);
+    void receiveCurrentFrameFromMainApp(cv::Mat mat, uint frameNumber);
     void receiveAreaDescriptor(IModelAreaDescriptor* areaDescr);
 
 private:
