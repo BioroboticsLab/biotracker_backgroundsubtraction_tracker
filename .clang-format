@@ -32,13 +32,13 @@ BreakBeforeBraces:                                               Custom
 BraceWrapping:
   AfterClass:                                                      true
   AfterControlStatement:                                          false
-  AfterEnum:                                                      false
+  AfterEnum:                                                       true
   AfterFunction:                                                   true
   AfterNamespace:                                                  true
-  AfterObjCDeclaration:                                           false
+  AfterObjCDeclaration:                                            true
   AfterStruct:                                                     true
-  AfterUnion:                                                     false
-  AfterExternBlock:                                               false
+  AfterUnion:                                                      true
+  AfterExternBlock:                                                true
   BeforeCatch:                                                    false
   BeforeElse:                                                     false
   IndentBraces:                                                   false
