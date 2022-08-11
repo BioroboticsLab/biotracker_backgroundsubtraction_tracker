@@ -77,41 +77,6 @@ void BioTrackerTrackingAlgorithm::receiveParametersChanged()
     }
 }
 
-void BioTrackerTrackingAlgorithm::sendSelectedImage(
-    QMap<QString, cv::Mat> images)
-{
-    auto index = _TrackingParameter->getSendImage();
-    auto name = [&]() -> QString {
-        switch (index) {
-        case 0:
-            return "Original";
-    case 1:
-            return "Background";
-    case 2:
-            return "Foreground Mask";
-    case 3:
-            return "Opened Mask";
-    case 4:
-            return "Closed Mask";
-    case 5:
-            return "Masked Greyscale";
-        default:
-            return "";
-    }
-    }();
-
-    if (name.isEmpty()) {
-        qCritical() << "Invalid tracking image";
-        return;
-    }
-
-    if (index != 0) {
-        emit emitCvMatA(*images.find(name), name);
-    }
-
-    emit emitChangeDisplayImage(name);
-}
-
 std::vector<BlobPose> BioTrackerTrackingAlgorithm::getContourCentroids(
     cv::Mat image)
 {
@@ -204,21 +169,6 @@ void BioTrackerTrackingAlgorithm::doTracking(cv::Mat image, uint framenumber)
     _bd.setMaxBlobSize(_TrackingParameter->getMaxBlobSize());
     _bd.setMinBlobSize(_TrackingParameter->getMinBlobSize());
 
-    auto foo = *images.find("Masked Greyscale");
-
-    std::vector<std::vector<cv::Point>> contours;
-    std::vector<cv::Vec4i>              hierarchy;
-    cv::findContours(foo,
-                     contours,
-                     hierarchy,
-                     cv::RETR_TREE,
-                     cv::CHAIN_APPROX_SIMPLE,
-                     cv::Point(0, 0));
-
-    for (size_t i = 0; i < contours.size(); i++) {
-        drawContours(foo, contours, (int) i, cv::Scalar(255));
-    }
-
     std::vector<BlobPose> blobs = getContourCentroids(mask);
 
     // Never switch the position of the trajectories. The NN2d mapper relies on
@@ -256,12 +206,7 @@ void BioTrackerTrackingAlgorithm::doTracking(cv::Mat image, uint framenumber)
                                  start);
     }
 
-    sendSelectedImage(images);
-
-    // First the user still wants to see the original image, right?
-    if (framenumber == 1) {
-        Q_EMIT emitChangeDisplayImage("Original");
-    }
+    emit trackingImagesChanged(images);
 
     std::string newSel = _TrackingParameter->getNewSelection();
 

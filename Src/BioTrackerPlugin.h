@@ -28,18 +28,13 @@ public:
     IModelTrackedComponentFactory* getComponentFactory();
 
 public:
-    void createPlugin();
+    void init();
     void sendCorePermissions();
 
 private:
     void connectInterfaces();
 signals:
-    void emitCvMat(cv::Mat mat, QString name);
-    void emitTrackingDone(uint framenumber);
-    void emitChangeDisplayImage(QString str);
     void emitAreaDescriptorUpdate(IModelAreaDescriptor* areaDescr);
-    void emitCorePermission(
-        std::pair<ENUMS::COREPERMISSIONS, bool> permission);
     void emitRemoveTrajectory(IModelTrackedTrajectory* trajectory);
     void emitAddTrajectory(QPoint pos);
     void emitRemoveTrajectoryId(int id);

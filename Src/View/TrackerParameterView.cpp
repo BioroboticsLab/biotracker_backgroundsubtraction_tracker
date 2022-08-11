@@ -174,14 +174,6 @@ void TrackerParameterView::on_pushButtonResetBackground_clicked()
     parameter->setResetBackground(true);
 }
 
-void TrackerParameterView::on_comboBoxSendImage_currentIndexChanged(int v)
-{
-    TrackerParameter* parameter = qobject_cast<TrackerParameter*>(getModel());
-    parameter->setSendImage(v);
-    parameter->setNewSelection(
-        _ui->comboBoxSendImage->currentText().toStdString());
-}
-
 void TrackerParameterView::getNotified()
 {
     TrackerParameter* parameter = qobject_cast<TrackerParameter*>(getModel());

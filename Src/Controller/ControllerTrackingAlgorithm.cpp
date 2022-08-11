@@ -56,17 +56,13 @@ void ControllerTrackingAlgorithm::connectModelToController()
     BioTrackerTrackingAlgorithm* trackingAlg =
         qobject_cast<BioTrackerTrackingAlgorithm*>(m_Model);
     QObject::connect(trackingAlg,
-                     &BioTrackerTrackingAlgorithm::emitCvMatA,
+                     &BioTrackerTrackingAlgorithm::trackingImagesChanged,
                      this,
-                     &ControllerTrackingAlgorithm::emitCvMat);
+                     &ControllerTrackingAlgorithm::trackingImagesChanged);
     QObject::connect(trackingAlg,
                      &BioTrackerTrackingAlgorithm::emitTrackingDone,
                      this,
                      &ControllerTrackingAlgorithm::emitTrackingDone);
-    QObject::connect(trackingAlg,
-                     &BioTrackerTrackingAlgorithm::emitChangeDisplayImage,
-                     this,
-                     &ControllerTrackingAlgorithm::emitChangeDisplayImage);
     QObject::connect(
         this,
         &ControllerTrackingAlgorithm::emitAreaDescriptorUpdate,

@@ -34,7 +34,7 @@ public:
     ~BioTrackerTrackingAlgorithm();
 
 Q_SIGNALS:
-    void emitCvMatA(cv::Mat image, QString name);
+    void trackingImagesChanged(QMap<QString, cv::Mat> images);
     void emitDimensionUpdate(int x, int y);
     void emitTrackingDone(uint framenumber);
 
@@ -47,7 +47,6 @@ public Q_SLOTS:
 private:
     std::vector<BlobPose> getContourCentroids(cv::Mat image);
     void                  refreshPolygon();
-    void sendSelectedImage(QMap<QString, cv::Mat> images);
 
     std::vector<FishPose> getLastPositionsAsPose();
 

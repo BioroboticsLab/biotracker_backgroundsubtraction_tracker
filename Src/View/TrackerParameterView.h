@@ -24,7 +24,6 @@ public:
 
 private slots:
     void on_pushButtonResetBackground_clicked();
-    void on_comboBoxSendImage_currentIndexChanged(int v);
 
 public:
 signals:

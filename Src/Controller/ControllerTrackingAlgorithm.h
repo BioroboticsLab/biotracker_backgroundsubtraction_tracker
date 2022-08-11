@@ -41,9 +41,8 @@ protected:
     void connectModelToController() override;
 
 Q_SIGNALS:
-    void emitCvMat(cv::Mat mat, QString name);
     void emitTrackingDone(uint framenumber);
-    void emitChangeDisplayImage(QString str);
+    void trackingImagesChanged(QMap<QString, cv::Mat> images);
     void emitAreaDescriptorUpdate(IModelAreaDescriptor* areaDescr);
 
 private:

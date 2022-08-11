@@ -42,7 +42,7 @@ IModelTrackedComponentFactory* BioTrackerPlugin::getComponentFactory()
     return new TrackedComponentFactory();
 }
 
-void BioTrackerPlugin::createPlugin()
+void BioTrackerPlugin::init()
 {
     _cfg = new Config();
     _cfg->load(Config::configLocation, "BackgroundSubtractionConfig.ini");
@@ -59,7 +59,15 @@ void BioTrackerPlugin::createPlugin()
 
     connectInterfaces();
 
-    qDebug() << "BST-Tracker loaded!";
+    emit trackingImageNamesChanged({
+        "Greyscale",
+        "Background",
+        "Foreground Mask",
+        "Opened Mask",
+        "Closed Mask",
+    });
+
+    qDebug() << "BST-Tracker initialized";
 }
 
 void BioTrackerPlugin::connectInterfaces()
@@ -71,17 +79,13 @@ void BioTrackerPlugin::connectInterfaces()
 
     // controllertrackingalgorithm
     QObject::connect(ctrAlg,
-                     &ControllerTrackingAlgorithm::emitCvMat,
+                     &ControllerTrackingAlgorithm::trackingImagesChanged,
                      this,
-                     &BioTrackerPlugin::emitCvMat);
+                     &BioTrackerPlugin::trackingImagesChanged);
     QObject::connect(ctrAlg,
                      &ControllerTrackingAlgorithm::emitTrackingDone,
                      this,
                      &BioTrackerPlugin::emitTrackingDone);
-    QObject::connect(ctrAlg,
-                     &ControllerTrackingAlgorithm::emitChangeDisplayImage,
-                     this,
-                     &BioTrackerPlugin::emitChangeDisplayImage);
     QObject::connect(
         this,
         &BioTrackerPlugin::emitAreaDescriptorUpdate,
