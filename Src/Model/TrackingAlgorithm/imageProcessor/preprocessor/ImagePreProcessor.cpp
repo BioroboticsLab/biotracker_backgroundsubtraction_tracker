@@ -123,16 +123,12 @@ QMap<QString, cv::Mat> ImagePreProcessor::preProcess(cv::Mat image)
         dilate(openedMask, m_TrackingParameter->getClosingDilationSize()),
         m_TrackingParameter->getClosingErosionSize());
 
-    // 4. step: masked greyscale image
-    greyMat.copyTo(maskedGrey, closedMask);
-
     QMap<QString, cv::Mat> all;
     all.insert("Greyscale", greyMat);
     all.insert("Background", m_backgroundImage);
     all.insert("Foreground Mask", m_foregroundMask);
     all.insert("Opened Mask", openedMask);
     all.insert("Closed Mask", closedMask);
-    all.insert("Masked Greyscale", maskedGrey);
 
     return all;
 }
